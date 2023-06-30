@@ -14,7 +14,7 @@ INSERT INTO role (name, description) VALUES ('mod', 'Moderator');
 CREATE TABLE user (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
-    emp_id INTEGER(6) UNIQUE NOT NULL,
+    emp_id TEXT(6) NOT NULL UNIQUE CHECK(emp_id GLOB '[0-9]*'),
     email TEXT UNIQUE NOT NULL,
     password TEXT NOT NULL,
     role_id INTEGER NOT NULL,

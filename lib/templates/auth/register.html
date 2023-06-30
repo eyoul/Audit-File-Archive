@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Register</h2>
+  <form method="post">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required><br><br>
+
+    <label for="emp_id">Employee ID:</label>
+    <input type="text" id="emp_id" name="emp_id" required><br><br>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required><br><br>
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required><br><br>
+
+    <input type="hidden" id="role_id" name="role_id" value="1">
+
+    <input type="submit" value="Register">
+  </form>
+{% endblock %}
