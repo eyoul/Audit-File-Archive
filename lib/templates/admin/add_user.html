@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h2>Register</h2>
+  <h2>Add User</h2>
   <form method="post">
     <label for="name">Name:</label>
     <input type="text" id="name" name="name" required><br><br>
@@ -38,10 +38,17 @@
       <option value="Director">Director</option>
       <option value="Vice President">Vice President</option>
       <option value="Admin">Admin</option>
-    </select><br><br>
+    </select>
 
-    <input type="hidden" id="role_id" name="role_id" value="1">
+    <label for="role_id">Role:</label>
+    <select id="role_id" name="role_id" required>
+      <option value="">-- Select Role --</option>
+      <option value="1">Admin</option>
+      <option value="2">Manager</option>
+      <option value="3">Employee</option>
+    </select>
+    <br><br><br>
 
-    <input type="submit" value="Register">
+    <input type="submit" value="Add User">
   </form>
 {% endblock %}

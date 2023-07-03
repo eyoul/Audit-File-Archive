@@ -13,3 +13,7 @@ bp = Blueprint('post', __name__)
 @bp.route('/')
 def index():
     return render_template('post/index.html')
+
+@bp.route('/board')
+def board():
+    return render_template('post/board.html')

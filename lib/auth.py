@@ -55,7 +55,14 @@ def login():
         if error is None:
             session.clear()
             session['user_id'] = user['id']
-            return redirect(url_for('index'))
+            if user['role_id'] == 1:
+                return redirect(url_for('admin.dashboard'))
+            elif user['role_id'] == 2:
+                return redirect(url_for('post.board'))
+            elif user['role_id'] == 3:
+                return redirect(url_for('post.board'))
+            else:
+                error = 'Invalid role.'
 
         flash(error)
 
@@ -68,6 +75,8 @@ def register():
         emp_id = request.form['emp_id']
         email = request.form['email']
         password = request.form['password']
+        department= request.form['department']
+        position = request.form['position']
         role_id = request.form['role_id']
 
         db = get_db()
@@ -81,14 +90,18 @@ def register():
             error = 'Email required!'
         elif not password:
             error = 'Password required!'
+        elif not department:
+            error = 'department required!'
+        elif not position:
+            error = 'position required!'
         elif not role_id:
             error = 'Role is required!'
 
         if error is None:
             try:
                 db.execute(
-                    "INSERT INTO user (name, emp_id, email, password, role_id) VALUES (?, ?, ?, ?, ?)",
-                    (name, emp_id, email, generate_password_hash(password), 1),
+                    "INSERT INTO user (name, emp_id, email, password, department, position, role_id) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                    (name, emp_id, email, generate_password_hash(password), department, position,  1),
                 )
                 db.commit()
             except db.IntegrityError:
@@ -100,15 +113,17 @@ def register():
 
     return render_template('auth/register.html')
 
-"""
-@bp.route('/add_user', method=('GET', 'POST'))
-@login_required_role(1)
+
+@bp.route('/add_user', methods=['GET', 'POST'])
+
 def add_user():
     if request.method == 'POST':
         name = request.form['name']
         emp_id = request.form['emp_id']
         email = request.form['email']
         password = request.form['password']
+        department= request.form['department']
+        position = request.form['position']
         role_id = request.form['role_id']
 
         db = get_db()
@@ -122,14 +137,18 @@ def add_user():
             error = 'Email required!'
         elif not password:
             error = 'Password required!'
+        elif not department:
+            error = 'department required!'
+        elif not position:
+            error = 'position required!'
         elif not role_id:
             error = 'Role is required!'
         
         if error is None:
             try:
                 db.execute(
-                    "INSERT INTO user (name, emp_id, email, password, role_id) VALUES (?, ?, ?, ?, ?)",
-                    (name, emp_id, email, generate_password_hash(password), role_id),
+                    "INSERT INTO user (name, emp_id, email, password, department, position, role_id) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                    (name, emp_id, email, generate_password_hash(password), department, position, role_id),
                 )
                 db.commit()
             except db.IntegrityError:
@@ -138,8 +157,8 @@ def add_user():
                 return redirect(url_for('auth.add_user'))
             flash(error)
     
-    return render_template('auth/add_user.html')
-"""
+    return render_template('admin/add_user.html')
+
 @bp.before_app_request
 def load_logged_in_user():
     user_id = session.get('user_id')
@@ -157,3 +176,7 @@ def load_logged_in_user():
 def logout():
     session.clear()
     return redirect(url_for('index'))
+
+@bp.route('/unauthorized')
+def unauthorized():
+    return render_template('auth/unauthorized.html')

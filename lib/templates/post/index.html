@@ -3,17 +3,13 @@
 {% block header %}
   <h1>{% block title %}Knowledge Management System{% endblock %}</h1>
 {% endblock %}
-{% block content %}
-    <header>
-        <nav>
-            <ul>
+{% block nav %}
+
                 <li><a href="#">Home</a></li>
                 <li><a href="#">Categories</a></li>
                 <li><a href="#">Search</a></li>
-                <li><a href="#">Login</a></li>
-            </ul>
-        </nav>
-    </header>
+{% endblock %}
+{% block content %}
     <main>
         <section>
             <h2>Welcome to our Knowledge Management System</h2>
@@ -37,7 +33,4 @@
             </ul>
         </section>
     </main>
-    <footer>
-        <p>&copy; 2023 Knowledge Management System</p>
-    </footer>
 {% endblock %}
