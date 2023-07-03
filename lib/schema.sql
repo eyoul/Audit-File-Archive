@@ -3,7 +3,11 @@ DROP TABLE if EXISTS user;
 DROP TABLE if EXISTS division;
 DROP TABLE if EXISTS department;
 DROP TABLE if EXISTS unit;
-
+DROP TABLE if EXISTS docType;
+DROP TABLE if EXISTS document;
+DROP TABLE if EXISTS division_document;
+DROP TABLE if EXISTS department_document;
+DROP TABLE if EXISTS unit_document;
 
 CREATE TABLE role (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -36,7 +40,7 @@ CREATE TABLE division (
 CREATE TABLE department (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
-    description TEXT ,
+    description TEXT NOT NULL,
     division_id INTEGER NOT NULL,
     FOREIGN KEY (division_id) REFERENCES division (id)
 );
@@ -44,16 +48,33 @@ CREATE TABLE department (
 CREATE TABLE unit (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
-    description TEXT ,
+    description TEXT NOT NULL ,
     department_id INTEGER NOT NULL,
     FOREIGN KEY (department_id) REFERENCES department (id)
 );
+
+CREATE TABLE docType(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    description TEXT NOT NULL
+);
+INSERT INTO docType (name, description) VALUES ('polcy', 'Policy');
+INSERT INTO docType (name, description) VALUES ('proc', 'Procedure');
+INSERT INTO docType (name, description) VALUES ('memo', 'Memo');
+INSERT INTO docType (name, description) VALUES ('guid', 'Guideline');
+INSERT INTO docType (name, description) VALUES ('user', 'Directive');
+INSERT INTO docType (name, description) VALUES ('procl', 'Proclamation');
+INSERT INTO docType (name, description) VALUES ('intr', 'Applicable international standard');
+INSERT INTO docType (name, description) VALUES ('other', 'Other related Material');
 
 CREATE TABLE document (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     file_path TEXT  NOT NULL,
-    description TEXT NOT NULL 
+    description TEXT NOT NULL,
+    docType_id INTEGER NOT NULL,
+    FOREIGN KEY (docType_id) REFERENCES docType (id)
+
 );
 
 CREATE TABLE division_document (

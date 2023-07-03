@@ -120,10 +120,10 @@
       <div class="profile-content">
       </div>
       <div class="name-job">
-        <div class="profile_name">Login As: {{ g.user['emp_id'] }}</div>
+        <div class="profile_name">As: {{ g.user['emp_id'] }}</div>
         <div class="job"> {{ g.user['name'] }}</div>
       </div>
-      <i class='bx bx-log-out' ></i>
+      <i><a class='bx bx-log-out' href="{{ url_for('auth.logout') }}"></a></i>
     </div>
   </li>
 </ul>
@@ -133,9 +133,10 @@
     <div class="home-content">
       <i class='bx bx-menu' ></i>
       <span class="text">Drop Down Sidebar</span>
+      {% block content %}{% endblock %}
     </div>
   </section>
-  {% block content %}{% endblock %}
+  
   <script src="{{ url_for('static', filename='js/script1.js') }}"></script>
 
 </body>
