@@ -34,9 +34,10 @@
         </div>
         <ul class="sub-menu">
           <li><a class="link_name" href="#">Structure</a></li>
-          <li><a href="#">Add Division</a></li>
-          <li><a href="#">Add Department</a></li>
-          <li><a href="#">Add Unit</a></li>
+          <li><a href="{{ url_for('struc.display_structure') }}"">Desplay</a></li>
+          <li><a href="{{ url_for('struc.add_division') }}">Add Division</a></li>
+          <li><a href="{{ url_for('struc.add_department') }}">Add Department</a></li>
+          <li><a href="{{ url_for('struc.add_unit') }}">Add Unit</a></li>
         </ul>
       </li>
       <li>
@@ -49,8 +50,8 @@
         </div>
         <ul class="sub-menu">
           <li><a class="link_name" href="#">Posts</a></li>
+          <li><a href="#">View File</a></li>
           <li><a href="#">Add file</a></li>
-          <li><a href="#">Review File</a></li>
           <li><a href="#">Edit File</a></li>
         </ul>
       </li>
@@ -65,27 +66,53 @@
         </div>
         <ul class="sub-menu">
           <li><a class="link_name" href="#">Users</a></li>
-          <li><a href="#">Add Users</a></li>
+          <li><a href="{{ url_for('auth.add_user') }}">Add Users</a></li>
           <li><a href="#">Edit Users</a></li>
           <li><a href="#">User Request</a></li>
         </ul>
       </li>
       <li>
-        <a href="#">
-          <i class='bx bx-compass' ></i>
-          <span class="link_name">Explore</span>
-        </a>
-        <ul class="sub-menu blank">
-          <li><a class="link_name" href="#">Explore</a></li>
+        <div class="iocn-link">
+          <a href="#">
+            <i class='bx bx-compass' ></i>
+            <span class="link_name">DocType</span>
+          </a>
+          <i class='bx bxs-chevron-down arrow' ></i>
+        </div>
+        <ul class="sub-menu">
+          <li><a class="link_name" href="#">Users</a></li>
+          <li><a href="#">Add DocType</a></li>
+          <li><a href="#">Edit DocType</a></li>
         </ul>
       </li>
       <li>
-        <a href="#">
-          <i class='bx bx-history'></i>
-          <span class="link_name">History</span>
-        </a>
-        <ul class="sub-menu blank">
-          <li><a class="link_name" href="#">History</a></li>
+        <div class="iocn-link">
+          <a href="#">
+            <i class='bx bx-pie-chart-alt-2' ></i>
+            <span class="link_name">User Role</span>
+          </a>
+          <i class='bx bxs-chevron-down arrow' ></i>
+        </div>
+        <ul class="sub-menu">
+          <li><a class="link_name" href="#">User Role</a></li>
+          <li><a href="#">Add Role</a></li>
+          <li><a href="#">Edit Role</a></li>
+        </ul>
+      </li>
+      <li>
+        <div class="iocn-link">
+          <a href="#">
+            <i class='bx bx-line-chart' ></i>
+            <span class="link_name">Edit Struc</span>
+          </a>
+          <i class='bx bxs-chevron-down arrow' ></i>
+        </div>
+        <ul class="sub-menu">
+          <li><a class="link_name" href="#">Edit Struc</a></li>
+          <li><a href="#">Edit Division</a></li>
+
+          <li><a href="#">Edit Department</a></li>
+          <li><a href="#">Edit Unit</a></li>
         </ul>
       </li>
       <li>
@@ -99,22 +126,14 @@
       </li>
       <li>
         <a href="#">
-          <i class='bx bx-pie-chart-alt-2' ></i>
-          <span class="link_name">Analytics</span>
+          <i class='bx bx-history'></i>
+          <span class="link_name">History</span>
         </a>
         <ul class="sub-menu blank">
-          <li><a class="link_name" href="#">Analytics</a></li>
+          <li><a class="link_name" href="#">History</a></li>
         </ul>
       </li>
-      <li>
-        <a href="#">
-          <i class='bx bx-line-chart' ></i>
-          <span class="link_name">Chart</span>
-        </a>
-        <ul class="sub-menu blank">
-          <li><a class="link_name" href="#">Chart</a></li>
-        </ul>
-      </li>
+
       <li>
     <div class="profile-details">
       <div class="profile-content">
@@ -132,9 +151,9 @@
   <section class="home-section">
     <div class="home-content">
       <i class='bx bx-menu' ></i>
-      <span class="text">Drop Down Sidebar</span>
-      {% block content %}{% endblock %}
+      <span class="text">Administrator Panal</span>
     </div>
+    {% block content %}{% endblock %}
   </section>
   
   <script src="{{ url_for('static', filename='js/script1.js') }}"></script>

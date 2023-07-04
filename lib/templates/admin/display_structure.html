@@ -1,0 +1,23 @@
+{% extends 'admin/layout.html' %}
+
+{% block content %}
+  <h1>Structure</h1>
+  <h2>Divisions</h2>
+  <ul>
+    {% for division in divisions %}
+      <li>{{ division.name }} - {{ division.description }}</li>
+    {% endfor %}
+  </ul>
+  <h2>Departments</h2>
+  <ul>
+    {% for department in departments %}
+      <li>{{ department.name }} - {{ department.description }}</li>
+    {% endfor %}
+  </ul>
+  <h2>Units</h2>
+  <ul>
+    {% for unit in units %}
+      <li>{{ unit.name }} - {{ unit.description }}</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

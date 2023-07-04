@@ -1,0 +1,43 @@
+{% extends 'admin/layout.html' %}
+    
+{% block content %}
+    <title>Edit Divisions</title>
+  </head>
+    <h1>Edit Divisions</h1>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul>
+          {% for message in messages %}
+            <li>{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for division in divisions %}
+          <tr>
+            <td>{{ division.id }}</td>
+            <td>{{ division.name }}</td>
+            <td>{{ division.description }}</td>
+            <td>
+              <form action="{{ url_for('struc.delete_division', id=division.id) }}" method="post">
+                <button type="submit">Delete</button>
+              </form>
+              <form action="{{ url_for('struc.edit_division', id=division.id) }}" method="get">
+                <button type="submit">Edit</button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endblock %}

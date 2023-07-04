@@ -115,7 +115,6 @@ def register():
 
 
 @bp.route('/add_user', methods=['GET', 'POST'])
-
 def add_user():
     if request.method == 'POST':
         name = request.form['name']

@@ -41,4 +41,7 @@ def create_app(test_config=None):
     from . import admin
     app.register_blueprint(admin.bp)
 
+    from . import struc
+    app.register_blueprint(struc.bp)
+
     return app

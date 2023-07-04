@@ -11,13 +11,9 @@ DROP TABLE if EXISTS unit_document;
 
 CREATE TABLE role (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
+    name TEXT NOT NULL UNIQUE,
     description TEXT NOT NULL
 );
-
-INSERT INTO role (name, description) VALUES ('admin', 'Administrator');
-INSERT INTO role (name, description) VALUES ('user', 'Regular User');
-INSERT INTO role (name, description) VALUES ('mod', 'Moderator');
 
 CREATE TABLE user (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -33,13 +29,13 @@ CREATE TABLE user (
 
 CREATE TABLE division (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
+    name TEXT NOT NULL UNIQUE,
     description TEXT 
 );
 
 CREATE TABLE department (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
+    name TEXT NOT NULL UNIQUE,
     description TEXT NOT NULL,
     division_id INTEGER NOT NULL,
     FOREIGN KEY (division_id) REFERENCES division (id)
@@ -47,7 +43,7 @@ CREATE TABLE department (
 
 CREATE TABLE unit (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
+    name TEXT NOT NULL UNIQUE,
     description TEXT NOT NULL ,
     department_id INTEGER NOT NULL,
     FOREIGN KEY (department_id) REFERENCES department (id)
@@ -55,17 +51,10 @@ CREATE TABLE unit (
 
 CREATE TABLE docType(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
+    name TEXT NOT NULL UNIQUE,
     description TEXT NOT NULL
 );
-INSERT INTO docType (name, description) VALUES ('polcy', 'Policy');
-INSERT INTO docType (name, description) VALUES ('proc', 'Procedure');
-INSERT INTO docType (name, description) VALUES ('memo', 'Memo');
-INSERT INTO docType (name, description) VALUES ('guid', 'Guideline');
-INSERT INTO docType (name, description) VALUES ('user', 'Directive');
-INSERT INTO docType (name, description) VALUES ('procl', 'Proclamation');
-INSERT INTO docType (name, description) VALUES ('intr', 'Applicable international standard');
-INSERT INTO docType (name, description) VALUES ('other', 'Other related Material');
+
 
 CREATE TABLE document (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

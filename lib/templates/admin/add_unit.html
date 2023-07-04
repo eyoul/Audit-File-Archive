@@ -1,0 +1,30 @@
+{% extends 'admin/layout.html' %}
+    
+{% block content %}
+<title>Add Unit</title>
+  </head>
+  <body>
+    <h1>Add Unit</h1>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul>
+          {% for message in messages %}
+            <li>{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+    <form method="post">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required><br>
+      <label for="description">Description:</label>
+      <input type="text" id="description" name="description" required><br>
+      <label for="department_id">Division:</label>
+      <select id="department_id" name="department_id" required>
+        {% for department in departments %}
+          <option value="{{ department.id }}">{{ department.name }}</option>
+        {% endfor %}
+      </select><br>
+      <button type="submit">Add Department</button>
+    </form>
+{% endblock %}
