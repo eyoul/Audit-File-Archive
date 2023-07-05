@@ -268,3 +268,30 @@ body{
     width: calc(100% - 78px);
   }
 }
+/* Style for the tree menu1 */
+.tree-menu1 {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.tree-menu1 li {
+  margin: 0;
+  padding: 0 0 0 1em;
+  position: relative;
+}
+.tree-menu1 li:before {
+  content: "";
+  display: block;
+  border-left: 1px solid black;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0.5em;
+}
+.tree-menu1 > li:before {
+  border: none;
+}
+.tree-menu1 li:last-child:before {
+  height: 1em;
+  bottom: auto;
+}

@@ -21,7 +21,7 @@
           <span class="link_name">Dashboard</span>
         </a>
         <ul class="sub-menu blank">
-          <li><a class="link_name" href="#">Dashboard</a></li>
+          <li><a class="link_name" href="{{ url_for('struc.dashboard') }}">Dashboard</a></li>
         </ul>
       </li>
       <li>
@@ -34,10 +34,10 @@
         </div>
         <ul class="sub-menu">
           <li><a class="link_name" href="#">Structure</a></li>
-          <li><a href="{{ url_for('struc.display_structure') }}"">Desplay</a></li>
-          <li><a href="{{ url_for('struc.add_division') }}">Add Division</a></li>
-          <li><a href="{{ url_for('struc.add_department') }}">Add Department</a></li>
-          <li><a href="{{ url_for('struc.add_unit') }}">Add Unit</a></li>
+          <li><a href="{{ url_for('struc.division') }}">Division</a></li>
+          <li><a href="{{ url_for('struc.department') }}">Department</a></li>
+          <li><a href="{{ url_for('struc.unit') }}">Unit</a></li>
+          <li><a href="{{ url_for('struc.display_structure') }}">Report</a></li>
         </ul>
       </li>
       <li>
@@ -72,26 +72,21 @@
         </ul>
       </li>
       <li>
-        <div class="iocn-link">
-          <a href="#">
-            <i class='bx bx-compass' ></i>
-            <span class="link_name">DocType</span>
-          </a>
-          <i class='bx bxs-chevron-down arrow' ></i>
-        </div>
-        <ul class="sub-menu">
-          <li><a class="link_name" href="#">Users</a></li>
-          <li><a href="#">Add DocType</a></li>
-          <li><a href="#">Edit DocType</a></li>
+        <a href="{{ url_for('post.doc_types') }}">
+          <i class='bx bx-compass'></i>
+          <span class="link_name">DocType</span>
+        </a>
+        <ul class="sub-menu blank">
+          <li><a class="link_name" href="{{ url_for('post.doc_types') }}">DocType</a></li>
         </ul>
       </li>
       <li>
         <div class="iocn-link">
           <a href="#">
-            <i class='bx bx-pie-chart-alt-2' ></i>
+            <i class='bx bx-pie-chart-alt-2'></i>
             <span class="link_name">User Role</span>
           </a>
-          <i class='bx bxs-chevron-down arrow' ></i>
+          <i class='bx bxs-chevron-down arrow'></i>
         </div>
         <ul class="sub-menu">
           <li><a class="link_name" href="#">User Role</a></li>
@@ -109,8 +104,11 @@
         </div>
         <ul class="sub-menu">
           <li><a class="link_name" href="#">Edit Struc</a></li>
-          <li><a href="#">Edit Division</a></li>
+          {% if division %}
 
+          <li><a href="{{ url_for('struc.edit_division', division_id=division.id) }}">Edit Division</a></li>
+          {% endif %}
+          <li><a href="#">Edit Division</a></li>
           <li><a href="#">Edit Department</a></li>
           <li><a href="#">Edit Unit</a></li>
         </ul>

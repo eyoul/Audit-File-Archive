@@ -1,30 +1,24 @@
 {% extends 'admin/layout.html' %}
-    
+
 {% block content %}
-<title>Add Department</title>
-  </head>
-  <body>
-    <h1>Add Department</h1>
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        <ul>
-          {% for message in messages %}
-            <li>{{ message }}</li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-    {% endwith %}
-    <form method="post">
-      <label for="name">Name:</label>
-      <input type="text" id="name" name="name" required><br>
-      <label for="description">Description:</label>
-      <input type="text" id="description" name="description" required><br>
-      <label for="division_id">Division:</label>
-      <select id="division_id" name="division_id" required>
+  <h1>Add Department</h1>
+  <form method="post">
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input type="text" class="form-control" id="name" name="name" value="{{ request.form['name'] }}" required>
+    </div>
+    <div class="form-group">
+      <label for="description">Description</label>
+      <textarea class="form-control" id="description" name="description" required>{{ request.form['description'] }}</textarea>
+    </div>
+    <div class="form-group">
+      <label for="division_id">Division</label>
+      <select class="form-control" id="division_id" name="division_id" required>
         {% for division in divisions %}
-          <option value="{{ division.id }}">{{ division.name }}</option>
+          <option value="{{ division['id'] }}">{{ division['name'] }}</option>
         {% endfor %}
-      </select><br>
-      <button type="submit">Add Department</button>
-    </form>
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Add Department</button>
+  </form>
 {% endblock %}

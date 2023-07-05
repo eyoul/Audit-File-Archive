@@ -1,23 +1,39 @@
 {% extends 'admin/layout.html' %}
 
 {% block content %}
-  <h1>Structure</h1>
-  <h2>Divisions</h2>
-  <ul>
-    {% for division in divisions %}
-      <li>{{ division.name }} - {{ division.description }}</li>
-    {% endfor %}
-  </ul>
-  <h2>Departments</h2>
-  <ul>
-    {% for department in departments %}
-      <li>{{ department.name }} - {{ department.description }}</li>
-    {% endfor %}
-  </ul>
-  <h2>Units</h2>
-  <ul>
-    {% for unit in units %}
-      <li>{{ unit.name }} - {{ unit.description }}</li>
-    {% endfor %}
-  </ul>
+    <style>
+
+    </style>
+
+    <h1>Structure</h1>
+    <ul class="tree-menu1">
+      <li>Divisions
+        <ul>
+          {% for division in divisions %}
+            <li>{{ division.name }} - {{ division.description }}</li>
+          {% endfor %}
+        </ul>
+      </li>
+      <li>Departments
+        <ul>
+          {% for department in departments %}
+            <li>{{ department.name }} - {{ department.description }}
+              <ul>
+                {% for unit in department.units %}
+                  <li>{{ unit.name }} - {{ unit.description }}</li>
+                {% endfor %}
+              </ul>
+            </li>
+          {% endfor %}
+        </ul>
+      </li>
+      <li>Units
+        <ul>
+          {% for unit in units %}
+            <li>{{ unit.name }} - {{ unit.description }}</li>
+          {% endfor %}
+        </ul>
+      </li>
+    </ul>
+
 {% endblock %}
