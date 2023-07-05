@@ -15,6 +15,10 @@ CREATE TABLE role (
     description TEXT NOT NULL
 );
 
+INSERT INTO role (name, description) VALUES ('admin', 'Administrator');
+INSERT INTO role (name, description) VALUES ('manager', 'Manager');
+INSERT INTO role (name, description) VALUES ('user', 'Regular');
+
 CREATE TABLE user (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
