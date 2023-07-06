@@ -4,7 +4,7 @@ from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
 from werkzeug.security import check_password_hash, generate_password_hash
-
+from werkzeug.exceptions import abort
 from lib.db import get_db
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
@@ -157,6 +157,71 @@ def add_user():
             flash(error)
     
     return render_template('admin/add_user.html')
+
+
+@bp.route('/edit_user/<int:user_id>', methods=['GET', 'POST'])
+def edit_user(user_id):
+    db = get_db()
+    user = db.execute(
+        'SELECT id, name, emp_id, email, department, position, role_id FROM user WHERE id = ?',
+        (user_id,)
+    ).fetchone()
+
+    if user is None:
+        abort(404, f"User id {user_id} doesn't exist.")
+
+    if request.method == 'POST':
+        name = request.form['name']
+        emp_id = request.form['emp_id']
+        email = request.form['email']
+        password = request.form['password']
+        department= request.form['department']
+        position = request.form['position']
+        role_id = request.form['role_id']
+        error = None
+
+        if not name:
+            error = 'Name is required!'
+        elif not emp_id:
+            error = 'Employee Id required!'
+        elif not email:
+            error = 'Email required!'
+        elif not department:
+            error = 'department required!'
+        elif not position:
+            error = 'position required!'
+        elif not role_id:
+            error = 'Role is required!'
+
+        if error is None:
+            db.execute(
+                'UPDATE user SET name = ?, emp_id = ?, email = ?, password = ?, department = ?, position = ?, role_id = ? WHERE id = ?',
+                (name, emp_id, email, generate_password_hash(password), department, position, role_id, user_id)
+            )
+            db.commit()
+            flash('User updated successfully!')
+            return redirect(url_for('auth.add_user'))
+
+        flash(error)
+
+    return render_template('admin/edit_user.html', user=user)
+
+@bp.route('/view_users')
+def view_users():
+    db = get_db()
+    users = db.execute('SELECT * FROM user').fetchall()
+    return render_template('admin/users.html', users=users)
+
+
+@bp.route('/delete_user/<int:user_id>', methods=('POST',))
+@login_required_role(1) # Only admins can delete users
+def delete_user(user_id):
+    db = get_db()
+    db.execute('DELETE FROM user WHERE id = ?', (user_id,))
+    db.commit()
+    flash('User deleted successfully!')
+    return redirect(url_for('auth.view_users'))
+
 
 @bp.before_app_request
 def load_logged_in_user():

@@ -1,0 +1,18 @@
+{% extends 'admin/layout.html' %}
+
+{% block content %}
+  <h1>Edit Document Type</h1>
+  <form method="post">
+    <div>
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" value="{{ doc_type['name'] }}" required>
+    </div>
+    <div>
+      <label for="description">Description:</label>
+      <textarea id="description" name="description" required>{{ doc_type['description'] }}</textarea>
+    </div>
+    <div>
+      <input type="submit" value="Update">
+    </div>
+  </form>
+{% endblock %}
