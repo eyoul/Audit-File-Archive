@@ -19,7 +19,7 @@
       <input type="text" id="name" name="name" required><br>
       <label for="description">Description:</label>
       <input type="text" id="description" name="description" required><br>
-      <label for="department_id">Division:</label>
+      <label for="department_id">Departement:</label>
       <select id="department_id" name="department_id" required>
         {% for department in departments %}
           <option value="{{ department.id }}">{{ department.name }}</option>

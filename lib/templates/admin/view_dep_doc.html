@@ -1,0 +1,28 @@
+{% extends 'admin/layout.html' %}
+
+{% block content %}
+  <h1>Documents</h1>
+  <a href="{{ url_for('post.add_dep_file') }}">Add Document</a>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Document Type</th>
+        <th>Department</th>
+        <th>File</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for document in documents %}
+        <tr>
+          <td>{{ document.name }}</td>
+          <td>{{ document.description }}</td>
+          <td>{{ document.docType_name }}</td>
+          <td>{{ document.department_name }}</td>
+          <td><a href="{{ url_for('post.download_file', filename=document.file_path) }}" target="_blank">Download</a></td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

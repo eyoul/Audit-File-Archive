@@ -93,3 +93,4 @@ CREATE TABLE unit_document (
     FOREIGN KEY (unit_id) REFERENCES unit (id),
     FOREIGN KEY (document_id) REFERENCES document (id)
 );
+

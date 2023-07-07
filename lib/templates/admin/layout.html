@@ -67,15 +67,15 @@
         <div class="iocn-link">
           <a href="#">
             <i class='bx bx-book-alt' ></i>
-            <span class="link_name">Posts</span>
+            <span class="link_name">Manage Files</span>
           </a>
           <i class='bx bxs-chevron-down arrow' ></i>
         </div>
         <ul class="sub-menu">
-          <li><a class="link_name" href="#">Posts</a></li>
-          <li><a href="{{ url_for('post.add_file') }}">View File</a></li>
-          <li><a href="#">Add file</a></li>
-          <li><a href="#">Edit File</a></li>
+          <li><a class="link_name" href="#">Manage Files</a></li>
+          <li><a href="{{ url_for('post.view_div_doc') }}">Division Files</a></li>
+          <li><a href="{{ url_for('post.view_dep_doc') }}">Department File</a></li>
+          <li><a href="{{ url_for('post.view_unit_doc') }}">Unit File</a></li>
         </ul>
       </li>
 
