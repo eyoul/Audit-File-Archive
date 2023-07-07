@@ -1,0 +1,34 @@
+{% extends 'admin/layout.html' %}
+
+{% block content %}
+  <h1>Edit User</h1>
+  <form method="post">
+    <label for="name">Name</label>
+    <input type="text" id="name" name="name" value="{{ user.name }}" required>
+
+    <label for="emp_id">Employee ID</label>
+    <input type="text" id="emp_id" name="emp_id" value="{{ user.emp_id }}" required>
+
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" value="{{ user.email }}" required>
+
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password" placeholder="Leave blank to keep current password">
+
+    <label for="department">Department</label>
+    <input type="text" id="department" name="department" value="{{ user.department }}" required>
+
+    <label for="position">Position</label>
+    <input type="text" id="position" name="position" value="{{ user.position }}" required>
+
+    <label for="role_id">Role</label>
+    <select id="role_id" name="role_id" required>
+      <option value="">Select a role</option>
+      <option value="1" {% if user.role_id == 1 %}selected{% endif %}>Admin</option>
+      <option value="2" {% if user.role_id == 2 %}selected{% endif %}>Manager</option>
+      <option value="3" {% if user.role_id == 3 %}selected{% endif %}>Employee</option>
+    </select>
+
+    <button type="submit">Save Changes</button>
+  </form>
+{% endblock %}
