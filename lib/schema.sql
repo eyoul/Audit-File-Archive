@@ -34,7 +34,7 @@ CREATE TABLE user (
 CREATE TABLE division (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL UNIQUE,
-    description TEXT 
+    description TEXT NOT NULL
 );
 
 CREATE TABLE department (
@@ -63,12 +63,18 @@ CREATE TABLE docType(
 CREATE TABLE document (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
-    file_path TEXT  NOT NULL,
+    file_path TEXT NOT NULL,
     description TEXT NOT NULL,
     docType_id INTEGER NOT NULL,
-    FOREIGN KEY (docType_id) REFERENCES docType (id)
-
+    division_id INTEGER NOT NULL,
+    department_id INTEGER,
+    unit_id INTEGER,
+    FOREIGN KEY (docType_id) REFERENCES docType (id),
+    FOREIGN KEY (division_id) REFERENCES division (id),
+    FOREIGN KEY (department_id) REFERENCES department (id),
+    FOREIGN KEY (unit_id) REFERENCES unit (id)
 );
+
 
 CREATE TABLE division_document (
     division_id INTEGER NOT NULL,

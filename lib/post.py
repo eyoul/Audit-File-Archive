@@ -376,6 +376,7 @@ def view_div_doc():
 
     return render_template('admin/view_div_doc.html', documents=documents)
 
+
 @bp.route('/view_dep_doc')
 def view_dep_doc():
     # Get the list of documents with their corresponding document type and Department
