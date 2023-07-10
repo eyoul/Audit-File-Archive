@@ -31,7 +31,7 @@ footer {
     width: 100%;
     margin-bottom: 0;
     justify-content: center;
-    position: relative;
+    position: fixed;
     align-items: center;
     display: flex;
   }
@@ -108,4 +108,19 @@ nav a:hover {
 
 .tree-menu li:last-child {
   margin-bottom: 0;
+}
+
+.section1{
+  position: fixed;
+  left: 10px;
+  height: 100%;
+  width: 300px;
+  background: rgb(235, 199, 238);
+  transition: all 0.5s ease;
+}
+.section2 {
+  left: auto;
+  margin-left: 350px;
+  width: 100%;
+  margin-right: 30px;
 }

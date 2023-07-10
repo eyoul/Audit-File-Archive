@@ -21,14 +21,14 @@
       </select>
     </div>
     <div>
-        <label for="department_id">Department:</label>
-        <select id="department_id" name="department_id" class="form-control" required>
-          <option value="">-- Select Department --</option>
-          {% for department in departments %}
-            <option value="{{ department.id }}">{{ department.name }}</option>
-          {% endfor %}
-        </select>
-      </div>
+      <label for="department_id">Department:</label>
+      <select id="department_id" name="department_id" class="form-control" required>
+        <option value="">-- Select Department --</option>
+        {% for department in departments %}
+          <option value="{{ department.id }}">{{ department.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
     <div>
       <label for="file_path">File:</label>
       <input type="file" id="file_path" name="file_path" accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.rtf" required>
