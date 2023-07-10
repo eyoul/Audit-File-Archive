@@ -25,7 +25,7 @@ CREATE TABLE user (
     emp_id TEXT(6) NOT NULL UNIQUE CHECK(emp_id GLOB '[0-9]*'),
     email TEXT UNIQUE NOT NULL,
     password TEXT NOT NULL,
-    department TEXT NOT NULL,
+    place TEXT NOT NULL,
     position TEXT NOT NULL,
     role_id INTEGER NOT NULL,
     FOREIGN KEY (role_id) REFERENCES role (id)
@@ -66,7 +66,7 @@ CREATE TABLE document (
     file_path TEXT NOT NULL,
     description TEXT NOT NULL,
     docType_id INTEGER NOT NULL,
-    division_id INTEGER NOT NULL,
+    division_id INTEGER,
     department_id INTEGER,
     unit_id INTEGER,
     FOREIGN KEY (docType_id) REFERENCES docType (id),

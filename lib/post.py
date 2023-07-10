@@ -37,7 +37,24 @@ def index():
 
 @bp.route('/board')
 def board():
-    return render_template('post/board.html')
+    db = get_db()
+    divisions = db.execute(
+        'SELECT id, name, description FROM division'
+    ).fetchall()
+
+    departments = db.execute(
+        'SELECT id, name, description, division_id FROM department'
+    ).fetchall()
+
+    units = db.execute(
+        'SELECT id, name, description, department_id FROM unit'
+    ).fetchall()
+
+    documents = db.execute(
+        'SELECT id, name, file_path, description, docType_id, division_id, department_id, unit_id FROM document'
+    ).fetchall()
+
+    return render_template('post/board.html', divisions=divisions, departments=departments, units=units, documents=documents)
 
 
 @bp.route('/docType')
@@ -182,9 +199,9 @@ def add_div_file():
             cursor = db.cursor()
             # Insert the document into the document table
             cursor.execute(
-                'INSERT INTO document (name, file_path, description, docType_id)'
-                ' VALUES (?, ?, ?, ?)',
-                (name, unique_filename, description, docType_id)
+               'INSERT INTO document (name, file_path, description, docType_id, division_id)'
+               ' VALUES (?, ?, ?, ?, ?)',
+                (name, unique_filename, description, docType_id, division_id)
             )
 
             doc_id = cursor.lastrowid
@@ -260,12 +277,12 @@ def add_dep_file():
             db = get_db()
             cursor = db.cursor()
             # Insert the document into the document table
-            cursor.execute(
-                'INSERT INTO document (name, file_path, description, docType_id)'
-                ' VALUES (?, ?, ?, ?)',
-                (name, unique_filename, description, docType_id)
-            )
 
+            cursor.execute(
+               'INSERT INTO document (name, file_path, description, docType_id, department_id)'
+               ' VALUES (?, ?, ?, ?, ?)',
+                (name, unique_filename, description, docType_id, department_id)
+            )
             doc_id = cursor.lastrowid
 
             # Insert the document into the department_document table
@@ -340,9 +357,9 @@ def add_unit_file():
             cursor = db.cursor()
             # Insert the document into the document table
             cursor.execute(
-                'INSERT INTO document (name, file_path, description, docType_id)'
-                ' VALUES (?, ?, ?, ?)',
-                (name, unique_filename, description, docType_id)
+                'INSERT INTO document (name, file_path, description, docType_id, unit_id)'
+                ' VALUES (?, ?, ?, ?, ?)',
+                (name, unique_filename, description, docType_id, unit_id)
             )
 
             doc_id = cursor.lastrowid
@@ -359,7 +376,6 @@ def add_unit_file():
             return redirect(url_for('post.add_unit_file'))
 
     return render_template('admin/add_unit_file.html', docTypes=docTypes, units=units)
-
 
 @bp.route('/view_div_doc')
 def view_div_doc():

@@ -21,14 +21,14 @@ def login_required(view):
     return wrapped_view 
 
 
-def login_required_role(role_id):
+def login_required_role(role_list):
     def decorator(f):
         @functools.wraps(f)
         def wrapped_view(*args, **kwargs):
             if g.user is None:
                 return redirect(url_for('auth.login'))
 
-            if g.user['role_id'] != role_id:
+            if g.user['role_id'] not in role_list:
                 return redirect(url_for('auth.unauthorized'))
 
             return f(*args, **kwargs)
@@ -58,7 +58,7 @@ def login():
             if user['role_id'] == 1:
                 return redirect(url_for('admin.dashboard'))
             elif user['role_id'] == 2:
-                return redirect(url_for('post.board'))
+                return redirect(url_for('admin.dashboard'))
             elif user['role_id'] == 3:
                 return redirect(url_for('post.board'))
             else:
@@ -75,7 +75,7 @@ def register():
         emp_id = request.form['emp_id']
         email = request.form['email']
         password = request.form['password']
-        department= request.form['department']
+        place= request.form['place']
         position = request.form['position']
         role_id = request.form['role_id']
 
@@ -90,8 +90,8 @@ def register():
             error = 'Email required!'
         elif not password:
             error = 'Password required!'
-        elif not department:
-            error = 'department required!'
+        elif not place:
+            error = 'place required!'
         elif not position:
             error = 'position required!'
         elif not role_id:
@@ -100,8 +100,8 @@ def register():
         if error is None:
             try:
                 db.execute(
-                    "INSERT INTO user (name, emp_id, email, password, department, position, role_id) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                    (name, emp_id, email, generate_password_hash(password), department, position,  1),
+                    "INSERT INTO user (name, emp_id, email, password, place, position, role_id) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                    (name, emp_id, email, generate_password_hash(password), place, position,  1),
                 )
                 db.commit()
             except db.IntegrityError:
@@ -121,7 +121,7 @@ def add_user():
         emp_id = request.form['emp_id']
         email = request.form['email']
         password = request.form['password']
-        department= request.form['department']
+        place= request.form['place']
         position = request.form['position']
         role_id = request.form['role_id']
 
@@ -136,8 +136,8 @@ def add_user():
             error = 'Email required!'
         elif not password:
             error = 'Password required!'
-        elif not department:
-            error = 'department required!'
+        elif not place:
+            error = 'place required!'
         elif not position:
             error = 'position required!'
         elif not role_id:
@@ -146,8 +146,8 @@ def add_user():
         if error is None:
             try:
                 db.execute(
-                    "INSERT INTO user (name, emp_id, email, password, department, position, role_id) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                    (name, emp_id, email, generate_password_hash(password), department, position, role_id),
+                    "INSERT INTO user (name, emp_id, email, password, place, position, role_id) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                    (name, emp_id, email, generate_password_hash(password), place, position, role_id),
                 )
                 db.commit()
             except db.IntegrityError:
@@ -163,7 +163,7 @@ def add_user():
 def edit_user(user_id):
     db = get_db()
     user = db.execute(
-        'SELECT id, name, emp_id, email, department, position, role_id FROM user WHERE id = ?',
+        'SELECT id, name, emp_id, email, place, position, role_id FROM user WHERE id = ?',
         (user_id,)
     ).fetchone()
 
@@ -175,7 +175,7 @@ def edit_user(user_id):
         emp_id = request.form['emp_id']
         email = request.form['email']
         password = request.form['password']
-        department= request.form['department']
+        place= request.form['place']
         position = request.form['position']
         role_id = request.form['role_id']
         error = None
@@ -186,8 +186,8 @@ def edit_user(user_id):
             error = 'Employee Id required!'
         elif not email:
             error = 'Email required!'
-        elif not department:
-            error = 'department required!'
+        elif not place:
+            error = 'place required!'
         elif not position:
             error = 'position required!'
         elif not role_id:
@@ -195,8 +195,8 @@ def edit_user(user_id):
 
         if error is None:
             db.execute(
-                'UPDATE user SET name = ?, emp_id = ?, email = ?, password = ?, department = ?, position = ?, role_id = ? WHERE id = ?',
-                (name, emp_id, email, generate_password_hash(password), department, position, role_id, user_id)
+                'UPDATE user SET name = ?, emp_id = ?, email = ?, password = ?, place = ?, position = ?, role_id = ? WHERE id = ?',
+                (name, emp_id, email, generate_password_hash(password), place, position, role_id, user_id)
             )
             db.commit()
             flash('User updated successfully!')
