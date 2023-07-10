@@ -1,0 +1,43 @@
+<section>
+    <ul class="tree-menu">
+     {% for division in divisions %}
+     <li>
+       <a href="#">{{ division.name }}</a>
+         <ul>
+         {% for department in departments if department.division_id == division.id %}
+             <li>
+                 <a href="#">{{ department.name }}</a>
+                 <ul>
+                 {% for unit in units if unit.department_id == department.id %}
+                     <li>
+                        <a href="#">{{ unit.name }}</a>
+                         <ul>
+                         {% for document in documents if document.unit_id == unit.id %}
+                             <li><a href="#" onclick="renderFile('{{ url_for('post.download_file', filename=document.file_path) }}', '{{ document.file_type }}')">{{ document.name }}</a></li>
+                         {% endfor %}
+                         </ul>
+                     </li>
+                 {% endfor %}
+                 </ul>
+                 <ul>
+                 {% for document in documents if document.department_id == department.id and document.unit_id is none %}
+                     <li><a href="#" onclick="renderFile('{{ url_for('post.download_file', filename=document.file_path) }}', '{{ document.file_type }}')">{{ document.name }}</a></li>
+                 {% endfor %}
+                 </ul>
+             </li>
+         {% endfor %}
+         <ul>
+         {% for document in documents if document.division_id == division.id and document.department_id is none and document.unit_id is none %}
+             <li><a href="#" onclick="renderFile('{{ url_for('post.download_file', filename=document.file_path) }}', '{{ document.file_type }}')">{{ document.name }}</a></li>
+         {% endfor %}
+         </ul>
+         </ul>
+     </li>
+     {% endfor %}
+    </ul>
+ </section>
+ 
+ <section id="file-container">
+   
+ </section>
+ <script src="{{ url_for('static', filename='js/script.js') }}"></script>
