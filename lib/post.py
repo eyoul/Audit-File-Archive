@@ -26,14 +26,14 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+@bp.route('/')
+def index():
+    return render_template('post/index.html')
+
 
 @bp.route('/download/<path:filename>')
 def download_file(filename):
     return send_from_directory(UPLOAD_FOLDER, filename)
-
-@bp.route('/')
-def index():
-    return render_template('post/index.html')
 
 @bp.route('/board')
 def board():
@@ -53,8 +53,13 @@ def board():
     documents = db.execute(
         'SELECT id, name, file_path, description, docType_id, division_id, department_id, unit_id FROM document'
     ).fetchall()
+    
+    programs = db.execute(
+        'SELECT id, name, period, description, division_id, department_id, unit_id FROM audit_program'
+    ).fetchall()
 
-    return render_template('post/board.html', divisions=divisions, departments=departments, units=units, documents=documents)
+    return render_template('post/board.html', divisions=divisions, departments=departments,
+                           units=units, documents=documents, programs=programs)
 
 
 @bp.route('/docType')

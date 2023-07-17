@@ -16,7 +16,7 @@
     </div>
     <ul class="nav-links">
       <li>
-        <a href="#">
+        <a href="{{ url_for('struc.dashboard') }}">
           <i class='bx bx-grid-alt' ></i>
           <span class="link_name">Dashboard</span>
         </a>
@@ -25,6 +25,16 @@
         </ul>
       </li>
       <li>
+        <li>
+          <a href="{{ url_for('post.board') }}">
+            <i class='bx bx-pie-chart-alt-2' ></i>
+            <span class="link_name">Home</span>
+          </a>
+          <ul class="sub-menu blank">
+            <li><a class="link_name" href="{{ url_for('post.board') }}">Home</a></li>
+          </ul>
+        </li>
+        <li>
         <div class="iocn-link">
           <a href="#">
             <i class='bx bx-collection' ></i>
@@ -32,14 +42,17 @@
           </a>
           <i class='bx bxs-chevron-down arrow' ></i>
         </div>
-        <ul class="sub-menu">
+         <ul class="sub-menu">
           <li><a class="link_name" href="#">Structure</a></li>
+          {% if g.user['role_id'] == 1 %}
           <li><a href="{{ url_for('struc.division') }}">Division</a></li>
           <li><a href="{{ url_for('struc.department') }}">Department</a></li>
           <li><a href="{{ url_for('struc.unit') }}">Unit</a></li>
+          {% endif %}
           <li><a href="{{ url_for('struc.display_structure') }}">Report</a></li>
         </ul>
       </li>
+      {% if g.user['role_id'] == 1 %}
       <li>
         <a href="{{ url_for('post.docType') }}">
           <i class='bx bx-compass'></i>
@@ -49,7 +62,7 @@
           <li><a class="link_name" href="{{ url_for('post.docType') }}">DocType</a></li>
         </ul>
       </li>
-      <li>
+       <li>
         <div class="iocn-link">
           <a href="#">
             <i class='bx bx-plug' ></i>
@@ -63,7 +76,9 @@
           <li><a href="#">User Request</a></li>
         </ul>
       </li>
+      {% endif %}
       <li>
+        
         <div class="iocn-link">
           <a href="#">
             <i class='bx bx-book-alt' ></i>
@@ -79,20 +94,25 @@
         </ul>
       </li>
 
-      <!-- <li>
-        <div class="iocn-link">
-          <a href="#">
-            <i class='bx bx-pie-chart-alt-2'></i>
-            <span class="link_name">User Role</span>
-          </a>
-          <i class='bx bxs-chevron-down arrow'></i>
-        </div>
-        <ul class="sub-menu">
-          <li><a class="link_name" href="#">User Role</a></li>
-          <li><a href="#">Add Role</a></li>
-          <li><a href="#">Edit Role</a></li>
+      <li>
+        <a href="{{ url_for('file.file_type') }}">
+          <i class='bx bx-pie-chart-alt-2'></i>
+          <span class="link_name">Audit File</span>
+        </a>
+        <ul class="sub-menu blank">
+          <li><a class="link_name" href="{{ url_for('file.file_type') }}">Audit File Type</a></li>
         </ul>
-      </li> -->
+      </li>
+      <li>
+        <a href="">
+                <i class='bx bx-grid-alt'></i>
+          <span class="link_name">Audit program</span>
+        </a>
+        <ul class="sub-menu blank">
+          <li><a class="link_name" href="{{ url_for('file.program') }}" >Audit program</a></li>
+        </ul>    
+      </li>
+
       <!-- <li>
         <div class="iocn-link">
           <a href="#">
