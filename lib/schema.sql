@@ -1,13 +1,16 @@
-DROP TABLE if EXISTS role;
-DROP TABLE if EXISTS user;
-DROP TABLE if EXISTS division;
-DROP TABLE if EXISTS department;
-DROP TABLE if EXISTS unit;
-DROP TABLE if EXISTS docType;
-DROP TABLE if EXISTS document;
-DROP TABLE if EXISTS division_document;
-DROP TABLE if EXISTS department_document;
-DROP TABLE if EXISTS unit_document;
+DROP TABLE IF EXISTS audit_File_Type;
+DROP TABLE IF EXISTS audit_File;
+DROP TABLE IF EXISTS audit_program;
+DROP TABLE IF EXISTS unit_document;
+DROP TABLE IF EXISTS department_document;
+DROP TABLE IF EXISTS division_document;
+DROP TABLE IF EXISTS document;
+DROP TABLE IF EXISTS docType;
+DROP TABLE IF EXISTS unit;
+DROP TABLE IF EXISTS department;
+DROP TABLE IF EXISTS division;
+DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS role;
 
 CREATE TABLE role (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -59,7 +62,6 @@ CREATE TABLE docType(
     description TEXT NOT NULL
 );
 
-
 CREATE TABLE document (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
@@ -74,7 +76,6 @@ CREATE TABLE document (
     FOREIGN KEY (department_id) REFERENCES department (id),
     FOREIGN KEY (unit_id) REFERENCES unit (id)
 );
-
 
 CREATE TABLE division_document (
     division_id INTEGER NOT NULL,
@@ -100,3 +101,34 @@ CREATE TABLE unit_document (
     FOREIGN KEY (document_id) REFERENCES document (id)
 );
 
+CREATE TABLE audit_File_Type (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL UNIQUE,
+    description TEXT NOT NULL
+);
+
+CREATE TABLE audit_program (
+    id INTEGER PRIMARY KEY AUTOINCREMENT, 
+    name TEXT NOT NULL UNIQUE,
+    period TEXT NOT NULL,
+    description TEXT,
+    division_id INTEGER,
+    department_id INTEGER,
+    unit_id INTEGER,
+    FOREIGN KEY (division_id) REFERENCES division (id),
+    FOREIGN KEY (department_id) REFERENCES department (id),
+    FOREIGN KEY (unit_id) REFERENCES unit (id)
+);
+
+
+CREATE TABLE audit_File (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    file_path TEXT NOT NULL,
+    description TEXT NOT NULL,
+    audit_program_id INTEGER NOT NULL,
+    file_type_id INTEGER NOT NULL,
+    file_size INTEGER NOT NULL DEFAULT 0,
+    FOREIGN KEY (audit_program_id) REFERENCES audit_program (id),
+    FOREIGN KEY (file_type_id) REFERENCES audit_File_Type (id)
+);

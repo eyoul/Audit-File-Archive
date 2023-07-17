@@ -44,4 +44,7 @@ def create_app(test_config=None):
     from . import struc
     app.register_blueprint(struc.bp)
 
+    from . import file
+    app.register_blueprint(file.bp)
+
     return app

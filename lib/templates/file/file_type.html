@@ -1,0 +1,30 @@
+{% extends 'admin/layout.html' %}
+
+{% block content %}
+  <h1>File Types</h1>
+  <p><a href="{{ url_for('file.add_file_type') }}">Add File Type</a></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for file_type in file_types %}
+        <tr>
+          <td>{{ file_type['name'] }}</td>
+          <td>{{ file_type['description'] }}</td>
+          <td>
+            <a href="{{ url_for('file.edit_file_type', file_type_id=file_type['id']) }}">Edit</a>
+            <form action="{{ url_for('file.delete_file_type', file_type_id=file_type['id']) }}"  onsubmit="return confirm('Are you sure you want to delete this audit program?')" method="post">
+              
+              <button type="submit" class="link-button">Delete</button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

@@ -21,6 +21,11 @@
                         <ul>
                         {% for document in documents if document.unit_id == unit.id %}
                             <li><a href="#" data-file="{{ url_for('post.download_file', filename=document.file_path) }}" data-type="{{ document.file_type }}">{{ document.name }}</a></li>
+                        {% endfor %}                      
+                        </ul>
+                        <ul>
+                        {% for program in programs if program.unit_id == unit.id %}
+                            <li><a href="#">{{ program.name }}</a></li>
                         {% endfor %}
                         </ul>
                     </li>
@@ -30,6 +35,9 @@
                 {% for document in documents if document.department_id == department.id and document.unit_id is none %}
                     <li><a href="#" data-file="{{ url_for('post.download_file', filename=document.file_path) }}" data-type="{{ document.file_type }}">{{ document.name }}</a></li>
                 {% endfor %}
+                {% for program in programs if program.department_id == department.id %}
+                    <li><a href="#">{{ program.name }}</a></li>
+                {% endfor %}
                 </ul>
             </li>
         {% endfor %}
@@ -38,6 +46,9 @@
         {% for document in documents if document.division_id == division.id and document.department_id is none and document.unit_id is none %}
             <li><a href="#" data-file="{{ url_for('post.download_file', filename=document.file_path) }}" data-type="{{ document.file_type }}">{{ document.name }}</a></li>
         {% endfor %}
+        {% for program in programs if program.division_id == division.id %}
+            <li><a href="#">{{ program.name }}</a></li>
+        {% endfor %}
         </ul>
         
     </li>
@@ -45,10 +56,11 @@
    </ul>
 </section>
 <section  id="file-container" class="section2">
-  <object id="pdf" data="" type="application/pdf" width="100%" height="600px">
+    
+  <object id="pdf" data="" type="application/pdf" width="800px" height="600px">
     <p>PDF cannot be displayed. Please download the PDF to view it: <a href="">Download PDF</a>.</p>
   </object>
-  
+ 
 </section>
 <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 {% endblock %}

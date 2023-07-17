@@ -67,3 +67,30 @@
     <button type="submit" class="btn btn-primary">Add File</button>
   </form>
 {% endblock %}
+
+
+
+{% for program in programs if program.unit_id == unit.id %}
+    <li><a href="#">{{ program.name }}</a></li>
+{% endfor %}
+
+{% for program in programs if program.department_id == department.id and program.unit_id is none %}
+    <li><a href="#">{{ program.name }}</a></li>
+{% endfor %}
+
+{% for program in programs if program.division_id == division.id and program.department_id is none and program.unit_id is none %}
+    <li><a href="#">{{ program.name }}</a></li>
+{% endfor %}
+
+
+{% for program in programs if program.unit_id == unit.id %}
+    <li><a href="#">{{ program.name }}</a></li>
+{% endfor %}
+
+{% for program in programs if program.department_id == department.id and program.unit_id is None %}
+    <li><a href="#">{{ program.name }}</a></li>
+{% endfor %}
+
+{% for program in programs if program.division_id == division.id and program.department_id is None and program.unit_id is None %}
+    <li><a href="#">{{ program.name }}</a></li>
+{% endfor %}

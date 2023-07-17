@@ -13,4 +13,3 @@ bp = Blueprint('admin', __name__, url_prefix='/admin')
 @login_required_role([1, 2])  # '1' is the role_id for the admin role
 def dashboard():
     return render_template('admin/dashboard.html')
-

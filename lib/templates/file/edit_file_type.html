@@ -1,0 +1,12 @@
+{% extends 'admin/layout.html' %}
+
+{% block content %}
+  <h1>Edit File Type</h1>
+  <form method="post">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" value="{{ file_type['name'] }}" required>
+    <label for="description">Description:</label>
+    <textarea id="description" name="description" required>{{ file_type['description'] }}</textarea>
+    <button type="submit">Update File Type</button>
+  </form>
+{% endblock %}
