@@ -108,7 +108,7 @@ def delete_file_type(file_type_id):
     return redirect(url_for('file.file_type'))
 
 
-"""
+
 @bp.route('/<int:audit_report_id>/files')
 def view_audit(audit_report_id):
     db = get_db()
@@ -236,7 +236,7 @@ def delete_file(file_id):
     db.commit()
     flash('File deleted successfully!')
     return redirect(url_for('audit.view_audit', audit_id=file['audit_report_id']))
-"""
+
 
 @bp.route('/division/<int:division_id>/audit/add_file', methods=['GET', 'POST'])
 @login_required

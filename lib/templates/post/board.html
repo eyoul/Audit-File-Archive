@@ -25,7 +25,14 @@
                         </ul>
                         <ul>
                         {% for program in programs if program.unit_id == unit.id %}
-                            <li><a href="#">{{ program.name }}</a></li>
+                            <li>
+                                <a href="#">{{ program.name }}</a>
+                                <ul>
+                                    {% for file in audit_files if file.audit_program_id == program.id %}
+                                    <li><a href="#" data-file="{{ url_for('file.download_audit', filename=file.file_path) }}" data-type="{{ file.file_path }}">{{ file.type_name }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
                         {% endfor %}
                         </ul>
                     </li>
@@ -36,7 +43,14 @@
                     <li><a href="#" data-file="{{ url_for('post.download_file', filename=document.file_path) }}" data-type="{{ document.file_type }}">{{ document.name }}</a></li>
                 {% endfor %}
                 {% for program in programs if program.department_id == department.id %}
-                    <li><a href="#">{{ program.name }}</a></li>
+                    <li>
+                        <a href="#">{{ program.name }}</a>
+                        <ul>
+                            {% for file in audit_files if file.audit_program_id == program.id %}
+                              <li><a href="#" data-file="{{ url_for('file.download_audit', filename=file.file_path) }}" data-type="{{ file.file_path }}">{{ file.type_name }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </li>
                 {% endfor %}
                 </ul>
             </li>
@@ -47,7 +61,14 @@
             <li><a href="#" data-file="{{ url_for('post.download_file', filename=document.file_path) }}" data-type="{{ document.file_type }}">{{ document.name }}</a></li>
         {% endfor %}
         {% for program in programs if program.division_id == division.id %}
-            <li><a href="#">{{ program.name }}</a></li>
+            <li>
+                <a href="#">{{ program.name }}</a>
+                <ul>
+                    {% for file in audit_files if file.audit_program_id == program.id %}
+                    <li><a href="#" data-file="{{ url_for('file.download_audit', filename=file.file_path) }}" data-type="{{ file.file_path }}">{{ file.type_name }}</a></li>
+                    {% endfor %}
+                  </ul>
+            </li>
         {% endfor %}
         </ul>
         

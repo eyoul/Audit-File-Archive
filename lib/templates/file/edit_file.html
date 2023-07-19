@@ -1,0 +1,45 @@
+{% extends 'admin/layout.html' %}
+
+{% block content %}
+  <h1>Edit File</h1>
+  <form method="post" enctype="multipart/form-data">
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input type="text" class="form-control" id="name" name="name" value="{{ file.name }}" required>
+    </div>
+    <div class="form-group">
+      <label for="description">Description</label>
+      <textarea class="form-control" id="description" name="description" rows="3" required>{{ file.description }}</textarea>
+    </div>
+    <div class="form-group">
+      <label for="audit_program_id">Audit Program</label>
+      <select class="form-control" id="audit_program_id" name="audit_program_id" required>
+        {% for program in audit_programs %}
+          {% if program.id == file.audit_program_id %}
+            <option value="{{ program.id }}" selected>{{ program.name }}</option>
+          {% else %}
+            <option value="{{ program.id }}">{{ program.name }}</option>
+          {% endif %}
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="file_type_id">File Type</label>
+      <select class="form-control" id="file_type_id" name="file_type_id" required>
+        {% for type in file_types %}
+          {% if type.id == file.file_type_id %}
+            <option value="{{ type.id }}" selected>{{ type.name }}</option>
+          {% else %}
+            <option value="{{ type.id }}">{{ type.name }}</option>
+          {% endif %}
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="file_path">File</label>
+      <input type="file" class="form-control-file" id="file_path" name="file_path">
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a href="{{ url_for('file.list_file') }}" class="btn btn-secondary">Cancel</a>
+  </form>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends 'admin/layout.html' %}
+
+{% block content %}
+  <h1>Files</h1>
+  <a href="{{ url_for('file.add_file') }}">Add Document</a>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Audit Program</th>
+        <th>File Type</th>
+        <th>File</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for file in files %}
+        <tr>
+          <td>{{ file.name }}</td>
+          <td>{{ file.description }}</td>
+          <td>{{ file.audit_program_name }}</td>
+          <td>{{ file.file_type_name }}</td>
+          <td><a href="{{ url_for('file.download_audit', filename=file.file_path) }}" target="_blank">Download</a></td>
+          <td>
+            <a href="{{ url_for('file.edit_file', id=file.id) }}">Edit</a>
+            <form action="{{ url_for('file.delete_file', id=file.id) }}" onsubmit="return confirm('Are you sure you want to delete this audit program?')" method="post" style="display: inline-block;">
+              <input type="hidden" name="_method" value="DELETE">
+              <button type="submit" class="btn-link text-danger">Delete</button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

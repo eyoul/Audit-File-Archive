@@ -13,6 +13,10 @@ from werkzeug.exceptions import abort
 from werkzeug.utils import secure_filename
 from flask import send_from_directory
 
+
+bp = Blueprint('post', __name__)
+
+
 #Upload file path
 UPLOAD_FOLDER = os.path.join(os.getcwd(), 'lib', 'static', 'uploads')
 ALLOWED_EXTENSIONS = {'pdf', 'doc', 'docx', 'xls', 'xlsx', 'csv', 'rtf' }
@@ -20,7 +24,7 @@ ALLOWED_EXTENSIONS = {'pdf', 'doc', 'docx', 'xls', 'xlsx', 'csv', 'rtf' }
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
-bp = Blueprint('post', __name__)
+
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -57,9 +61,15 @@ def board():
     programs = db.execute(
         'SELECT id, name, period, description, division_id, department_id, unit_id FROM audit_program'
     ).fetchall()
+    audit_files = db.execute('''
+    SELECT audit_File.*, audit_File_Type.name AS type_name
+    FROM audit_File
+    JOIN audit_File_Type ON audit_File.file_type_id = audit_File_Type.id
+    ORDER BY audit_File.name
+    ''').fetchall()
 
     return render_template('post/board.html', divisions=divisions, departments=departments,
-                           units=units, documents=documents, programs=programs)
+                           units=units, documents=documents, programs=programs, audit_files=audit_files)
 
 
 @bp.route('/docType')

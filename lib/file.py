@@ -11,20 +11,20 @@ from lib.db import get_db
 
 bp = Blueprint('file', __name__)
 
-# Upload file path
-UPLOAD_FOLDER = os.path.join(os.getcwd(), 'lib', 'static', 'uploads', 'audit')
+# Upload file path 
+AUDIT_FOLDER = os.path.join(os.getcwd(), 'lib', 'static', 'uploads', 'audit')
 ALLOWED_EXTENSIONS = {'pdf', 'doc', 'docx', 'xls', 'xlsx', 'csv', 'rtf'}
 
-if not os.path.exists(UPLOAD_FOLDER):
-    os.makedirs(UPLOAD_FOLDER)
+if not os.path.exists(AUDIT_FOLDER):
+    os.makedirs(AUDIT_FOLDER)
 
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-@bp.route('/download_audit/<path:filename>')
+@bp.route('/download_file/<path:filename>')
 def download_audit(filename):
-    return send_from_directory(UPLOAD_FOLDER, filename)
+    return send_from_directory(AUDIT_FOLDER, filename)
 
 @bp.route('/file_type')
 def file_type():
@@ -224,3 +224,181 @@ def delete_program(program_id):
     db.commit()
     flash('File type deleted successfully!')
     return redirect(url_for('file.program'))
+
+@bp.route('/list_file')
+def list_file():
+    # Get the list of documents with their corresponding document type and division
+    db = get_db()
+    files = db.execute(
+        'SELECT a.id, a.name, a.file_path, a.description, p.name AS audit_program_name, ft.name AS audit_file_Type_name '
+        'FROM audit_File a '
+        'JOIN audit_program p ON p.id = a.audit_program_id '
+        'JOIN audit_File_Type ft ON ft.id = a.file_type_id '
+        'ORDER BY a.name'
+    ).fetchall()
+
+    return render_template('file/list_file.html', files=files)
+
+@bp.route('/add_file', methods=('GET', 'POST'))
+def add_file():
+    if request.method == 'POST':     
+        # Get the form inputs
+        name = request.form['name'].upper()
+        description = request.form['description']
+        audit_program_id = request.form['audit_program_id']
+        file_type_id = request.form['file_type_id']
+        
+        error = None
+        
+        # Validate the form inputs
+        if not name:
+            error = 'Name is required.'
+        elif not description:
+            error = 'Description is required.'
+        elif not audit_program_id:
+            error = 'Audit Program is required.'
+        elif not file_type_id:
+            error = 'File Type is required.'
+
+        # Handle file upload
+        if 'file_path' not in request.files:
+            error = 'File is required.'
+        else:
+            file = request.files['file_path']
+            if file.filename == '':
+                error = 'File is required.'
+            elif not allowed_file(file.filename):
+                error = 'Invalid file type. Only Pdf, Doc, Docx, Xls, Xlsx, Csv, and Rtf are allowed.'
+            else:
+                filename = secure_filename(file.filename)
+                _, ext = os.path.splitext(filename)
+                # Generate a unique filename using uuid4()
+                unique_filename = str(uuid.uuid4()) + ext
+                file.save(os.path.join(AUDIT_FOLDER, unique_filename))
+
+        # Handle errors and success
+        if error is not None:
+            flash(error)
+        else:
+            db = get_db()
+            cursor = db.cursor()
+            # Insert a new record into the "audit_File" table
+            cursor.execute(
+                'INSERT INTO audit_File (name, file_path, description, audit_program_id, file_type_id, file_size)'
+                ' VALUES (?, ?, ?, ?, ?, ?)',
+                (name, unique_filename, description, audit_program_id, file_type_id, os.path.getsize(os.path.join(AUDIT_FOLDER, unique_filename)))
+            )
+        db.commit()
+        flash('File uploaded successfully')
+        return redirect(url_for('file.list_file'))
+    
+    # Render the form
+    db = get_db()
+    audit_programs = db.execute(
+        'SELECT id, name FROM audit_program ORDER BY name'
+    ).fetchall()
+    file_types = db.execute(
+        'SELECT id, name FROM audit_File_Type ORDER BY name'
+    ).fetchall()
+    return render_template('file/add_file.html', audit_programs=audit_programs, file_types=file_types)
+
+
+@bp.route('/edit_file/<int:id>', methods=('GET', 'POST'))
+def edit_file(id):
+    db = get_db()
+    file = db.execute(
+        'SELECT id, name, file_path, description, audit_program_id, file_type_id '
+        'FROM audit_File '
+        'WHERE id = ?',
+        (id,)
+    ).fetchone()
+
+    # Check if the file exists
+    if file is None:
+        abort(404, f"File id {id} doesn't exist.")
+
+    # Get the current file path
+    current_file_path = file['file_path']
+
+    if request.method == 'POST':
+        # Get the form inputs
+        name = request.form['name'].upper()
+        description = request.form['description']
+        audit_program_id = request.form['audit_program_id']
+        file_type_id = request.form['file_type_id']
+
+        error = None
+
+        # Validate the form inputs
+        if not name:
+            error = 'Name is required.'
+        elif not description:
+            error = 'Description is required.'
+        elif not audit_program_id:
+            error = 'Audit Program is required.'
+        elif not file_type_id:
+            error = 'File Type is required.'
+
+        # Handle file upload
+        if 'file_path' in request.files:
+            file = request.files['file_path']
+            if file.filename != '':
+                if not allowed_file(file.filename):
+                    error = 'Invalid file type. Only Pdf, Doc, Docx, Xls, Xlsx, Csv, and Rtf are allowed.'
+                else:
+                    filename = secure_filename(file.filename)
+                    _, ext = os.path.splitext(filename)
+                    # Generate a unique filename using uuid4()
+                    unique_filename = str(uuid.uuid4()) + ext
+                    file.save(os.path.join(AUDIT_FOLDER, unique_filename))
+
+                    # Remove the old file from the upload folder
+                    os.remove(os.path.join(AUDIT_FOLDER, current_file_path))
+
+                    # Update the file path with the new filename
+                    current_file_path = unique_filename
+
+        # Handle errors and success
+        if error is not None:
+            flash(error)
+        else:
+            db.execute(
+                'UPDATE audit_File SET name = ?, file_path = ?, description = ?, '
+                'audit_program_id = ?, file_type_id = ?, file_size = ? WHERE id = ?',
+                (name, current_file_path, description, audit_program_id, file_type_id, os.path.getsize(os.path.join(AUDIT_FOLDER, current_file_path)), id)
+            )
+            db.commit()
+
+            flash('File updated successfully')
+            return redirect(url_for('file.list_file'))
+
+    # Render the form
+    audit_programs = db.execute(
+        'SELECT id, name FROM audit_program ORDER BY name'
+    ).fetchall()
+    file_types = db.execute(
+        'SELECT id, name FROM audit_File_Type ORDER BY name'
+    ).fetchall()
+    return render_template('file/edit_file.html', file=file, audit_programs=audit_programs, file_types=file_types)
+
+
+@bp.route('/delete_file/<int:id>', methods=('POST',))
+def delete_file(id):
+    db = get_db()
+    file = db.execute(
+        'SELECT id, file_path FROM audit_File WHERE id = ?', (id,)
+    ).fetchone()
+    if file is None:
+        abort(404, f"File id {id} doesn't exist.")
+
+    # Delete the record from the "audit_File" table
+    db.execute(
+        'DELETE FROM audit_File WHERE id = ?', (id,)
+    )
+    db.commit()
+
+    # Delete the file from the upload folder
+    os.remove(os.path.join(AUDIT_FOLDER, file['file_path']))
+
+    flash('File deleted successfully')
+    return redirect(url_for('file.list_file'))

@@ -123,7 +123,7 @@ CREATE TABLE audit_program (
 
 CREATE TABLE audit_File (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
+    name TEXT NOT NULL UNIQUE,
     file_path TEXT NOT NULL,
     description TEXT NOT NULL,
     audit_program_id INTEGER NOT NULL,
