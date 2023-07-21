@@ -211,6 +211,23 @@ def edit_user(user_id):
     return render_template('admin/edit_user.html', user=user)
 
 
+@bp.route('/profile')
+@login_required
+def profile():
+    # get the current user's profile data from the database
+    db = get_db()
+    user_data = db.execute(
+        'SELECT name, emp_id, email, place, position FROM user WHERE emp_id = ?',
+        (g.user['emp_id'],)
+    ).fetchone()
+    return render_template('auth/profile.html', user_data=user_data)
+
+@bp.route('/change_password')
+@login_required
+def change_password():
+    return render_template('auth/change_password.html')
+
+
 @bp.route('/delete_user/<int:user_id>', methods=('POST',))
 @login_required
 @login_required_role([1]) # Only admins can delete users

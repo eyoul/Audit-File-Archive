@@ -13,14 +13,10 @@
        <li><a href="{{ url_for('post.index') }}">Home</a></li>
        <li><a href="#">Search</a></li>
        
-      <li><a href="{{ url_for('auth.logout') }}">Log Out</a>
-      <li><a href="#">Profile</a>
-      <!-- <ul>
-        <li><a href="#">View Profile</a>
-        <li><a href="#">Reset Password</a>
-      </ul> -->
-      </li>
-        <li><span style="color: aliceblue;"> login As: {{ g.user['emp_id'] }}</span>
+      <li><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
+      
+      <!-- <li>Profile</a></li> -->
+      <li><a href="{{ url_for('auth.profile') }}">login As: {{ g.user['emp_id'] }}</span>
     {% else %}
       
       <li><a href="{{ url_for('auth.register') }}">Register</a>

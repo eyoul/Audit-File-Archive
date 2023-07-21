@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block nav %}
+
+{% endblock %}
+{% block content %}
+  <head>
+    <title>{{ user_data.name }}'s Profile</title>
+  </head>
+  <body>
+    <h1>{{ user_data.name }}'s Profile</h1>
+    <h2><p>Employee ID: {{ user_data.emp_id }}</p>
+    <p>Email: {{ user_data.email }}</p>
+    <p>Location: {{ user_data.place }}</p>
+    <p>Position: {{ user_data.position }}</p>
+    <p>Password: <a href="{{ url_for('auth.change_password') }}">Change Password</a></p></h2>
+{% endblock %}
+
