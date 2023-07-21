@@ -124,3 +124,6 @@ nav a:hover {
   width: 100%;
   margin-right: 30px;
 }
+.tree-menu a[data-file] {
+  color: rgb(4, 0, 255);
+}

@@ -10,15 +10,17 @@
        {% if g.user['role_id'] == 1 or g.user['role_id'] == 2 %}
        <li><a href="{{ url_for('struc.dashboard') }}">Admin</a>
         {% endif %}
-       <li><a href="{{ url_for('post.board') }}">Home</a></li>
+       <li><a href="{{ url_for('post.index') }}">Home</a></li>
        <li><a href="#">Search</a></li>
-       <li><span> login As: {{ g.user['emp_id'] }}</span>
+       
       <li><a href="{{ url_for('auth.logout') }}">Log Out</a>
-    
+      <li><a href="#">Profile</a>
+        <li><span style="color: aliceblue;"> login As: {{ g.user['emp_id'] }}</span>
     {% else %}
       
       <li><a href="{{ url_for('auth.register') }}">Register</a>
       <li><a href="{{ url_for('auth.login') }}">Log In</a>
+      
     {% endif %}
 
   </ul>

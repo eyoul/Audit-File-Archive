@@ -27,6 +27,8 @@ def download_audit(filename):
     return send_from_directory(AUDIT_FOLDER, filename)
 
 @bp.route('/file_type')
+@login_required_role([1, 2])  # '1' is the role_id for the admin role
+@login_required
 def file_type():
     db = get_db()
     file_types = db.execute(
@@ -35,6 +37,8 @@ def file_type():
     return render_template('file/file_type.html', file_types=file_types)
 
 @bp.route('/add_file_type', methods=['GET', 'POST'])
+@login_required_role([1, 2])  # '1' is the role_id for the admin role
+@login_required
 def add_file_type():
     if request.method == 'POST':
         name = request.form['name']
@@ -68,6 +72,8 @@ def add_file_type():
 
 
 @bp.route('/edit_file_type/<int:file_type_id>', methods=['GET', 'POST'])
+@login_required_role([1, 2])  # '1' is the role_id for the admin role
+@login_required
 def edit_file_type(file_type_id):
     db = get_db()
     file_type = db.execute(
@@ -101,6 +107,8 @@ def edit_file_type(file_type_id):
     return render_template('file/edit_file_type.html', file_type=file_type)
 
 @bp.route('/delete_file_type/<int:file_type_id>', methods=['POST'])
+@login_required_role([1])  # '1' is the role_id for the admin role
+@login_required
 def delete_file_type(file_type_id):
     db = get_db()
     db.execute('DELETE FROM audit_File_Type WHERE id = ?', (file_type_id,))
@@ -110,6 +118,8 @@ def delete_file_type(file_type_id):
 
 
 @bp.route('/program')
+@login_required_role([1, 2])  # '1' is the role_id for the admin role
+@login_required
 def program():
     db = get_db()
     programs = db.execute('''
@@ -125,6 +135,8 @@ def program():
     return render_template('file/view_program.html', programs=programs)
 
 @bp.route('/add_program', methods=['GET', 'POST'])
+@login_required_role([1, 2])  # '1' is the role_id for the admin role
+@login_required
 def add_program():
     db = get_db()
     divisions = db.execute('SELECT id, name FROM division ORDER BY name').fetchall()
@@ -157,7 +169,7 @@ def add_program():
                 )
                 db.commit()
                 flash('Audit program added successfully!', 'success')
-                return redirect(url_for('file.add_program'))
+                return redirect(url_for('file.program'))
             except db.IntegrityError:
                 error = f"The program '{name}' already exists."
 
@@ -167,6 +179,8 @@ def add_program():
 
 
 @bp.route('/edit_program/<int:program_id>', methods=['GET', 'POST'])
+@login_required_role([1, 2])  # '1' is the role_id for the admin role
+@login_required
 def edit_program(program_id):
     db = get_db()
     program = db.execute(
@@ -218,6 +232,8 @@ def edit_program(program_id):
 
 
 @bp.route('/delete_program/<int:program_id>', methods=['POST'])
+@login_required_role([1])  # '1' is the role_id for the admin role
+@login_required
 def delete_program(program_id):
     db = get_db()
     db.execute('DELETE FROM audit_program WHERE id = ?', (program_id,))
@@ -226,6 +242,8 @@ def delete_program(program_id):
     return redirect(url_for('file.program'))
 
 @bp.route('/list_file')
+@login_required_role([1, 2])  # '1' is the role_id for the admin role
+@login_required
 def list_file():
     # Get the list of documents with their corresponding document type and division
     db = get_db()
@@ -240,6 +258,8 @@ def list_file():
     return render_template('file/list_file.html', files=files)
 
 @bp.route('/add_file', methods=('GET', 'POST'))
+@login_required_role([1, 2])  # '1' is the role_id for the admin role
+@login_required
 def add_file():
     if request.method == 'POST':     
         # Get the form inputs
@@ -304,6 +324,8 @@ def add_file():
 
 
 @bp.route('/edit_file/<int:id>', methods=('GET', 'POST'))
+@login_required_role([1, 2])  # '1' is the role_id for the admin role
+@login_required
 def edit_file(id):
     db = get_db()
     file = db.execute(
@@ -383,6 +405,8 @@ def edit_file(id):
 
 
 @bp.route('/delete_file/<int:id>', methods=('POST',))
+@login_required_role([1])  # '1' is the role_id for the admin role
+@login_required
 def delete_file(id):
     db = get_db()
     file = db.execute(

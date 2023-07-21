@@ -55,15 +55,7 @@ def login():
         if error is None:
             session.clear()
             session['user_id'] = user['id']
-            if user['role_id'] == 1:
-                return redirect(url_for('admin.dashboard'))
-            elif user['role_id'] == 2:
-                return redirect(url_for('admin.dashboard'))
-            elif user['role_id'] == 3:
-                return redirect(url_for('post.board'))
-            else:
-                error = 'Invalid role.'
-
+            return redirect(url_for('post.index'))
         flash(error)
 
     return render_template('auth/login.html')
@@ -114,7 +106,17 @@ def register():
     return render_template('auth/register.html')
 
 
+@bp.route('/view_users')
+@login_required_role([1]) # '1' is the role_id for the admin role
+@login_required
+def view_users():
+    db = get_db()
+    users = db.execute('SELECT * FROM user').fetchall()
+    return render_template('admin/users.html', users=users)
+
 @bp.route('/add_user', methods=['GET', 'POST'])
+@login_required_role([1])  # '1' is the role_id for the admin role
+@login_required
 def add_user():
     if request.method == 'POST':
         name = request.form['name']
@@ -153,13 +155,15 @@ def add_user():
             except db.IntegrityError:
                 error = f"User {emp_id} is already registered."
             else:
-                return redirect(url_for('auth.add_user'))
+                return redirect(url_for('auth.view_users'))
             flash(error)
     
     return render_template('admin/add_user.html')
 
 
 @bp.route('/edit_user/<int:user_id>', methods=['GET', 'POST'])
+@login_required
+@login_required_role([1])  # '1' is the role_id for the admin role
 def edit_user(user_id):
     db = get_db()
     user = db.execute(
@@ -200,21 +204,16 @@ def edit_user(user_id):
             )
             db.commit()
             flash('User updated successfully!')
-            return redirect(url_for('auth.add_user'))
+            return redirect(url_for('auth.view_users'))
 
         flash(error)
 
     return render_template('admin/edit_user.html', user=user)
 
-@bp.route('/view_users')
-def view_users():
-    db = get_db()
-    users = db.execute('SELECT * FROM user').fetchall()
-    return render_template('admin/users.html', users=users)
-
 
 @bp.route('/delete_user/<int:user_id>', methods=('POST',))
-@login_required_role(1) # Only admins can delete users
+@login_required
+@login_required_role([1]) # Only admins can delete users
 def delete_user(user_id):
     db = get_db()
     db.execute('DELETE FROM user WHERE id = ?', (user_id,))
