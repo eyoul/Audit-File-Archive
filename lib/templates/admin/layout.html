@@ -26,12 +26,12 @@
       </li>
       <li>
         <li>
-          <a href="{{ url_for('post.board') }}">
+          <a href="{{ url_for('post.index') }}">
             <i class='bx bx-pie-chart-alt-2' ></i>
             <span class="link_name">Home</span>
           </a>
           <ul class="sub-menu blank">
-            <li><a class="link_name" href="{{ url_for('post.board') }}">Home</a></li>
+            <li><a class="link_name" href="{{ url_for('post.index') }}">Home</a></li>
           </ul>
         </li>
         <li>
@@ -44,15 +44,13 @@
         </div>
          <ul class="sub-menu">
           <li><a class="link_name" href="#">Structure</a></li>
-          {% if g.user['role_id'] == 1 %}
           <li><a href="{{ url_for('struc.division') }}">Division</a></li>
           <li><a href="{{ url_for('struc.department') }}">Department</a></li>
           <li><a href="{{ url_for('struc.unit') }}">Unit</a></li>
-          {% endif %}
           <li><a href="{{ url_for('struc.display_structure') }}">Report</a></li>
         </ul>
       </li>
-      {% if g.user['role_id'] == 1 %}
+      
       <li>
         <a href="{{ url_for('post.docType') }}">
           <i class='bx bx-compass'></i>
@@ -62,6 +60,7 @@
           <li><a class="link_name" href="{{ url_for('post.docType') }}">DocType</a></li>
         </ul>
       </li>
+      {% if g.user['role_id'] == 1 %}
        <li>
         <div class="iocn-link">
           <a href="#">
@@ -111,6 +110,15 @@
         <ul class="sub-menu blank">
           <li><a class="link_name" href="{{ url_for('file.program') }}" >Audit program</a></li>
         </ul>    
+      </li>
+      <li>
+        <a href="{{ url_for('file.list_file') }}">
+          <i class='bx bx-compass'></i>
+          <span class="link_name">Audit file</span>
+        </a>
+        <ul class="sub-menu blank">
+          <li><a class="link_name" href="{{ url_for('file.list_file') }}">Audit file</a></li>
+        </ul>
       </li>
 
       <!-- <li>

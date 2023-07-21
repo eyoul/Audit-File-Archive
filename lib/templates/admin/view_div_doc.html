@@ -1,8 +1,8 @@
 {% extends 'admin/layout.html' %}
 
 {% block content %}
-  <h1>Documents</h1>
-  <a href="{{ url_for('post.add_div_file') }}">Add Document</a>
+  <h1>Division Documents</h1>
+  <a href="{{ url_for('post.add_div_file') }}">Add Division Document</a>
   <table>
     <thead>
       <tr>
@@ -11,6 +11,10 @@
         <th>Document Type</th>
         <th>Division</th>
         <th>File</th>
+        <th>Update</th>
+        {% if g.user['role_id'] == 1 %}
+        <th>Remove</th>
+        {% endif %}
       </tr>
     </thead>
     <tbody>
@@ -21,6 +25,16 @@
           <td>{{ document.docType_name }}</td>
           <td>{{ document.division_name }}</td>
           <td><a href="{{ url_for('post.download_file', filename=document.file_path) }}" target="_blank">Download</a></td>
+          <td>
+            <a href="{{ url_for('post.edit_div_file', doc_id=document['id']) }}" class="btn btn-primary">Edit</a>
+          </td>
+          {% if g.user['role_id'] == 1 %}
+          <td>  
+            <form action="{{ url_for('post.delete_div_file', id=document.id) }}" method="post" onsubmit="return confirm('Are you sure you want to delete this file?')">
+              <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+          </td>
+          {% endif %}
         </tr>
       {% endfor %}
     </tbody>

@@ -1,36 +1,87 @@
 {% extends 'base.html' %}
 
-{% block header %}
-  <h1>{% block title %}Knowledge Management System{% endblock %}</h1>
-{% endblock %}
 {% block nav %}
 
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Categories</a></li>
-                <li><a href="#">Search</a></li>
 {% endblock %}
+
 {% block content %}
-    <main>
-        <section>
-            <h2>Welcome to our Knowledge Management System</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis feugiat,
-                dui non lacinia volutpat, nisl lorem sagittis odio, vel consectetur nunc tortor vel purus.</p>
-        </section>
-        <section>
-            <h2>Latest Articles</h2>
-            <ul>
-                <li><a href="#">Article 1</a></li>
-                <li><a href="#">Article 2</a></li>
-                <li><a href="#">Article 3</a></li>
-            </ul>
-        </section>
-        <section>
-            <h2>Popular Categories</h2>
-            <ul>
-                <li><a href="#">Category 1</a></li>
-                <li><a href="#">Category 2</a></li>
-                <li><a href="#">Category 3</a></li>
-            </ul>
-        </section>
-    </main>
+<section class="section1">
+   <ul class="tree-menu">
+    {% for division in divisions %}
+    <li>
+      <a href="#">{{ division.name }}</a>
+        <ul>
+        {% for department in departments if department.division_id == division.id %}
+            <li>
+                <a href="#">{{ department.name }}</a>
+                <ul>
+                {% for unit in units if unit.department_id == department.id %}
+                    <li>
+                       <a href="#">{{ unit.name }}</a>
+                        <ul>
+                        {% for document in documents if document.unit_id == unit.id %}
+                            <li><a href="#" data-file="{{ url_for('post.download_file', filename=document.file_path) }}" data-type="{{ document.file_type }}">{{ document.name }}</a></li>
+                        {% endfor %}                      
+                        </ul>
+                        <ul>
+                        {% for program in programs if program.unit_id == unit.id %}
+                            <li>
+                                <a href="#">{{ program.name }}</a>
+                                <ul>
+                                    {% for file in audit_files if file.audit_program_id == program.id %}
+                                    <li><a href="#" data-file="{{ url_for('file.download_audit', filename=file.file_path) }}" data-type="{{ file.file_path }}">{{ file.type_name }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                        {% endfor %}
+                        </ul>
+                    </li>
+                {% endfor %}
+                </ul>
+                <ul>
+                {% for document in documents if document.department_id == department.id and document.unit_id is none %}
+                    <li><a href="#" data-file="{{ url_for('post.download_file', filename=document.file_path) }}" data-type="{{ document.file_type }}">{{ document.name }}</a></li>
+                {% endfor %}
+                {% for program in programs if program.department_id == department.id %}
+                    <li>
+                        <a href="#">{{ program.name }}</a>
+                        <ul>
+                            {% for file in audit_files if file.audit_program_id == program.id %}
+                              <li><a href="#" data-file="{{ url_for('file.download_audit', filename=file.file_path) }}" data-type="{{ file.file_path }}">{{ file.type_name }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                {% endfor %}
+                </ul>
+            </li>
+        {% endfor %}
+        </ul>
+        <ul>
+        {% for document in documents if document.division_id == division.id and document.department_id is none and document.unit_id is none %}
+            <li><a href="#" data-file="{{ url_for('post.download_file', filename=document.file_path) }}" data-type="{{ document.file_type }}">{{ document.name }}</a></li>
+        {% endfor %}
+        {% for program in programs if program.division_id == division.id %}
+            <li>
+                <a href="#">{{ program.name }}</a>
+                <ul>
+                    {% for file in audit_files if file.audit_program_id == program.id %}
+                    <li><a href="#" data-file="{{ url_for('file.download_audit', filename=file.file_path) }}" data-type="{{ file.file_path }}">{{ file.type_name }}</a></li>
+                    {% endfor %}
+                  </ul>
+            </li>
+        {% endfor %}
+        </ul>
+        
+    </li>
+    {% endfor %}
+   </ul>
+</section>
+<section  id="file-container" class="section2">
+    
+  <object id="pdf" data="" type="application/pdf" width="800px" height="600px">
+    <p>PDF cannot be displayed. Please download the PDF to view it: <a href="">Download PDF</a>.</p>
+  </object>
+ 
+</section>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
 {% endblock %}

@@ -12,7 +12,8 @@
         <th>Division</th>
         <th>Department</th>
         <th>Unit</th>
-        <th>Actions</th>
+        <th>Update</th>
+        <th>Remove</th>
       </tr>
     </thead>
     <tbody>
@@ -26,7 +27,8 @@
         <td>{{ program.unit_name }}</td>
         <td>
           <a href="{{ url_for('file.edit_program', program_id=program['id']) }}">Edit</a>
-
+        </td>
+        <td>
           <form method="post" action="{{ url_for('file.delete_program', program_id=program.id) }}" onsubmit="return confirm('Are you sure you want to delete this audit program?')">            
             <button type="submit" class="link-button">Delete</button>
           </form>
