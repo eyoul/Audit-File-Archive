@@ -1,47 +1,123 @@
+/* Global Styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
 
+h1 {
+  font-family: serif;
+  color: #377ba8;
+  margin: 1rem 0;
+}
 
-h1 { font-family: serif; color: #377ba8; margin: 1rem 0; }
-a { color: #272729; }
-hr { border: none; border-top: 1px solid lightgray; }
+a {
+  color: #272729;
+}
 
-.content { padding: 0 1rem 1rem; }
-.content > header { border-bottom: 1px solid lightgray; display: flex; align-items: flex-end; }
-.content > header h1 { flex: auto; margin: 1rem 0 0.25rem 0; }
-.flash { margin: 1em 0; padding: 1em; background: #cae6f6; border: 1px solid #377ba8; }
-.post > header { display: flex; align-items: flex-end; font-size: 0.85em; }
-.post > header > div:first-of-type { flex: auto; }
-.post > header h1 { font-size: 1.5em; margin-bottom: 0; }
-.post .about { color: slategray; font-style: italic; }
-.post .body { white-space: pre-line; }
-.content:last-child { margin-bottom: 0; }
-.content form { margin: 1em 0; display: flex; flex-direction: column; }
-.content label { font-weight: bold; margin-bottom: 0.5em; }
-.content input, .content textarea { margin-bottom: 1em; }
-.content textarea { min-height: 12em; resize: vertical; }
-input.danger { color: #cc2f2e; }
-input[type=submit] { align-self: start; min-width: 10em; }
+hr {
+  border: none;
+  border-top: 1px solid lightgray;
+}
 
+/* Content Styles */
+.content {
+  padding: 0 1rem 1rem;
+}
 
+.content > header {
+  border-bottom: 1px solid lightgray;
+  display: flex;
+  align-items: flex-end;
+}
+
+.content > header h1 {
+  flex: auto;
+  margin: 1rem 0 0.25rem 0;
+}
+
+.flash {
+  margin: 1em 0;
+  padding: 1em;
+  background: #cae6f6;
+  border: 1px solid #377ba8;
+}
+
+.post > header {
+  display: flex;
+  align-items: flex-end;
+  font-size: 0.85em;
+}
+
+.post > header > div:first-of-type {
+  flex: auto;
+}
+
+.post > header h1 {
+  font-size: 1.5em;
+  margin-bottom: 0;
+}
+
+.post .about {
+  color: slategray;
+  font-style: italic;
+}
+
+.post .body {
+  white-space: pre-line;
+}
+
+.content:last-child {
+  margin-bottom: 0;
+}
+
+.content form {
+  margin: 1em 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.content label {
+  font-weight: bold;
+  margin-bottom: 0.5em;
+}
+
+.content input,
+.content textarea {
+  margin-bottom: 1em;
+}
+
+.content textarea {
+  min-height: 12em;
+  resize: vertical;
+}
+
+input.danger {
+  color: #cc2f2e;
+}
+
+input[type=submit] {
+  align-self: start;
+  min-width: 10em;
+}
+
+/* Footer Styles */
 footer {
-    bottom: 0;
-    border-top: 1px solid #CCCCCC;
-    text-align: center;
-    background-color: #8f0d88;
-    height: 60px;
-    width: 100%;
-    margin-bottom: 0;
-    justify-content: center;
-    position: fixed;
-    align-items: center;
-    display: flex;
-  }
-  
+  bottom: 0;
+  padding: 0 0.5rem;
+  border-top: 1px solid #ccc;
+  text-align: center;
+  background-color: #8f0d88;
+  height: 60px;
+  width: 100%;
+  justify-content: center;
+  position: fixed;
+  align-items: center;
+  display: flex;
+  color: #fff;
+}
 
-  nav h1 { flex: auto; margin: 0; }
-  nav h1 a { text-decoration: none; padding: 0.25rem 0.5rem; }
-  nav ul  { display: flex; list-style: none; margin: 0; padding: 0; }
-  nav ul li a, nav ul li span, header .action { display: block; padding: 0.5rem; }
-
+/* Navigation Styles */
 nav {
   background-color: #6b0466;
   overflow: hidden;
@@ -51,7 +127,30 @@ nav {
   padding: 0 0.5rem;
 }
 
-/* Links inside the navbar */
+nav h1 {
+  flex: auto;
+  margin: 0;
+}
+
+nav h1 a {
+  text-decoration: none;
+  padding: 0.25rem 0.5rem;
+}
+
+nav ul {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+nav ul li a,
+nav ul li span,
+header .action {
+  display: block;
+  padding: 0.5rem;
+}
+
 nav a {
   color: white;
   text-align: center;
@@ -60,11 +159,10 @@ nav a {
   font-size: 18px;
 }
 
-/* Change the color of links on hover */
 nav a:hover {
   background-color: #ddd;
   color: black;
-} */
+}
 
 .tree-menu {
   list-style: none;
@@ -80,6 +178,8 @@ nav a:hover {
   text-decoration: none;
   color: #333;
   font-weight: bold;
+  display: flex;
+  align-items: center;
 }
 
 .tree-menu ul {
@@ -100,34 +200,200 @@ nav a:hover {
 .tree-menu li > a:before {
   content: "+";
   margin-right: 5px;
+  transition: transform 0.3s ease;
 }
 
 .tree-menu li.active > a:before {
   content: "-";
+  transform: rotate(90deg);
 }
 
 .tree-menu li:last-child {
   margin-bottom: 0;
 }
 
-.section1{
+/* Additional Styles for Attractiveness */
+
+.tree-menu a:hover {
+  color: #6b0466;
+}
+
+.tree-menu ul:before {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: -16px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #6b0466;
+}
+
+.tree-menu li.active > ul:before {
+  background-color: #000;
+}
+
+.tree-menu ul li {
+  position: relative;
+}
+
+.tree-menu ul li:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -16px;
+  width: 10px;
+  height: 100%;
+  border-left: 1px solid #ccc;
+}
+
+.tree-menu ul li:last-child:before {
+  border-left: none;
+}
+
+.tree-menu ul li.active:before {
+  border-left: 1px solid #000;
+}
+
+.tree-menu ul li a {
+  padding-left: 5px;
+}
+
+.tree-menu ul li a:before {
+  content: "+";
+  margin-right: 5px;
+  color: #6b0466;
+  transition: transform 0.3s ease;
+}
+
+.tree-menu ul li.active > a:before {
+  content: "-";
+  transform: rotate(90deg);
+}
+
+.tree-menu ul li.active > a {
+  color: #6b0466;
+}
+/* Section Styles */
+.section1 {
   position: fixed;
-  left: 10px;
+  left: 0.9px;
   height: 100%;
   width: 300px;
   background: rgb(235, 199, 238);
   transition: all 0.5s ease;
 }
+
 .section2 {
   left: auto;
   margin-left: 350px;
   width: 100%;
   margin-right: 30px;
 }
+
 .tree-menu a[data-file] {
   color: rgb(4, 0, 255);
+ background-color: rgb(214, 153, 233);
 }
 
 ul {
   list-style-type: none;
-  }
+}
+
+#pdf {
+  width: 900px;
+  height: 500px;
+  display: flex;
+}
+
+form {
+  display: flex;
+  align-items: center;
+}
+
+input[type="text"] {
+  padding: 8px;
+  width: 250px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+}
+
+.button[type="submit"] {
+  padding: 8px 16px;
+  background-color: #6b0466;
+  color: #fff;
+  border: none;
+  width: 265px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button[type="submit"]:hover {
+  background-color: #8f0d88;
+}
+
+/* Optional: Adjust the form alignment and spacing */
+form {
+  margin-top: 1rem;
+}
+
+input[type="text"],
+.button[type="submit"] {
+  margin-right: 0.5rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 2rem;
+  text-align: center; /* Align form elements at the center */
+}
+
+.form label {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.form input[type="text"],
+.form input[type="email"],
+.form input[type="password"] {
+  padding: 8px;
+  border: 1px solid #f344f3;
+  border-radius: 4px;
+  outline: none;
+  height: 20px;
+  width: 30%;
+  margin-bottom: 1rem;
+}
+
+.form .button {
+  padding: 8px 16px;
+  background-color: #6b0466;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  height: 40px;
+  transition: background-color 0.3s ease;
+  width: 31%;
+}
+
+.form .button:hover {
+  background-color: #8f0d88;
+}
+
+.form li {
+  list-style-type: none;
+}
+
+.form li a {
+  color: #6b0466;
+  text-decoration: none;
+}
+
+.form li a:hover {
+  text-decoration: underline;
+}

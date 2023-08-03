@@ -359,3 +359,4 @@ def display_structure():
     departments = db.execute('SELECT * FROM department ORDER BY name').fetchall()
     units = db.execute('SELECT * FROM unit ORDER BY name').fetchall()
     return render_template('admin/display_structure.html', divisions=divisions, departments=departments, units=units)
+

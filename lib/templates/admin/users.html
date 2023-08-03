@@ -12,6 +12,7 @@
         <th>Department</th>
         <th>Position</th>
         <th>Role</th>
+        <th>Status</th>
         <th>Update</th>
         <th>Remove</th>
       </tr>
@@ -25,7 +26,17 @@
           <td>{{ user.place }}</td>
           <td>{{ user.position }}</td>
           <td>{{ user.role_id }}</td>
-         
+          <td>
+            {% if user.active %}
+            <form action="{{ url_for('auth.deactivate_user', user_id=user.id) }}" method="post">
+                <button type="submit" class="btn btn-danger">Deactivate</button>
+            </form>
+            {% else %}
+            <form action="{{ url_for('auth.activate_user', user_id=user.id) }}" method="post">
+                <button type="submit" class="btn btn-success">Activate</button>
+            </form>
+            {% endif %}
+          </td>
           <td>
             <a href="{{ url_for('auth.edit_user', user_id=user.id) }}">Edit</a>
           </td>
