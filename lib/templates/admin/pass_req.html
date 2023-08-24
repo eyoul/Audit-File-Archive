@@ -1,0 +1,46 @@
+<!-- admin/pass_req.html -->
+{% extends 'admin/layout.html' %}
+
+{% block content %}
+  <h1>Password Reset Requests</h1>
+  
+  {% if requests %}
+    <table>
+      <thead>
+        <tr>
+          <th>Employee ID</th>
+          <th>Email</th>
+          <th>Reason</th>
+          <th>Change Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for request in requests %}
+          <tr>
+            <td>{{ request['emp_id'] }}</td>
+            <td>{{ request['email'] }}</td>
+            <td>{{ request['reason'] }}</td>
+            <td>
+             {% if request['status'] != 'authorize' %}
+                <form action="{{ url_for('auth.authorize_reset_pass', password_reset_request_id=request['id']) }}" method="POST" style="display: inline;">
+                  <button type="submit">Authorize</button>
+                </form>
+              {% endif %}
+              {% if request['status'] != 'pending' %}
+                <form action="{{ url_for('auth.pending_reset_pass', password_reset_request_id=request['id']) }}" method="POST" style="display: inline;">
+                  <button type="submit">Pending</button>
+                </form>
+              {% endif %}
+            </td>
+            <td>
+              <form action="{{ url_for('auth.delete_request', request_id=request.id) }}" method="post">
+                <button type="submit" class="btn btn-danger">Delete</button>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}SSsS
+    <p>No password reset requests found.</p>
+  {% endif %}
+{% endblock %}
