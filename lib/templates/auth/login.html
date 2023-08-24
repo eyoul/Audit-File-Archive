@@ -1,15 +1,17 @@
 {% extends 'base.html' %}
-
-{% block header %}
-  <h1>{% block title %}Log In{% endblock %}</h1>
-{% endblock %}
-
 {% block content %}
-  <form method="post">
-    <label for="emp_id">Employee Id</label>
-    <input name="emp_id" id="emp_id" required>
+<li><a href="{{ url_for('auth.register') }}">Register</a>
+  
+
+<h1 style="padding-left: 650px;">Log In</h1>
+
+  <form class="form" method="post">
+    <label  for="emp_id">Employee Id</label>
+    <input type="text" name="emp_id" id="emp_id" required>
     <label for="password">Password</label>
     <input type="password" name="password" id="password" required>
-    <input type="submit" value="Log In">
-  </form>
+    <button class="button" type="submit" value="Log In">Log In</button>
+    
+  <li><a href="{{ url_for('auth.reset_request') }}">Forget Password</a></li>
+</form>
 {% endblock %}
