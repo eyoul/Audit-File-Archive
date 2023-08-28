@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS password_reset_request;
 DROP TABLE IF EXISTS audit_File_Type;
 DROP TABLE IF EXISTS audit_File;
 DROP TABLE IF EXISTS audit_program;
@@ -31,6 +32,7 @@ CREATE TABLE user (
     place TEXT NOT NULL,
     position TEXT NOT NULL,
     role_id INTEGER NOT NULL,
+    active BOOLEAN NOT NULL DEFAULT TRUE,
     FOREIGN KEY (role_id) REFERENCES role (id) ON DELETE CASCADE
 );
 
@@ -131,4 +133,13 @@ CREATE TABLE audit_File (
     file_size INTEGER NOT NULL DEFAULT 0,
     FOREIGN KEY (audit_program_id) REFERENCES audit_program (id) ON DELETE CASCADE,
     FOREIGN KEY (file_type_id) REFERENCES audit_File_Type (id) ON DELETE CASCADE
+);
+
+CREATE TABLE password_reset_request (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  emp_id TEXT(6) NOT NULL UNIQUE CHECK(emp_id GLOB '[0-9]*'),
+  email TEXT NOT NULL,
+  reason TEXT NOT NULL,
+  status TEXT NOT NULL DEFAULT 'pending',
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

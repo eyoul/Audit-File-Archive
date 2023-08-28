@@ -63,6 +63,7 @@ def index():
     return render_template('post/index.html', divisions=divisions, departments=departments,
                            units=units, documents=documents, programs=programs, audit_files=audit_files)
 
+
 @bp.route('/download/<path:filename>')
 @login_required
 def download_file(filename):
@@ -779,3 +780,41 @@ def edit_unit_file(doc_id):
             return redirect(url_for('post.view_dep_doc'))
 
     return render_template('admin/edit_unit_file.html', document=document, docTypes=docTypes, units=units)
+
+@bp.route('/search')
+def search():
+    query = request.args.get('q')
+    db = get_db()
+
+    div = db.execute(
+    'SELECT * FROM division WHERE name LIKE ?',
+    ('%' + query + '%',)
+    ).fetchall()
+
+    dep = db.execute(
+        'SELECT * FROM department WHERE name LIKE ?',
+        ('%' + query + '%',)
+    ).fetchall()
+
+    unit = db.execute(
+        'SELECT * FROM unit WHERE name LIKE ?',
+        ('%' + query + '%',)
+    ).fetchall()
+
+    documents = db.execute(
+        'SELECT * FROM document WHERE name LIKE ?',
+        ('%' + query + '%',)
+    ).fetchall()
+
+    auditprogram = db.execute(
+        'SELECT * FROM audit_program WHERE name LIKE ?',
+        ('%' + query + '%',)
+    ).fetchall()
+
+    auditfiles = db.execute(
+        'SELECT * FROM audit_File WHERE name LIKE ?',
+        ('%' + query + '%',)
+    ).fetchall()
+
+    return render_template('post/search.html', documents=documents, auditfiles=auditfiles, div=div,
+                           dep=dep, unit=unit, auditprogram=auditprogram, query=query)

@@ -72,7 +72,7 @@
         <ul class="sub-menu">
           <li><a class="link_name" href="#">Manage Users</a></li>
           <li><a href="{{ url_for('auth.view_users') }}">Users</a></li>
-          <li><a href="#">User Request</a></li>
+          <li><a href="{{ url_for('auth.view_users_req') }}">User Request</a></li>
         </ul>
       </li>
       {% endif %}
@@ -142,15 +142,6 @@
       </li> -->
       <li>
         <a href="#">
-          <i class='bx bx-cog' ></i>
-          <span class="link_name">Setting</span>
-        </a>
-        <ul class="sub-menu blank">
-          <li><a class="link_name" href="#">Setting</a></li>
-        </ul>
-      </li>
-      <li>
-        <a href="#">
           <i class='bx bx-history'></i>
           <span class="link_name">History</span>
         </a>
@@ -158,6 +149,17 @@
           <li><a class="link_name" href="#">History</a></li>
         </ul>
       </li>
+  
+      <li>
+        <a href="#">
+          <i class='bx bx-cog' ></i>
+          <span class="link_name">Setting</span>
+        </a>
+        <ul class="sub-menu blank">
+          <li><a class="link_name" href="#">Setting</a></li>
+        </ul>
+      </li>
+
 
       <li>
     <div class="profile-details">

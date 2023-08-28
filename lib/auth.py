@@ -51,6 +51,8 @@ def login():
             error = 'Incorrect emp_id.'
         elif not check_password_hash(user['password'], password):
             error = 'Incorrect password.'
+        elif not user['active']:
+            error = 'User account is inactive.'
 
         if error is None:
             session.clear()
@@ -59,6 +61,7 @@ def login():
         flash(error)
 
     return render_template('auth/login.html')
+
 
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
@@ -113,6 +116,7 @@ def view_users():
     db = get_db()
     users = db.execute('SELECT * FROM user').fetchall()
     return render_template('admin/users.html', users=users)
+
 
 @bp.route('/add_user', methods=['GET', 'POST'])
 @login_required_role([1])  # '1' is the role_id for the admin role
@@ -211,6 +215,78 @@ def edit_user(user_id):
     return render_template('admin/edit_user.html', user=user)
 
 
+@bp.route('/reset_password/<int:user_id>', methods=['GET', 'POST'])
+@login_required_role([1])  # '1' is the role_id for the admin role
+@login_required
+def reset_password(user_id):
+    db = get_db()
+    user = db.execute('SELECT * FROM user WHERE id = ?', (user_id,)).fetchone()
+
+    if user is None:
+        flash('User not found.', 'error')
+        return redirect(url_for('auth.view_users_req'))
+
+    if request.method == 'POST':
+        password = request.form['password']
+        confirm_password = request.form['confirm_password']
+
+        if password != confirm_password:
+            flash('Passwords do not match.', 'error')
+        else:
+            hashed_password = generate_password_hash(password)
+            db.execute('UPDATE user SET password = ? WHERE id = ?', (hashed_password, user_id))
+            db.commit()
+            flash('Password reset successfully.', 'success')
+            return redirect(url_for('auth.view_users_req'))
+
+    return render_template('admin/reset_password.html', user=user)
+
+
+@bp.route('/profile')
+@login_required
+def profile():
+    # get the current user's profile data from the database
+    db = get_db()
+    user_data = db.execute(
+        'SELECT name, emp_id, email, place, position FROM user WHERE emp_id = ?',
+        (g.user['emp_id'],)
+    ).fetchone()
+    return render_template('auth/profile.html', user_data=user_data)
+
+
+@bp.route('/change_password', methods=('GET', 'POST'))
+@login_required
+def change_password():
+    if request.method == 'POST':
+        old_password = request.form['old_password']
+        new_password = request.form['new_password']
+        confirm_password = request.form['confirm_password']
+        
+        db = get_db()
+        error = None
+        user = db.execute(
+            'SELECT * FROM user WHERE emp_id = ?', (g.user['emp_id'],)
+        ).fetchone()
+        
+        if not check_password_hash(user['password'], old_password):
+            error = 'Incorrect old password'
+        elif new_password != confirm_password:
+            error = 'Passwords do not match'
+        
+        if error is None:
+            db.execute(
+                'UPDATE user SET password = ? WHERE emp_id = ?',
+                (generate_password_hash(new_password), g.user['emp_id'])
+            )
+            db.commit()
+            flash('Password changed successfully!')
+            return redirect(url_for('post.index'))
+        
+        flash(error)
+    
+    return render_template('auth/change_password.html')
+
+
 @bp.route('/delete_user/<int:user_id>', methods=('POST',))
 @login_required
 @login_required_role([1]) # Only admins can delete users
@@ -240,6 +316,119 @@ def logout():
     session.clear()
     return redirect(url_for('index'))
 
+
 @bp.route('/unauthorized')
 def unauthorized():
     return render_template('auth/unauthorized.html')
+
+
+@bp.route('/activate_user/<int:user_id>', methods=['POST'])
+@login_required_role([1]) # '1' is the role_id for the admin role
+@login_required
+def activate_user(user_id):
+    db = get_db()
+    db.execute('UPDATE user SET active = 1 WHERE id = ?', (user_id,))
+    db.commit()
+    return redirect(url_for('auth.view_users'))
+
+
+@bp.route('/deactivate_user/<int:user_id>', methods=['POST'])
+@login_required_role([1]) # '1' is the role_id for the admin role
+@login_required
+def deactivate_user(user_id):
+    db = get_db()
+    db.execute('UPDATE user SET active = 0 WHERE id = ?', (user_id,))
+    db.commit()
+    return redirect(url_for('auth.view_users'))
+
+
+@bp.route('/reset_request', methods=('GET','POST',))
+def reset_request():
+    emp_id = request.form.get('emp_id')
+    email = request.form.get('email')
+    reason = request.form.get('reason')
+
+    db = get_db()
+    error = None
+
+    if not emp_id:
+        error = 'Employee ID is required!'
+    elif not email:
+        error = 'Email is required!'
+    elif not reason:
+        error = 'Reason is required!'
+
+    if error is None:
+        try:
+            # Check if the employee ID exists in the user table
+            user = db.execute(
+                'SELECT * FROM user WHERE emp_id = ?',
+                (emp_id,)
+            ).fetchone()
+
+            if user is None:
+                error = 'Employee ID is not registered!'
+            else:
+                # Check if a pending request already exists for this employee ID
+                existing_request = db.execute(
+                    'SELECT * FROM password_reset_request WHERE emp_id = ? AND status = ?',
+                    (emp_id, 'pending')
+                ).fetchone()
+
+                if existing_request is not None:
+                    error = 'A pending request already exists for this employee ID.'
+                    flash(error)
+                    return redirect(url_for('auth.login'))
+                else:
+                    # Insert the password reset request into the table
+                    db.execute(
+                        'INSERT INTO password_reset_request (emp_id, email, reason, status) VALUES (?, ?, ?, ?)',
+                        (emp_id, email, reason, 'pending')
+                    )
+                    db.commit()
+                    flash('Password reset request submitted successfully!')
+                    return redirect(url_for('auth.login'))
+        except db.IntegrityError:
+            error = 'An error occurred while processing your request.'
+
+    return render_template('auth/pass_res_req.html')
+
+
+@bp.route('/view_users_req')
+@login_required_role([1]) # '1' is the role_id for the admin role
+@login_required
+def view_users_req():
+    db = get_db()
+    requests = db.execute('SELECT * FROM password_reset_request').fetchall()
+    return render_template('admin/pass_req.html', requests=requests)
+
+
+@bp.route('/authorize_reset_pass/<int:password_reset_request_id>', methods=['POST'])
+@login_required_role([1]) # '1' is the role_id for the admin role
+@login_required
+def authorize_reset_pass(password_reset_request_id):
+    db = get_db()
+    db.execute('UPDATE password_reset_request SET status = "authorize" WHERE id = ?', (password_reset_request_id,))
+    db.commit()
+    return redirect(url_for('auth.view_users_req'))
+
+
+@bp.route('/pending_reset_pass/<int:password_reset_request_id>', methods=['POST'])
+@login_required_role([1]) # '1' is the role_id for the admin role
+@login_required
+def pending_reset_pass(password_reset_request_id):
+    db = get_db()
+    db.execute('UPDATE password_reset_request SET status = "pending" WHERE id = ?', (password_reset_request_id,))
+    db.commit()
+    return redirect(url_for('auth.view_users_req'))
+
+
+@bp.route('/delete_request/<int:request_id>', methods=['POST'])
+@login_required_role([1])  # '1' is the role_id for the admin role
+@login_required
+def delete_request(request_id):
+    db = get_db()
+    db.execute('DELETE FROM password_reset_request WHERE id = ?', (request_id,))
+    db.commit()
+    flash('Request deleted successfully.', 'success')
+    return redirect(url_for('auth.view_users_req'))
