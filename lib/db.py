@@ -25,7 +25,9 @@ def init_db():
     db = get_db()
 
     with current_app.open_resource('schema.sql') as f:
-        db.cursor().execute(f.read().decode('utf8'))
+        cursor = db.cursor()
+        cursor.execute(f.read().decode('utf8'))
+        cursor.close()
 
 @click.command('init-db')
 def init_db_command():
