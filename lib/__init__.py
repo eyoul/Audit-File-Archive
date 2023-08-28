@@ -1,13 +1,16 @@
 import os
-
 from flask import Flask
+import mysql.connector
 
 def create_app(test_config=None):
     #create and configure the app
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY='DEV',
-        DATABASE=os.path.join(app.instance_path, 'library.sqlite'),
+        MYSQL_HOST='localhost',
+        MYSQL_USER='root',
+        MYSQL_PASSWORD='newpassword',
+        MYSQL_DB='library'
     )
 
     if test_config is None:
