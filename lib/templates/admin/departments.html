@@ -20,9 +20,9 @@
       {% for department in departments %}
         <tr>
           <td>{{ loop.index }}</td>
-          <td>{{ department.name }}</td>
-          <td>{{ department.description }}</td>
-          <td>{{ department.division_name }}</td>
+          <td>{{ department[1] }}</td>
+          <td>{{ department[2] }}</td>
+          <td>{{ department[3] }}</td>
           <td>
             <a href="{{ url_for('struc.edit_department', department_id=department['id']) }}">Edit</a>
           </td>

@@ -34,8 +34,7 @@ def login_required_role(role_list):
             return f(*args, **kwargs)
         return wrapped_view
     return decorator
-
-
+#logIn
 @bp.route('/login', methods=('GET', 'POST'))
 def login():
     if request.method == 'POST':
@@ -43,9 +42,10 @@ def login():
         password = request.form['password']
         db = get_db()
         error = None
-        user = db.execute(
-            'SELECT * FROM user WHERE emp_id = ?', (emp_id,)
-        ).fetchone()
+
+        cursor = db.cursor(dictionary=True)  # Fetch rows as dictionaries
+        cursor.execute('SELECT * FROM user WHERE emp_id = %s', (emp_id,))
+        user = cursor.fetchone()
 
         if user is None:
             error = 'Incorrect emp_id.'
@@ -58,11 +58,12 @@ def login():
             session.clear()
             session['user_id'] = user['id']
             return redirect(url_for('post.index'))
+
         flash(error)
 
     return render_template('auth/login.html')
 
-
+#tempo Regist
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
     if request.method == 'POST':
@@ -70,7 +71,7 @@ def register():
         emp_id = request.form['emp_id']
         email = request.form['email']
         password = request.form['password']
-        place= request.form['place']
+        place = request.form['place']
         position = request.form['position']
         role_id = request.form['role_id']
 
@@ -80,34 +81,34 @@ def register():
         if not name:
             error = 'Name is required!'
         elif not emp_id:
-            error = 'Employee Id required!'
+            error = 'Employee ID is required!'
         elif not email:
-            error = 'Email required!'
+            error = 'Email is required!'
         elif not password:
-            error = 'Password required!'
+            error = 'Password is required!'
         elif not place:
-            error = 'place required!'
+            error = 'Place is required!'
         elif not position:
-            error = 'position required!'
+            error = 'Position is required!'
         elif not role_id:
-            error = 'Role is required!'
+            error = 'Role ID is required!'
 
         if error is None:
             try:
-                db.execute(
-                    "INSERT INTO user (name, emp_id, email, password, place, position, role_id) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                    (name, emp_id, email, generate_password_hash(password), place, position,  1),
+                cursor = db.cursor()
+                cursor.execute(
+                    "INSERT INTO user (name, emp_id, email, password, place, position, role_id) VALUES (%s, %s, %s, %s, %s, %s, %s)",
+                    (name, emp_id, email, generate_password_hash(password), place, position, role_id),
                 )
                 db.commit()
-            except db.IntegrityError:
-                error = f"User {emp_id} is alrady registerd."
+            except Exception as e:
+                error = f"User {emp_id} is already registered. Error: {str(e)}"
             else:
                 return redirect(url_for("auth.login"))
-        
+
         flash(error)
 
     return render_template('auth/register.html')
-
 
 @bp.route('/view_users')
 @login_required_role([1]) # '1' is the role_id for the admin role
@@ -305,10 +306,10 @@ def load_logged_in_user():
     if user_id is None:
         g.user = None
     else:
-        g.user = get_db().execute(
-            'SELECT * FROM user WHERE id = ?', (user_id,)
-
-        ).fetchone()
+        db = get_db()
+        cursor = db.cursor(dictionary=True)
+        cursor.execute('SELECT * FROM user WHERE id = %s', (user_id,))
+        g.user = cursor.fetchone()
 
 
 @bp.route('/logout')

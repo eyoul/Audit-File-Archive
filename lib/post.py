@@ -30,35 +30,37 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+# index file 
 @bp.route('/')
 @login_required
-def index():    
+def index():
     db = get_db()
-    divisions = db.execute(
-        'SELECT id, name, description FROM division'
-    ).fetchall()
+    cursor = db.cursor()
 
-    departments = db.execute(
-        'SELECT id, name, description, division_id FROM department'
-    ).fetchall()
+    cursor.execute('SELECT id, name, description FROM division')
+    divisions = cursor.fetchall()
 
-    units = db.execute(
-        'SELECT id, name, description, department_id FROM unit'
-    ).fetchall()
+    cursor.execute('SELECT id, name, description, division_id FROM department')
+    departments = cursor.fetchall()
 
-    documents = db.execute(
-        'SELECT id, name, file_path, description, docType_id, division_id, department_id, unit_id FROM document'
-    ).fetchall()
-    
-    programs = db.execute(
-        'SELECT id, name, period, description, division_id, department_id, unit_id FROM audit_program'
-    ).fetchall()
-    audit_files = db.execute('''
-    SELECT audit_File.*, audit_File_Type.name AS type_name
-    FROM audit_File
-    JOIN audit_File_Type ON audit_File.file_type_id = audit_File_Type.id
-    ORDER BY audit_File.name
-    ''').fetchall()
+    cursor.execute('SELECT id, name, description, department_id FROM unit')
+    units = cursor.fetchall()
+
+    cursor.execute('SELECT id, name, file_path, description, docType_id, division_id, department_id, unit_id FROM document')
+    documents = cursor.fetchall()
+
+    cursor.execute('SELECT id, name, period, description, division_id, department_id, unit_id FROM audit_program')
+    programs = cursor.fetchall()
+
+    cursor.execute('''
+        SELECT audit_File.*, audit_File_Type.name AS type_name
+        FROM audit_File
+        JOIN audit_File_Type ON audit_File.file_type_id = audit_File_Type.id
+        ORDER BY audit_File.name
+    ''')
+    audit_files = cursor.fetchall()
+
+    cursor.close()
 
     return render_template('post/index.html', divisions=divisions, departments=departments,
                            units=units, documents=documents, programs=programs, audit_files=audit_files)

@@ -15,15 +15,15 @@
    <ul class="tree-menu">
     {% for division in divisions %}
     <li>
-      <a href="#">{{ division.name }}</a>
+      <a href="#">{{ division[1] }}</a>
         <ul>
         {% for department in departments if department.division_id == division.id %}
             <li>
-                <a href="#">{{ department.name }}</a>
+                <a href="#">{{ department[1] }}</a>
                 <ul>
                 {% for unit in units if unit.department_id == department.id %}
                     <li>
-                       <a href="#">{{ unit.name }}</a>
+                       <a href="#">{{ unit[1] }}</a>
                         <ul>
                         {% for document in documents if document.unit_id == unit.id %}
                             <li><a href="#" data-file="{{ url_for('post.download_file', filename=document.file_path) }}" data-type="{{ document.file_type }}">{{ document.name }}</a></li>
