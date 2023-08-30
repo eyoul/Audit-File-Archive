@@ -125,24 +125,17 @@ def edit_division(division_id):
     return render_template('admin/edit_div.html', division={'id': division_id, 'name': name, 'description': description})
 
 
-@bp.route('/delete_division', methods=['POST'])
+@bp.route('/delete_division/<int:division_id>', methods=['POST'])
 @login_required_role([1])  # '1' is the role_id for the admin role
 @login_required
-def delete_division():
+def delete_division(division_id):
     db = get_db()
     cursor = db.cursor()
-
-    division_id = request.form.get('division_id')
-
-    if division_id is None:
-        flash('Invalid request.')
-        return redirect(url_for('struc.division'))
 
     # Use a transaction to ensure that the deletion is atomic
     with db:
         # Delete the division record and any associated department records
         cursor.execute('DELETE FROM division WHERE id = %s', (division_id,))
-
     cursor.close()
 
     flash('Division deleted successfully!')

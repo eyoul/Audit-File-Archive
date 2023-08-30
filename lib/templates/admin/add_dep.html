@@ -16,7 +16,7 @@
       <select class="form-control" id="division_id" name="division_id" required>
         <option value="">Select a Division</option>
         {% for division in divisions %}
-          <option value="{{ division['id'] }}">{{ division[1] }}</option>
+          <option value="{{ division[0] }}">{{ division[1] }}</option>
         {% endfor %}
       </select>
     </div>
