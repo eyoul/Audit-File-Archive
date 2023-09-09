@@ -47,7 +47,7 @@
           <li><a href="{{ url_for('struc.division') }}">Division</a></li>
           <li><a href="{{ url_for('struc.department') }}">Department</a></li>
           <li><a href="{{ url_for('struc.unit') }}">Unit</a></li>
-          <li><a href="{{ url_for('struc.display_structure') }}">Report</a></li>
+          {# <li><a href="{{ url_for('struc.display_structure') }}">Report</a></li> #}
         </ul>
       </li>
       
@@ -103,13 +103,19 @@
         </ul>
       </li>
       <li>
-        <a href="">
-                <i class='bx bx-grid-alt'></i>
-          <span class="link_name">Audit program</span>
-        </a>
-        <ul class="sub-menu blank">
-          <li><a class="link_name" href="{{ url_for('file.program') }}" >Audit program</a></li>
-        </ul>    
+        <div class="iocn-link">
+          <a href="#">
+            <i class='bx bx-grid-alt' ></i>
+            <span class="link_name">Audit program</span>
+          </a>
+          <i class='bx bxs-chevron-down arrow' ></i>
+        </div>
+        <ul class="sub-menu">
+          <li><a class="link_name" href="#">Audit program</a></li>
+          <li><a href="{{ url_for('file.program') }}">Division program</a></li>
+          <li><a href="{{ url_for('file.program') }}">Department program</a></li>
+          <li><a href="{{ url_for('file.program') }}">Unit program</a></li>
+        </ul>
       </li>
       <li>
         <a href="{{ url_for('file.list_file') }}">

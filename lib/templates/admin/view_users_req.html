@@ -1,0 +1,45 @@
+<!-- admin/view_users_req.html -->
+
+{% extends 'admin/layout.html' %}
+
+{% block content %}
+    <h1>Password Reset Requests</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Employee ID</th>
+                <th>Email</th>
+                <th>Reason</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for request in requests %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ request[1] }}</td>
+                <td>{{ request[2] }}</td>
+                <td>{{ request[3] }}</td>
+                <td>
+                    {% if request[4] == 'authorize' %}
+                    <form action="{{ url_for('auth.pending_reset_pass', password_reset_request_id=request[0]) }}" method="post">
+                        <button type="submit">Pending</button>
+                    </form>
+                    {% else %}
+                    <form action="{{ url_for('auth.authorize_reset_pass', password_reset_request_id=request[0]) }}" method="post">
+                        <button type="submit">Authorize</button>
+                    </form>
+                    {% endif %}
+               </td> 
+               <td>
+                    <form action="{{ url_for('auth.delete_request', request_id=request[0]) }}" method="post">
+                        <button type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

@@ -293,3 +293,114 @@ def add_file_to_division_audit(division_id):
         'SELECT id, name FROM audit_File_Type ORDER BY name'
     ).fetchall()
     return render_template('add_division_audit_file.html', division=division, file_types=file_types)
+
+
+
+
+
+
+"""
+@bp.route('/add_program', methods=['GET', 'POST'])
+@login_required_role([1, 2])  # '1' is the role_id for the admin role
+@login_required
+def add_program():
+    db = get_db()
+    cursor = db.cursor()
+
+    cursor.execute('SELECT id, name FROM division ORDER BY name')
+    divisions = cursor.fetchall()
+    cursor.execute('SELECT id, name FROM department ORDER BY name')
+    departments = cursor.fetchall()
+    cursor.execute('SELECT id, name FROM unit ORDER BY name')
+    units = cursor.fetchall()
+
+    if request.method == 'POST':
+        name = request.form['name']
+        period = request.form['period']
+        description = request.form['description']
+        division_id = request.form.get('division_id')
+        department_id = request.form.get('department_id')
+        unit_id = request.form.get('unit_id')
+        error = None
+
+        if not name:
+            error = 'Name is required!'
+        elif not period:
+            error = 'Period is required!'
+        elif not description:
+            error = 'Description is required!'
+        elif division_id is None and department_id is None and unit_id is None:
+            error = 'At least one of Division, Department, or Unit must be selected.'
+
+        if error is None:
+            cursor.execute(
+                'INSERT INTO audit_program (name, period, description, division_id, department_id, unit_id) VALUES (%s, %s, %s, %s, %s, %s)',
+                (name, period, description, division_id, department_id, unit_id)
+            )
+            db.commit()
+            flash('Audit program added successfully!', 'success')
+            return redirect(url_for('file.program'))
+
+        flash(error, 'error')
+
+    return render_template('file/add_program.html', divisions=divisions, departments=departments, units=units)
+"""
+
+@bp.route('/edit_program/<int:program_id>', methods=['GET', 'POST'])
+@login_required_role([1, 2])  # '1' is the role_id for the admin role
+@login_required
+def edit_program(program_id):
+    db = get_db()
+    cursor = db.cursor()
+
+    cursor.execute(
+        'SELECT id, name, period, description, division_id, department_id, unit_id FROM audit_program WHERE id = %s',
+        (program_id,)
+    )
+    program = cursor.fetchone()
+
+    if program is None:
+        flash(f"Program with ID '{program_id}' does not exist.", 'error')
+        return redirect(url_for('file.program'))
+
+    cursor.execute('SELECT id, name FROM division ORDER BY name')
+    divisions = cursor.fetchall()
+    cursor.execute('SELECT id, name FROM department ORDER BY name')
+    departments = cursor.fetchall()
+    cursor.execute('SELECT id, name FROM unit ORDER BY name')
+    units = cursor.fetchall()
+
+    if request.method == 'POST':
+        name = request.form['name']
+        period = request.form['period']
+        description = request.form['description']
+        division_id = request.form.get('division_id')
+        department_id = request.form.get('department_id')
+        unit_id = request.form.get('unit_id')
+        error = None
+
+        if not name:
+            error = 'Name is required!'
+        elif not period:
+            error = 'Period is required!'
+        elif not description:
+            error = 'Description is required!'
+        elif division_id is None and department_id is None and unit_id is None:
+            error = 'At least one of Division, Department, or Unit must be selected.'
+
+        if error is None:
+            try:
+                cursor.execute(
+                    'UPDATE audit_program SET name = %s, period = %s, description = %s, division_id = %s, department_id = %s, unit_id = %s WHERE id = %s',
+                    (name, period, description, division_id, department_id, unit_id, program_id)
+                )
+                db.commit()
+                flash('Audit program updated successfully!', 'success')
+                return redirect(url_for('file.program'))
+            except db.IntegrityError:
+                error = f"The program '{name}' already exists."
+
+        flash(error, 'error')
+
+    return render_template('file/edit_program.html', program=program, divisions=divisions, departments=departments, units=units)
+

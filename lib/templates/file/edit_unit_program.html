@@ -1,0 +1,25 @@
+{% extends 'admin/layout.html' %}
+
+{% block content %}
+  <h1>Edit Audit Unit Program</h1>
+  <form method="post">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" value="{{ unit_program[1] }}" required>
+
+    <label for="period">Period:</label>
+    <input type="text" id="period" name="period" value="{{ unit_program[2] }}" required>
+
+    <label for="description">Description:</label>
+    <textarea id="description" name="description" required>{{ unit_program[3] }}</textarea>
+
+    <label for="unit_id">Unit:</label>
+    <select id="unit_id" name="unit_id">
+      <option value="">-- Select a unit --</option>
+      {% for unit in units %}
+        <option value="{{ unit[0] }}" {% if unit_program.unit_id == unit[0] %}selected{% endif %}>{{ unit[1] }}</option>
+      {% endfor %}
+    </select>
+
+    <input type="submit" value="Update">
+  </form>
+{% endblock %}

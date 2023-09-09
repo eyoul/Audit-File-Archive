@@ -16,7 +16,7 @@
       <select id="audit_program_id" name="audit_program_id" class="form-control" required>
         <option value="">-- Select Audit Program --</option>
         {% for audit_program in audit_programs %}
-        <option value="{{ audit_program.id }}">{{ audit_program.name }}</option>
+        <option value="{{ audit_program[0] }}">{{ audit_program[1] }}</option>
         {% endfor %}
       </select>
     </div>
@@ -25,7 +25,7 @@
       <select id="file_type_id" name="file_type_id" class="form-control" required>
         <option value="">-- Select File Type --</option>
         {% for file_type in file_types %}
-        <option value="{{ file_type.id }}">{{ file_type.name }}</option>
+        <option value="{{ file_type[0] }}">{{ file_type[1] }}</option>
         {% endfor %}
       </select>
     </div>

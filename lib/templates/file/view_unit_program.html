@@ -1,0 +1,33 @@
+{% extends 'admin/layout.html' %}
+
+{% block content %}
+  <h1>Unit Programs</h1>
+  <p><a href="{{ url_for('file.add_unit_program') }}">Add Unit Programs</a></p>
+  <table>
+    <thead>
+      <tr>
+        <th>No</th>
+        <th>Name</th>
+        <th>Period</th>
+        <th>Description</th>
+        <th>Unit</th>
+        <th>Update</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for unit_program in unit_programs if unit_program[4] != None %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ unit_program[1] }}</td>
+        <td>{{ unit_program[2] }}</td>
+        <td>{{ unit_program[3] }}</td>
+        <td>{{ unit_program[4] }}</td>
+        <td>
+          <a href="{{ url_for('file.edit_unit_program', unit_program_id=unit_program[0]) }}">Edit</a>
+        </td>
+
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
