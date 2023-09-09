@@ -18,7 +18,7 @@
           {% if division['id'] == department['division_id'] %}
             <option value="{{ division['id'] }}" selected>{{ division['name'] }}</option>
           {% else %}
-            <option value="{{ division['id'] }}">{{ division['name'] }}</option>
+            <option value="{{ division[0] }}">{{ division[1] }}</option>
           {% endif %}
         {% endfor %}
       </select>

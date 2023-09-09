@@ -9,7 +9,7 @@
     <h2>Divisions</h2>
       <ul>
         {% for division in div %}
-        <li><a href="{{ url_for('struc.division', id=division.id) }}">{{ division.name }}</a></li>
+        <li><a href="{{ url_for('struc.division', id=division[0]) }}">{{ division[1] }}</a></li>
         {% endfor %}
       </ul>
     {% endif %}
@@ -18,7 +18,7 @@
     <h2>Departments</h2>
       <ul>
         {% for department in dep %}
-        <li><a href="{{ url_for('struc.department', id=department.id) }}">{{ department.name }}</a></li>
+        <li><a href="{{ url_for('struc.department', id=department[0] )}}">{{ department[1] }}</a></li>
         {% endfor %}
       </ul>
     {% endif %}
@@ -27,7 +27,7 @@
     <h2>Units</h2>
       <ul>
         {% for u in unit %}
-          <li><a href="{{ url_for('struc.unit', id=u.id) }}">{{ u.name }}</a></li>
+          <li><a href="{{ url_for('struc.unit', id=u[0]) }}">{{ u[1] }}</a></li>
         {% endfor %}
       </ul>
 
@@ -38,7 +38,7 @@
     <h2>Documents</h2>
       <ul>
         {% for document in documents %}
-          <li><a href="{{ url_for('post.download_file', filename=document.file_path) }}">{{ document.name }}</a></li>
+          <li><a href="{{ url_for('post.download_file', filename=document[2]) }}">{{ document[1] }}</a></li>
         {% endfor %}
       </ul>
     {% endif %}
@@ -47,7 +47,7 @@
     <h2>Audit Programs</h2>
       <ul>
         {% for program in auditprogram %}
-          <li><a href="{{ url_for('file.program', id=program.id) }}">{{ program.name }}</a></li>
+          <li><a href="{{ url_for('file.program', id=program[0]) }}">{{ program[1] }}</a></li>
         {% endfor %}
       </ul>
 
@@ -57,7 +57,7 @@
     <h2>Audit Files</h2>
       <ul>
         {% for file in auditfiles %}
-          <li><a href="{{ url_for('file.download_audit', filename=file.file_path) }}">{{ file.name }}</a></li>
+          <li><a href="{{ url_for('file.download_audit', filename=file[2]) }}">{{ file[1] }}</a></li>
         {% endfor %}
       </ul>
     {% endif %}

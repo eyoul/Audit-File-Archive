@@ -132,13 +132,19 @@ def delete_division(division_id):
     db = get_db()
     cursor = db.cursor()
 
-    # Use a transaction to ensure that the deletion is atomic
-    with db:
-        # Delete the division record and any associated department records
-        cursor.execute('DELETE FROM division WHERE id = %s', (division_id,))
-    cursor.close()
+    cursor.execute('SELECT id FROM division WHERE id = %s', (division_id,))
+    division = cursor.fetchone()
 
+    if division is None:
+        abort(404, f"Division id {division_id} doesn't exist.")
+    
+    # Use a transaction to ensure that the deletion is atomic
+        # Delete the division record and any associated department records 
+    
+    cursor.execute('DELETE FROM division WHERE id = %s', (division_id,))
+    db.commit()
     flash('Division deleted successfully!')
+    cursor.close()  
     return redirect(url_for('struc.division'))
 
 
@@ -219,12 +225,18 @@ def add_department():
 @login_required
 def edit_department(department_id):
     db = get_db()
-    department = db.execute(
-        'SELECT id, name, description, division_id FROM department WHERE id = ?', (department_id,)
-    ).fetchone()
+    cursor = db.cursor()
+
+    cursor.execute(
+        'SELECT id, name, description, division_id FROM department WHERE id = %s', (department_id,)
+    )
+    department = cursor.fetchone()
 
     if department is None:
-        abort(404, f"Department id {department_id} doesn't exist.")
+        flash(f"Department id {department_id} doesn't exist.")
+        return redirect(url_for('struc.department'))
+
+    department_id, name, description, division_id = department
 
     if request.method == 'POST':
         name = request.form['name']
@@ -238,40 +250,58 @@ def edit_department(department_id):
             error = 'Description is required!'
         elif not division_id:
             error = 'Division is required!'
-        elif db.execute(
-                'SELECT id FROM department WHERE name = ? AND id != ?', (name, department_id)
-        ).fetchone() is not None:
-            error = f"Department '{name}' already exists!"
-
-        if error is None:
-            db.execute(
-                'UPDATE department SET name = ?, description = ?, division_id = ? WHERE id = ?',
-                (name, description, division_id, department_id)
+        else:
+            # Check if the department name already exists (excluding the current department)
+            cursor.execute(
+                'SELECT id FROM department WHERE name = %s AND id != %s',
+                (name, department_id)
             )
-            db.commit()
-            flash('Department updated successfully!')
-            return redirect(url_for('struc.department'))
+            existing_department = cursor.fetchone()
+
+            if existing_department:
+                error = f"Department '{name}' already exists!"
+
+            if error is None:
+                # Update the department in the database
+                cursor.execute(
+                    'UPDATE department SET name = %s, description = %s, division_id = %s WHERE id = %s',
+                    (name, description, division_id, department_id)
+                )
+                db.commit()
+                flash('Department updated successfully!')
+                return redirect(url_for('struc.department'))
 
         flash(error)
 
-    divisions = db.execute('SELECT id, name FROM division ORDER BY name').fetchall()
-    return render_template('admin/edit_dep.html', department=department, divisions=divisions)
+    cursor.execute('SELECT id, name FROM division ORDER BY name')
+    divisions = cursor.fetchall()
+    cursor.close()
+    return render_template(
+        'admin/edit_dep.html',
+        department={'id': department_id, 'name': name, 'description': description, 'division_id': division_id},
+        divisions=divisions
+    )
+
 
 @bp.route('/delete_department/<int:department_id>', methods=['POST'])
-@login_required_role([1])  # '1' is the role_id for the admin role
+@login_required_role([1, 2])  # '1' is the role_id for the admin role
 @login_required
 def delete_department(department_id):
     db = get_db()
+    cursor = db.cursor()
 
-    # Use a transaction to ensure that the deletion is atomic
-    with db:
-        # Delete the division record and any associated department records
-        db.execute('DELETE FROM department WHERE id = ?', (department_id,))
+    cursor.execute('SELECT id FROM department WHERE id = %s', (department_id,))
+    department = cursor.fetchone()
 
+    if department is None:
+        abort(404, f"Department id {department_id} doesn't exist.")
+
+    # Delete the department from the database
+    cursor.execute('DELETE FROM department WHERE id = %s', (department_id,))
     db.commit()
     flash('Department deleted successfully!')
+    cursor.close()
     return redirect(url_for('struc.department'))
- 
 
 #Unit
 @bp.route('/unit')
@@ -297,9 +327,6 @@ def unit():
 @login_required_role([1, 2])  # '1' is the role_id for the admin role
 @login_required
 def add_unit():
-    db = get_db()
-    departments = db.execute('SELECT id, name FROM department ORDER BY name').fetchall()
-
     if request.method == 'POST':
         name = request.form['name']
         description = request.form['description']
@@ -312,22 +339,37 @@ def add_unit():
             error = 'Description is required!'
         elif not department_id:
             error = 'Department is required!'
-                
-        if error is None:
-            try:
-                db.execute(
-                    "INSERT INTO unit (name, description, department_id) VALUES (?, ?, ?)",
+        else:
+            db = get_db()
+            cursor = db.cursor()
+
+            # Check if the Division already exists
+            cursor.execute('SELECT id FROM unit WHERE name = %s', (name,))
+            department = cursor.fetchall()
+
+            if department:
+                error = f"Unit '{name}' already exists!"
+            
+            if error is None:
+                # Insert the Unit into the database
+                cursor.execute(
+                    "INSERT INTO unit (name, description, department_id) VALUES (%s, %s, %s)",
                     (name, description, department_id),
                 )
                 db.commit()
-            except db.IntegrityError:
-                error = f"Unit {name} is already registered."
-            else:
-                flash('The unit has been added.', 'success')
+                flash('Unit added Successfully!')
+                cursor.close()
                 return redirect(url_for('struc.unit'))
-            
-        flash(error, 'error')
-    
+            cursor.close()
+            flash(error)
+    db = get_db()
+    cursor = db.cursor()
+
+    # Fetch the divisions for displaying in the template
+    cursor.execute('SELECT id, name FROM department ORDER BY name')
+    departments = cursor.fetchall()
+
+    cursor.close()    
     return render_template('admin/add_unit.html', departments=departments)
 
 
@@ -336,12 +378,18 @@ def add_unit():
 @login_required
 def edit_unit(unit_id):
     db = get_db()
-    unit = db.execute(
-        'SELECT id, name, description, department_id FROM unit WHERE id = ?', (unit_id,)
-    ).fetchone()
+    cursor = db.cursor()
+
+    cursor.execute(
+        'SELECT id, name, description, department_id FROM unit WHERE id = %s', (unit_id,)
+    )
+    unit = cursor.fetchone()
 
     if unit is None:
-        abort(404, f"Unit id {unit_id} doesn't exist.")
+        flash(f"Unit id {unit_id} doesn't exist.")
+        return redirect(url_for('struc.unit'))
+    
+    unit_id, name, description, department_id = unit
 
     if request.method == 'POST':
         name = request.form['name']
@@ -355,14 +403,19 @@ def edit_unit(unit_id):
             error = 'Description is required!'
         elif not department_id:
             error = 'Division is required!'
-        elif db.execute(
-                'SELECT id FROM unit WHERE name = ? AND id != ?', (name, unit_id)
-        ).fetchone() is not None:
+        else:
+            cursor.execute(
+                'SELECT id FROM unit WHERE name = %s AND id != %s', (name, unit_id)
+        )
+        existing_unit = cursor.fetchone()
+
+        if existing_unit:
             error = f"Unit '{name}' already exists!"
 
         if error is None:
-            db.execute(
-                'UPDATE unit SET name = ?, description = ?, department_id = ? WHERE id = ?',
+            # Update the Unit in the database
+            cursor.execute(
+                'UPDATE unit SET name = %s, description = %s, department_id = %s WHERE id = %s',
                 (name, description, department_id, unit_id)
             )
             db.commit()
@@ -370,9 +423,12 @@ def edit_unit(unit_id):
             return redirect(url_for('struc.unit'))
 
         flash(error)
-
-    departments = db.execute('SELECT id, name FROM department ORDER BY name').fetchall()
-    return render_template('admin/edit_unit.html', unit=unit, departments=departments)
+    cursor.execute('SELECT id, name FROM department ORDER BY name')
+    departments = cursor.fetchall()
+    cursor.close()
+    return render_template(
+        'admin/edit_unit.html',
+        unit={'id': unit_id, 'name': name, 'description': description, 'department_id': department_id }, departments=departments)
 
 
 @bp.route('/unit/<int:unit_id>/delete', methods=('POST',))
@@ -380,16 +436,23 @@ def edit_unit(unit_id):
 @login_required
 def delete_unit(unit_id):
     db = get_db()
-    
-    # Use a transaction to ensure that the deletion is atomic
-    with db:
-        # Delete the division record and any associated department records
-        db.execute('DELETE FROM unit WHERE id = ?', (unit_id,))
+    cursor = db.cursor()
 
+    cursor.execute('SELECT id FROM unit WHERE id = %s', (unit_id,))
+    unit = cursor.fetchall()
+
+    if unit is None:
+        abort(404, f"Unit id {unit_id} doesn't exist.")
+        
+        # Delete the division record and any associated department records
+    cursor.execute('DELETE FROM unit WHERE id = %s', (unit_id,))
     db.commit()
+    flash('Unit Deleted successfully!')
+    cursor.close()
+
     return redirect(url_for('struc.unit'))
 
-
+"""
 @bp.route('/display_structure', methods=['GET', 'POST'])
 @login_required_role([1, 2])  # '1' is the role_id for the admin role
 @login_required
@@ -399,4 +462,4 @@ def display_structure():
     departments = db.execute('SELECT * FROM department ORDER BY name').fetchall()
     units = db.execute('SELECT * FROM unit ORDER BY name').fetchall()
     return render_template('admin/display_structure.html', divisions=divisions, departments=departments, units=units)
-
+"""

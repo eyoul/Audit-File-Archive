@@ -22,7 +22,7 @@
       <label for="department_id">Departement:</label>
       <select id="department_id" name="department_id" required>
         {% for department in departments %}
-          <option value="{{ department.id }}">{{ department.name }}</option>
+          <option value="{{ department[0] }}">{{ department[1] }}</option>
         {% endfor %}
       </select><br>
       <button type="submit">Add Unit</button>

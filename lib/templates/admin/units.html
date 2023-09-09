@@ -6,10 +6,10 @@
   <table>
     <thead>
       <tr>
+        <th>No</th>
         <th>Name</th>
         <th>Description</th>
         <th>Department</th>
-        <th>Division</th>
         <th>Update</th>
         {% if g.user['role_id'] == 1 %}
         <th>Remove</th>
@@ -19,16 +19,16 @@
     <tbody>
       {% for unit in units %}
         <tr>
-          <td>{{ unit.name }}</td>
-          <td>{{ unit.description }}</td>
-          <td>{{ unit.department_name }}</td>
-          <td>{{ unit.division_name }}</td>
+          <th>{{ loop.index}}</th>
+          <td>{{ unit[1] }}</td>
+          <td>{{ unit[2] }}</td>
+          <td>{{ unit[3] }}</td>
           <td>
-            <a href="{{ url_for('struc.edit_unit', unit_id=unit.id) }}">Edit</a>
+            <a href="{{ url_for('struc.edit_unit', unit_id=unit[0]) }}">Edit</a>
           </td>
           {% if g.user['role_id'] == 1 %}
           <td>
-            <form method="post" action="{{ url_for('struc.delete_unit', unit_id=unit.id) }}" onsubmit="return confirm('Are you sure you want to delete this unit?')">
+            <form method="post" action="{{ url_for('struc.delete_unit', unit_id=unit[0]) }}" onsubmit="return confirm('Are you sure you want to delete this unit?')">
               <button type="submit">Delete</button>
             </form>
           </td>

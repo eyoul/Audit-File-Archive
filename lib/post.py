@@ -25,7 +25,6 @@ if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
 
-
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -77,9 +76,13 @@ def download_file(filename):
 @login_required
 def docType():
     db = get_db()
-    docTypes = db.execute(
+    cursor = db.cursor()
+    cursor.execute(
         'SELECT id, name, description FROM docType ORDER BY name'
-    ).fetchall()
+    )
+    docTypes = cursor.fetchall()
+
+    cursor.close()
     return render_template('admin/docTypes.html', docTypes=docTypes)
 
 
@@ -87,6 +90,9 @@ def docType():
 @login_required_role([1, 2])  # '1' is the role_id for the admin role
 @login_required
 def add_doc_type():
+    db = get_db()
+    cursor = db.cursor()
+
     if request.method == 'POST':
         name = request.form['name']
         description = request.form['description']
@@ -96,26 +102,33 @@ def add_doc_type():
             error = 'Name is required!'
         elif not description:
             error = 'Description is required!'
-        else:
-            db = get_db()
-            doc_type = db.execute(
-                'SELECT id FROM docType WHERE name = ?', (name,)
-            ).fetchone()
-            if doc_type is not None:
+        
+        if error is None:          
+            cursor.execute(
+                'SELECT id FROM docType WHERE name = %s', (name,)
+            )
+            existing_docType = cursor.fetchone()
+
+            if existing_docType is not None:
                 error = f'The document type "{name}" already exists.'
 
-        if error is None:
-            db.execute(
-                'INSERT INTO docType (name, description) VALUES (?, ?)',
-                (name, description)
-            )
-            db.commit()
-            flash('Document type added successfully!')
-            return redirect(url_for('post.docType'))
+            else:
+                cursor.execute(
+                    'INSERT INTO docType (name, description) VALUES (%s, %s)',
+                    (name, description)
+                )
+                db.commit()
+                flash('Document type added successfully!')
+                return redirect(url_for('post.docType'))
 
         flash(error)
 
-    return render_template('admin/add_doc_type.html')
+    cursor.execute(
+        'SELECT id, name, description FROM docType'
+    )
+    docType = cursor.fetchall()
+    cursor.close()
+    return render_template('admin/add_doc_type.html', docType=docType )
 
 
 @bp.route('/edit_doc_type/<int:doc_type_id>', methods=['GET', 'POST'])
@@ -123,12 +136,18 @@ def add_doc_type():
 @login_required
 def edit_doc_type(doc_type_id):
     db = get_db()
-    doc_type = db.execute(
-        'SELECT id, name, description FROM docType WHERE id = ?', (doc_type_id,)
-    ).fetchone()
+    cursor = db.cursor()
+
+    cursor.execute(
+        'SELECT id, name, description FROM docType WHERE id = %s', (doc_type_id,)
+    )
+    doc_type = cursor.fetchone()
 
     if doc_type is None:
-        abort(404, f"Document type id {doc_type_id} doesn't exist.")
+        flash(f"Document type id {doc_type_id} doesn't exist.")
+        return redirect(url_for('post.docType'))
+    
+    doc_type_id, name, description = doc_type 
 
     if request.method == 'POST':
         name = request.form['name']
@@ -141,8 +160,8 @@ def edit_doc_type(doc_type_id):
             error = 'Description is required!'
 
         if error is None:
-            db.execute(
-                'UPDATE docType SET name = ?, description = ? WHERE id = ?',
+            cursor.execute(
+                'UPDATE docType SET name = %s, description = %s WHERE id = %s',
                (name, description, doc_type_id)
             )
             db.commit()
@@ -150,8 +169,12 @@ def edit_doc_type(doc_type_id):
             return redirect(url_for('post.docType'))
 
         flash(error)
+    
+    cursor.close()
 
-    return render_template('admin/edit_doc_type.html', doc_type=doc_type)
+    return render_template('admin/edit_doc_type.html',
+                           doc_type = {'id': doc_type_id, 'name': name,
+                                       'description': description})
 
 
 @bp.route('/delete_doc_type/<int:doc_type_id>', methods=['POST'])
@@ -159,9 +182,18 @@ def edit_doc_type(doc_type_id):
 @login_required
 def delete_doc_type(doc_type_id):
     db = get_db()
-    db.execute('DELETE FROM docType WHERE id = ?', (doc_type_id,))
+    cursor = db.cursor()
+
+    cursor.execute('SELECT id FROM docType WHERE id = %s', (doc_type_id,))
+    doc_type = cursor.fetchone()
+
+    if doc_type is None:
+        abort(404, f"Document type {doc_type_id} doesn't exist.")
+    
+    cursor.execute('DELETE FROM docType WHERE id = %s', (doc_type_id,))
     db.commit()
     flash('Document type deleted successfully!')
+    cursor.close()
     return redirect(url_for('post.docType'))
 
 
@@ -171,14 +203,18 @@ def delete_doc_type(doc_type_id):
 def view_div_doc():
     # Get the list of documents with their corresponding document type and division
     db = get_db()
-    documents = db.execute(
+
+    cursor = db.cursor()
+
+    cursor.execute(
         'SELECT d.id, d.name, d.file_path, d.description, dt.name AS docType_name, dv.name AS division_name'
         ' FROM document d'
         ' JOIN docType dt ON d.docType_id = dt.id'
         ' JOIN division_document dd ON d.id = dd.document_id'
         ' JOIN division dv ON dd.division_id = dv.id'
         ' ORDER BY d.name'
-    ).fetchall()
+    )
+    documents = cursor.fetchall()
 
     return render_template('admin/view_div_doc.html', documents=documents)
 
@@ -189,14 +225,18 @@ def view_div_doc():
 def add_div_file():
     # Get the list of document types to populate the select element
     db = get_db()
-    docTypes = db.execute(
+    cursor = db.cursor()
+    
+    cursor.execute(
         'SELECT id, name FROM docType ORDER BY name'
-    ).fetchall()
+    )
+    docTypes = cursor.fetchall()
 
     # Get the list of divisions to populate the select element
-    divisions = db.execute(
+    cursor.execute(
         'SELECT id, name FROM division ORDER BY name'
-    ).fetchall()
+    )
+    divisions = cursor.fetchall()
 
     # Handle form submission
     if request.method == 'POST':
@@ -243,7 +283,7 @@ def add_div_file():
             # Insert the document into the document table
             cursor.execute(
                'INSERT INTO document (name, file_path, description, docType_id, division_id)'
-               ' VALUES (?, ?, ?, ?, ?)',
+               ' VALUES (%s, %s, %s, %s, %s)',
                 (name, unique_filename, description, docType_id, division_id)
             )
 
@@ -252,7 +292,7 @@ def add_div_file():
             # Insert the document into the division_document table
             cursor.execute(
                 'INSERT INTO division_document (division_id, document_id)'
-                ' VALUES (?, ?)',
+                ' VALUES (%s, %s)',
                 (division_id, doc_id)
             )
                      
@@ -269,19 +309,25 @@ def add_div_file():
 @login_required
 def edit_div_file(doc_id):
     db = get_db()
-    document = db.execute(
-        'SELECT * FROM document WHERE id = ?', (doc_id,)
-    ).fetchone()
+
+    cursor = db.cursor()
+
+    cursor.execute(
+        'SELECT * FROM document WHERE id = %s', (doc_id,)
+    )
+    document = cursor.fetchone()
 
     # Get the list of document types to populate the select element
-    docTypes = db.execute(
+    cursor.execute(
         'SELECT id, name FROM docType ORDER BY name'
-    ).fetchall()
+    )
+    docTypes = cursor.fetchall()
 
     # Get the list of divisions to populate the select element
-    divisions = db.execute(
+    cursor.execute(
         'SELECT id, name FROM division ORDER BY name'
-    ).fetchall()
+    )
+    divisions = cursor.fetchall()
 
     # Handle form submission
     if request.method == 'POST':
@@ -318,21 +364,23 @@ def edit_div_file(doc_id):
                     file.save(os.path.join(UPLOAD_FOLDER, unique_filename))
 
                     # Delete the old file
-                    if document['file_path'] is not None:
-                        os.remove(os.path.join(UPLOAD_FOLDER, document['file_path']))
+                    if document[3] is not None:
+                        old_file_path = os.path.join(UPLOAD_FOLDER, document[3])
+                        if os.path.exists(old_file_path):
+                            os.remove(old_file_path)
 
                     # Update the file path in the database
-                    db.execute(
-                        'UPDATE document SET file_path = ? WHERE id = ?',
+                    cursor.execute(
+                        'UPDATE document SET file_path = %s WHERE id = %s',
                         (unique_filename, doc_id)
                     )
                     db.commit()
 
         # Update the document record if there are no errors
         if error is None:
-            db.execute(
-                'UPDATE document SET name = ?, description = ?, docType_id = ?, division_id = ?'
-                ' WHERE id = ?',
+            cursor.execute(
+                'UPDATE document SET name = %s, description = %s, docType_id = %s, division_id = %s'
+                ' WHERE id = %s',
                 (name, description, docType_id, division_id, doc_id)
             )
             db.commit()
@@ -350,21 +398,25 @@ def edit_div_file(doc_id):
 @login_required
 def delete_div_file(id):
     db = get_db()
-    document = db.execute(
-        'SELECT id, file_path FROM document WHERE id = ?',
+    cursor = db.cursor()
+
+    cursor.execute(
+        'SELECT id, file_path FROM document WHERE id = %s',
         (id,)
-    ).fetchone()
+    )
+    document = cursor.fetchone()
 
     if document is None:
         abort(404, f"Document id {id} doesn't exist.")
 
     # Delete the document file from the server
-    os.remove(os.path.join(UPLOAD_FOLDER, document['file_path']))
+    os.remove(os.path.join(UPLOAD_FOLDER, document[1]))
 
-    db.execute('DELETE FROM document WHERE id = ?', (id,))
-    db.execute('DELETE FROM division_document WHERE document_id = ?', (id,))
+    cursor.execute('DELETE FROM document WHERE id = %s', (id,))
+    cursor.execute('DELETE FROM division_document WHERE document_id = %s', (id,))
     db.commit()
     flash('File deleted successfully!')
+    cursor.close()
     return redirect(url_for('post.view_div_doc'))
 
 
@@ -374,14 +426,17 @@ def delete_div_file(id):
 def view_dep_doc():
     # Get the list of documents with their corresponding document type and Department
     db = get_db()
-    documents = db.execute(
+    cursor = db.cursor()
+
+    cursor.execute(
         'SELECT d.id, d.name, d.file_path, d.description, dt.name AS docType_name, de.name AS department_name'
         ' FROM document d'
         ' JOIN docType dt ON d.docType_id = dt.id'
         ' JOIN department_document dd ON d.id = dd.document_id'
         ' JOIN department de ON dd.department_id = de.id'
         ' ORDER BY d.name'
-    ).fetchall()
+    )
+    documents = cursor.fetchall()
 
     return render_template('admin/view_dep_doc.html', documents=documents)
 
@@ -392,14 +447,18 @@ def view_dep_doc():
 def add_dep_file():
     # Get the list of document types to populate the select element
     db = get_db()
-    docTypes = db.execute(
+    cursor = db.cursor()
+
+    cursor.execute(
         'SELECT id, name FROM docType ORDER BY name'
-    ).fetchall()
+    )
+    docTypes = cursor.fetchall()
 
     # Get the list of departments to populate the select element
-    departments = db.execute(
+    cursor.execute(
         'SELECT id, name FROM department ORDER BY name'
-    ).fetchall()
+    )
+    departments = cursor.fetchall()
 
     # Handle form submission
     if request.method == 'POST':
@@ -447,7 +506,7 @@ def add_dep_file():
 
             cursor.execute(
                'INSERT INTO document (name, file_path, description, docType_id, department_id)'
-               ' VALUES (?, ?, ?, ?, ?)',
+               ' VALUES (%s, %s, %s, %s, %s)',
                 (name, unique_filename, description, docType_id, department_id)
             )
             doc_id = cursor.lastrowid
@@ -455,7 +514,7 @@ def add_dep_file():
             # Insert the document into the department_document table
             cursor.execute(
                 'INSERT INTO department_document (department_id, document_id)'
-                ' VALUES (?, ?)',
+                ' VALUES (%s, %s)',
                 (department_id, doc_id)
             )
 
@@ -471,26 +530,31 @@ def add_dep_file():
 @login_required
 def edit_dep_file(doc_id):
     db = get_db()
-    document = db.execute(
+    cursor = db.cursor()
+
+    cursor.execute(
         'SELECT d.id, d.name, d.file_path, d.description, d.docType_id, d.department_id'
         ' FROM document d JOIN department_document dd ON d.id = dd.document_id'
-        ' WHERE d.id = ?',
+        ' WHERE d.id = %s',
         (doc_id,)
-    ).fetchone()
+    )
+    document = cursor.fetchone()
 
     if document is None:
         flash('Document does not exist.')
         return redirect(url_for('post.view_dep_doc'))
 
     # Get the list of document types to populate the select element
-    docTypes = db.execute(
+    cursor.execute(
         'SELECT id, name FROM docType ORDER BY name'
-    ).fetchall()
+    )
+    docTypes = cursor.fetchall()
 
     # Get the list of departments to populate the select element
-    departments = db.execute(
+    cursor.execute(
         'SELECT id, name FROM department ORDER BY name'
-    ).fetchall()
+    )
+    departments = cursor.fetchall()
 
     # Handle form submission
     if request.method == 'POST':
@@ -532,22 +596,23 @@ def edit_dep_file(doc_id):
                 unique_filename = str(uuid.uuid4()) + ext
                 file.save(os.path.join(UPLOAD_FOLDER, unique_filename))
                 cursor.execute(
-                    'UPDATE document SET name=?, file_path=?, description=?, docType_id=?, department_id=? WHERE id=?',
+                    'UPDATE document SET name= %s, file_path = %s, description = %s, docType_id = %s, department_id = %s WHERE id = %s',
                     (name, unique_filename, description, docType_id, department_id, doc_id)
                 )
             else:
                 cursor.execute(
-                    'UPDATE document SET name=?, description=?, docType_id=?, department_id=? WHERE id=?',
+                    'UPDATE document SET name = %s, description = %s, docType_id = %s, department_id = %s WHERE id = %s',
                     (name, description, docType_id, department_id, doc_id)
                 )
 
             # Update the department-document mapping in the department_document table
             cursor.execute(
-                'UPDATE department_document SET department_id=? WHERE document_id=?',
+                'UPDATE department_document SET department_id = %s WHERE document_id = %s',
                 (department_id, doc_id)
             )
 
             db.commit()
+
             flash('Document updated successfully!')
             return redirect(url_for('post.view_dep_doc'))
 
@@ -559,19 +624,22 @@ def edit_dep_file(doc_id):
 @login_required
 def delete_dep_file(id):
     db = get_db()
-    document = db.execute(
-        'SELECT id, file_path FROM document WHERE id = ?',
+    cursor = db.cursor()
+
+    cursor.execute(
+        'SELECT id, file_path FROM document WHERE id = %s',
         (id,)
-    ).fetchone()
+    )
+    document = cursor.fetchone()
 
     if document is None:
         abort(404, f"Document id {id} doesn't exist.")
 
     # Delete the document file from the server
-    os.remove(os.path.join(UPLOAD_FOLDER, document['file_path']))
+    os.remove(os.path.join(UPLOAD_FOLDER, document[1]))
 
-    db.execute('DELETE FROM document WHERE id = ?', (id,))
-    db.execute('DELETE FROM department_document WHERE document_id = ?', (id,))
+    cursor.execute('DELETE FROM document WHERE id = %s', (id,))
+    cursor.execute('DELETE FROM department_document WHERE document_id = %s', (id,))
     db.commit()
     flash('File deleted successfully!')
     return redirect(url_for('post.view_dep_doc'))
@@ -582,14 +650,16 @@ def delete_dep_file(id):
 def view_unit_doc():
     # Get the list of documents with their corresponding document type and unit
     db = get_db()
-    documents = db.execute(
+    cursor = db.cursor()
+    cursor.execute(
         'SELECT d.id, d.name, d.file_path, d.description, dt.name AS docType_name, u.name AS unit_name'
         ' FROM document d'
         ' JOIN docType dt ON d.docType_id = dt.id'
         ' JOIN unit_document dd ON d.id = dd.document_id'
         ' JOIN unit u ON dd.unit_id = u.id'
         ' ORDER BY d.name'
-    ).fetchall()
+    )
+    documents = cursor.fetchall()
 
     return render_template('admin/view_unit_doc.html', documents=documents)
 
@@ -600,14 +670,18 @@ def view_unit_doc():
 def add_unit_file():
     # Get the list of document types to populate the select element
     db = get_db()
-    docTypes = db.execute(
+    cursor = db.cursor()
+
+    cursor.execute(
         'SELECT id, name FROM docType ORDER BY name'
-    ).fetchall()
+    )
+    docTypes = cursor.fetchall()
 
     # Get the list of units to populate the select element
-    units = db.execute(
+    cursor.execute(
         'SELECT id, name FROM unit ORDER BY name'
-    ).fetchall()
+    )
+    units =cursor.fetchall()
 
     # Handle form submission
     if request.method == 'POST':
@@ -654,7 +728,7 @@ def add_unit_file():
             # Insert the document into the document table
             cursor.execute(
                 'INSERT INTO document (name, file_path, description, docType_id, unit_id)'
-                ' VALUES (?, ?, ?, ?, ?)',
+                ' VALUES (%s, %s, %s, %s, %s)',
                 (name, unique_filename, description, docType_id, unit_id)
             )
 
@@ -663,7 +737,7 @@ def add_unit_file():
             # Insert the document into the unit_document table
             cursor.execute(
                 'INSERT INTO unit_document (unit_id, document_id)'
-                ' VALUES (?, ?)',
+                ' VALUES (%s, %s)',
                 (unit_id, doc_id)
             )
 
@@ -673,54 +747,37 @@ def add_unit_file():
 
     return render_template('admin/add_unit_file.html', docTypes=docTypes, units=units)
 
-@bp.route('/delete_unit_file/<int:id>', methods=('POST',))
-@login_required_role([1])  # '1' is the role_id for the admin role
-@login_required
-def delete_unit_file(id):
-    db = get_db()
-    document = db.execute(
-        'SELECT id, file_path FROM document WHERE id = ?',
-        (id,)
-    ).fetchone()
-
-    if document is None:
-        abort(404, f"Document id {id} doesn't exist.")
-
-    # Delete the document file from the server
-    os.remove(os.path.join(UPLOAD_FOLDER, document['file_path']))
-
-    db.execute('DELETE FROM document WHERE id = ?', (id,))
-    db.execute('DELETE FROM unit_document WHERE document_id = ?', (id,))
-    db.commit()
-    flash('File deleted successfully!')
-    return redirect(url_for('post.view_unit_doc'))
-
 
 @bp.route('/edit_unit_file/<int:doc_id>', methods=('GET', 'POST'))
 @login_required_role([1, 2])  # '1' is the role_id for the admin role
 @login_required
 def edit_unit_file(doc_id):
     db = get_db()
-    document = db.execute(
+    cursor = db.cursor()
+
+    cursor.execute(
         'SELECT u.id, u.name, u.file_path, u.description, u.docType_id, u.unit_id'
         ' FROM document u JOIN unit_document dd ON u.id = dd.document_id'
-        ' WHERE u.id = ?',
+        ' WHERE u.id = %s',
         (doc_id,)
-    ).fetchone()
+    )
+    document = cursor.fetchone()
 
     if document is None:
         flash('Document does not exist.')
         return redirect(url_for('post.view_unit_doc'))
 
     # Get the list of document types to populate the select element
-    docTypes = db.execute(
+    cursor.execute(
         'SELECT id, name FROM docType ORDER BY name'
-    ).fetchall()
+    )
+    docTypes = cursor.fetchall()
 
     # Get the list of units to populate the select element
-    units = db.execute(
+    cursor.execute(
         'SELECT id, name FROM unit ORDER BY name'
-    ).fetchall()
+    )
+    units = cursor.fetchall()
 
     # Handle form submission
     if request.method == 'POST':
@@ -762,18 +819,18 @@ def edit_unit_file(doc_id):
                 unique_filename = str(uuid.uuid4()) + ext
                 file.save(os.path.join(UPLOAD_FOLDER, unique_filename))
                 cursor.execute(
-                    'UPDATE document SET name=?, file_path=?, description=?, docType_id=?, unit_id=? WHERE id=?',
+                    'UPDATE document SET name =%s, file_path =%s, description =%s, docType_id =%s, unit_id =%s WHERE id =%s',
                     (name, unique_filename, description, docType_id, unit_id, doc_id)
                 )
             else:
                 cursor.execute(
-                    'UPDATE document SET name=?, description=?, docType_id=?, unit_id=? WHERE id=?',
+                    'UPDATE document SET name =%s, description =%s, docType_id =%s, unit_id =%s WHERE id =%s',
                     (name, description, docType_id, unit_id, doc_id)
                 )
 
             # Update the unit-document mapping in the unit_document table
             cursor.execute(
-                'UPDATE unit_document SET unit_id=? WHERE document_id=?',
+                'UPDATE unit_document SET unit_id =%s WHERE document_id =%s',
                 (unit_id, doc_id)
             )
 
@@ -783,40 +840,75 @@ def edit_unit_file(doc_id):
 
     return render_template('admin/edit_unit_file.html', document=document, docTypes=docTypes, units=units)
 
+
+@bp.route('/delete_unit_file/<int:id>', methods=('POST',))
+@login_required_role([1])  # '1' is the role_id for the admin role
+@login_required
+def delete_unit_file(id):
+    db = get_db()
+    cursor = db.cursor()
+
+    cursor.execute(
+        'SELECT id, file_path FROM document WHERE id = %s',
+        (id,)
+    )
+    document = cursor.fetchone()
+
+    if document is None:
+        abort(404, f"Document id {id} doesn't exist.")
+
+    # Delete the document file from the server
+    os.remove(os.path.join(UPLOAD_FOLDER, document[1]))
+
+    cursor.execute('DELETE FROM document WHERE id = %s', (id,))
+    cursor.execute('DELETE FROM unit_document WHERE document_id = %s', (id,))
+    db.commit()
+    flash('File deleted successfully!')
+    return redirect(url_for('post.view_unit_doc'))
+
+
+
 @bp.route('/search')
 def search():
     query = request.args.get('q')
     db = get_db()
+    cursor = db.cursor()
 
-    div = db.execute(
-    'SELECT * FROM division WHERE name LIKE ?',
+    cursor.execute(
+    'SELECT * FROM division WHERE name LIKE %s',
     ('%' + query + '%',)
-    ).fetchall()
+    )
+    div = cursor.fetchall()
 
-    dep = db.execute(
-        'SELECT * FROM department WHERE name LIKE ?',
+    cursor.execute(
+        'SELECT * FROM department WHERE name LIKE %s',
         ('%' + query + '%',)
-    ).fetchall()
+    )
+    dep = cursor.fetchall()
 
-    unit = db.execute(
-        'SELECT * FROM unit WHERE name LIKE ?',
+    cursor.execute(
+        'SELECT * FROM unit WHERE name LIKE %s',
         ('%' + query + '%',)
-    ).fetchall()
+    )
+    unit = cursor.fetchall()
 
-    documents = db.execute(
-        'SELECT * FROM document WHERE name LIKE ?',
+    cursor.execute(
+        'SELECT * FROM document WHERE name LIKE %s',
         ('%' + query + '%',)
-    ).fetchall()
+    )
+    documents = cursor.fetchall()
 
-    auditprogram = db.execute(
-        'SELECT * FROM audit_program WHERE name LIKE ?',
+    cursor.execute(
+        'SELECT * FROM audit_program WHERE name LIKE %s',
         ('%' + query + '%',)
-    ).fetchall()
+    )
+    auditprogram = cursor.fetchall()
 
-    auditfiles = db.execute(
-        'SELECT * FROM audit_File WHERE name LIKE ?',
+    cursor.execute(
+        'SELECT * FROM audit_File WHERE name LIKE %s',
         ('%' + query + '%',)
-    ).fetchall()
+    )
+    auditfiles = cursor.fetchall()
 
     return render_template('post/search.html', documents=documents, auditfiles=auditfiles, div=div,
                            dep=dep, unit=unit, auditprogram=auditprogram, query=query)

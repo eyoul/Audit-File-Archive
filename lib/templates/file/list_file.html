@@ -6,6 +6,7 @@
   <table class="table">
     <thead>
       <tr>
+        <th>No</th>
         <th>Name</th>
         <th>Description</th>
         <th>Audit Program</th>
@@ -20,17 +21,18 @@
     <tbody>
       {% for file in files %}
         <tr>
-          <td>{{ file.name }}</td>
-          <td>{{ file.description }}</td>
-          <td>{{ file.audit_program_name }}</td>
-          <td>{{ file.audit_file_Type_name }}</td>
-          <td><a href="{{ url_for('file.download_audit', filename=file.file_path) }}" target="_blank">Download</a></td>
+          <td>{{ loop.index }}</td>
+          <td>{{ file[1] }}</td>
+          <td>{{ file[3] }}</td>
+          <td>{{ file[4] }}</td>
+          <td>{{ file[5] }}</td>
+          <td><a href="{{ url_for('file.download_audit', filename=file[2]) }}" target="_blank">Download</a></td>
           <td>
-            <a href="{{ url_for('file.edit_file', id=file.id) }}">Edit</a>
+            <a href="{{ url_for('file.edit_file', id=file[0]) }}">Edit</a>
           </td>
           {% if g.user['role_id'] == 1 %}  
           <td>
-            <form action="{{ url_for('file.delete_file', id=file.id) }}" onsubmit="return confirm('Are you sure you want to delete this audit program?')" method="post" style="display: inline-block;">
+            <form action="{{ url_for('file.delete_file', id=file[0]) }}" onsubmit="return confirm('Are you sure you want to delete this audit program?')" method="post" style="display: inline-block;">
               <input type="hidden" name="_method" value="DELETE">
               <button type="submit" class="btn-link text-danger">Delete</button>
             </form>

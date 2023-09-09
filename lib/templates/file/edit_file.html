@@ -5,20 +5,20 @@
   <form method="post" enctype="multipart/form-data">
     <div class="form-group">
       <label for="name">Name</label>
-      <input type="text" class="form-control" id="name" name="name" value="{{ file.name }}" required>
+      <input type="text" class="form-control" id="name" name="name" value="{{ file[1] }}" required>
     </div>
     <div class="form-group">
       <label for="description">Description</label>
-      <textarea class="form-control" id="description" name="description" rows="3" required>{{ file.description }}</textarea>
+      <textarea class="form-control" id="description" name="description" rows="3" required>{{ file[3] }}</textarea>
     </div>
     <div class="form-group">
       <label for="audit_program_id">Audit Program</label>
       <select class="form-control" id="audit_program_id" name="audit_program_id" required>
         {% for program in audit_programs %}
           {% if program.id == file.audit_program_id %}
-            <option value="{{ program.id }}" selected>{{ program.name }}</option>
+            <option value="{{ program.id }}" selected>{{ program[1] }}</option>
           {% else %}
-            <option value="{{ program.id }}">{{ program.name }}</option>
+            <option value="{{ program.id }}">{{ program[1] }}</option>
           {% endif %}
         {% endfor %}
       </select>
@@ -28,9 +28,9 @@
       <select class="form-control" id="file_type_id" name="file_type_id" required>
         {% for type in file_types %}
           {% if type.id == file.file_type_id %}
-            <option value="{{ type.id }}" selected>{{ type.name }}</option>
+            <option value="{{ type[0] }}" selected>{{ type[1] }}</option>
           {% else %}
-            <option value="{{ type.id }}">{{ type.name }}</option>
+            <option value="{{ type[0] }}">{{ type[1] }}</option>
           {% endif %}
         {% endfor %}
       </select>
@@ -38,6 +38,9 @@
     <div class="form-group">
       <label for="file_path">File</label>
       <input type="file" class="form-control-file" id="file_path" name="file_path">
+      {% if file[2] %}
+        <small class="form-text text-muted">Current file: <a href="{{ url_for('static', filename='uploads/'~file[2]) }}">{{ file[1] }}</a></small>
+      {% endif %}
     </div>
     <button type="submit" class="btn btn-primary">Save</button>
     <a href="{{ url_for('file.list_file') }}" class="btn btn-secondary">Cancel</a>

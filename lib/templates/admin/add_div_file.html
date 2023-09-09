@@ -16,7 +16,7 @@
       <select id="docType_id" name="docType_id" required>
         <option value="">-- Select Document Type --</option>
         {% for docType in docTypes %}
-          <option value="{{ docType.id }}">{{ docType.name }}</option>
+          <option value="{{ docType[0] }}">{{ docType[1] }}</option>
         {% endfor %}
       </select>
     </div>
@@ -25,7 +25,7 @@
       <select id="division_id" name="division_id" required>
         <option value="">-- Select Division --</option>
         {% for division in divisions %}
-          <option value="{{ division.id }}">{{ division.name }}</option>
+          <option value="{{ division[0] }}">{{ division[1] }}</option>
         {% endfor %}
       </select>
     </div>

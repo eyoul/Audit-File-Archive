@@ -112,7 +112,7 @@ CREATE TABLE audit_File_Type (
 CREATE TABLE audit_program (
     id INT PRIMARY KEY AUTO_INCREMENT, 
     name VARCHAR(255) NOT NULL UNIQUE,
-    period TEXT NOT NULL,
+    duration TEXT NOT NULL,
     description TEXT,
     division_id INT,
     department_id INT,
@@ -122,6 +122,29 @@ CREATE TABLE audit_program (
     FOREIGN KEY (unit_id) REFERENCES unit (id) ON DELETE CASCADE
 );
 
+CREATE TABLE division_program (
+    division_id INT NOT NULL,
+    audit_program_id INT NOT NULL,
+    PRIMARY KEY (division_id, audit_program_id),
+    FOREIGN KEY (division_id) REFERENCES division (id) ON DELETE CASCADE,
+    FOREIGN KEY (audit_program_id) REFERENCES audit_program (id) ON DELETE CASCADE
+);
+
+CREATE TABLE department_program (
+    department_id INT NOT NULL,
+    audit_program_id INT NOT NULL,
+    PRIMARY KEY (department_id, audit_program_id),
+    FOREIGN KEY (department_id) REFERENCES department (id) ON DELETE CASCADE,
+    FOREIGN KEY (audit_program_id) REFERENCES audit_program (id) ON DELETE CASCADE
+);
+
+CREATE TABLE unit_program (
+    unit_id INT NOT NULL,
+    audit_program_id INT NOT NULL,
+    PRIMARY KEY (unit_id, audit_program_id),
+    FOREIGN KEY (unit_id) REFERENCES unit (id) ON DELETE CASCADE,
+    FOREIGN KEY (audit_program_id) REFERENCES audit_program (id) ON DELETE CASCADE
+);
 
 CREATE TABLE audit_File (
     id INT PRIMARY KEY AUTO_INCREMENT,
