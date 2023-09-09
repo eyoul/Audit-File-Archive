@@ -1,0 +1,25 @@
+{% extends 'admin/layout.html' %}
+
+{% block content %}
+  <h1>Edit Audit Department Program</h1>
+  <form method="post">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" value="{{ dep_program[1] }}" required>
+
+    <label for="period">Period:</label>
+    <input type="text" id="period" name="period" value="{{ dep_program[2] }}" required>
+
+    <label for="description">Description:</label>
+    <textarea id="description" name="description" required>{{ dep_program[3] }}</textarea>
+
+    <label for="department_id">Department:</label>
+    <select id="department_id" name="department_id">
+      <option value="">-- Select a department --</option>
+      {% for department in departments %}
+        <option value="{{ department[0] }}" {% if dep_program.department_id == department[0] %}selected{% endif %}>{{ department[1] }}</option>
+      {% endfor %}
+    </select>
+
+    <input type="submit" value="Update">
+  </form>
+{% endblock %}

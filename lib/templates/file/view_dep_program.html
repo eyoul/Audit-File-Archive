@@ -1,0 +1,32 @@
+{% extends 'admin/layout.html' %}
+
+{% block content %}
+  <h1>Department Programs</h1>
+  <p><a href="{{ url_for('file.add_dep_program') }}">Add Department Programs</a></p>
+  <table>
+    <thead>
+      <tr>
+        <th>No</th>
+        <th>Name</th>
+        <th>Period</th>
+        <th>Description</th>
+        <th>Department</th>
+        <th>Update</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for dep_program in dep_programs if dep_program[4] != None %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ dep_program[1] }}</td>
+        <td>{{ dep_program[2] }}</td>
+        <td>{{ dep_program[3] }}</td>
+        <td>{{ dep_program[4] }}</td>
+        <td>
+          <a href="{{ url_for('file.edit_dep_program', dep_program_id=dep_program[0]) }}">Edit</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

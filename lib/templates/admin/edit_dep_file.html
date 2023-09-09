@@ -5,20 +5,20 @@
     <form method="post" enctype="multipart/form-data">
         <div class="form-group">
             <label for="name">Name</label>
-            <input type="text" id="name" name="name" class="form-control" value="{{ document['name'] }}" required>
+            <input type="text" id="name" name="name" class="form-control" value="{{ document[1] }}" required>
         </div>
         <div class="form-group">
             <label for="description">Description</label>
-            <textarea id="description" name="description" class="form-control" required>{{ document['description'] }}</textarea>
+            <textarea id="description" name="description" class="form-control" required>{{ document[3] }}</textarea>
         </div>
         <div class="form-group">
             <label for="docType_id">Document Type</label>
             <select id="docType_id" name="docType_id" class="form-control" required>
                 {% for docType in docTypes %}
                     {% if docType['id'] == document['document_type_id'] %}
-                        <option value="{{ docType['id'] }}" selected>{{ docType['name'] }}</option>
+                        <option value="{{ docType[0] }}" selected>{{ docType[1] }}</option>
                     {% else %}
-                        <option value="{{ docType['id'] }}">{{ docType['name'] }}</option>
+                        <option value="{{ docType[0] }}">{{ docType[1] }}</option>
                     {% endif %}
                 {% endfor %}
             </select>
@@ -28,9 +28,9 @@
             <select id="department_id" name="department_id" class="form-control" required>
                 {% for department in departments %}
                     {% if department['id'] == document['department_id'] %}
-                        <option value="{{ department['id'] }}" selected>{{ department['name'] }}</option>
+                        <option value="{{ department[0] }}" selected>{{ department[1] }}</option>
                     {% else %}
-                        <option value="{{ department['id'] }}">{{ department['name'] }}</option>
+                        <option value="{{ department[0] }}">{{ department[1] }}</option>
                     {% endif %}
                 {% endfor %}
             </select>
@@ -38,8 +38,8 @@
         <div class="form-group">
             <label for="file_path">File</label>
             <input type="file" id="file_path" name="file_path" class="form-control-file">
-            {% if document['file_path'] %}
-                <small class="form-text text-muted">Current file: <a href="{{ url_for('static', filename='uploads/'~document['file_path']) }}">{{ document['file_path'] }}</a></small>
+            {% if document[2] %}
+                <small class="form-text text-muted">Current file: <a href="{{ url_for('static', filename='uploads/'~document[2]) }}">{{ document[1] }}</a></small>
             {% endif %}
         </div>
         <button type="submit" class="btn btn-primary">Save</button>
