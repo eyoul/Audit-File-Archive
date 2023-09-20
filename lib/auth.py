@@ -258,6 +258,7 @@ def profile():
 
     return render_template('auth/profile.html', user_data=user_data)
 
+
 # User Change Password
 @bp.route('/change_password', methods=('GET', 'POST'))
 @login_required

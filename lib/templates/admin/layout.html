@@ -102,19 +102,14 @@
           <li><a class="link_name" href="{{ url_for('file.file_type') }}">Audit File Type</a></li>
         </ul>
       </li>
+
       <li>
-        <div class="iocn-link">
-          <a href="#">
-            <i class='bx bx-grid-alt' ></i>
-            <span class="link_name">Audit program</span>
-          </a>
-          <i class='bx bxs-chevron-down arrow' ></i>
-        </div>
-        <ul class="sub-menu">
-          <li><a class="link_name" href="#">Audit program</a></li>
-          <li><a href="{{ url_for('file.program') }}">Division program</a></li>
-          <li><a href="{{ url_for('file.program') }}">Department program</a></li>
-          <li><a href="{{ url_for('file.program') }}">Unit program</a></li>
+        <a href="{{ url_for('file.program') }}">
+          <i class='bx bx-grid-alt'></i>
+          <span class="link_name">Audit program</span>
+        </a>
+        <ul class="sub-menu blank">
+          <li><a class="link_name" href="{{ url_for('file.program') }}">Audit program</a></li>
         </ul>
       </li>
       <li>
