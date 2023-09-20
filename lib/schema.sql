@@ -122,6 +122,28 @@ CREATE TABLE audit_program (
     FOREIGN KEY (unit_id) REFERENCES unit (id) ON DELETE CASCADE
 );
 
+CREATE TABLE audit_File (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL UNIQUE,
+    file_path TEXT NOT NULL,
+    description TEXT NOT NULL,
+    audit_program_id INT NOT NULL,
+    file_type_id INT NOT NULL,
+    file_size_bytes BIGINT NOT NULL DEFAULT 0,
+    FOREIGN KEY (audit_program_id) REFERENCES audit_program (id) ON DELETE CASCADE,
+    FOREIGN KEY (file_type_id) REFERENCES audit_File_Type (id) ON DELETE CASCADE
+);
+
+CREATE TABLE password_reset_request (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  emp_id VARCHAR(6) NOT NULL UNIQUE CHECK(emp_id REGEXP '[0-9]*'),
+  email VARCHAR(255) NOT NULL,
+  reason VARCHAR(255) NOT NULL,
+  status VARCHAR(25) NOT NULL DEFAULT 'pending',
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+
 CREATE TABLE division_program (
     division_id INT NOT NULL,
     audit_program_id INT NOT NULL,
@@ -144,25 +166,4 @@ CREATE TABLE unit_program (
     PRIMARY KEY (unit_id, audit_program_id),
     FOREIGN KEY (unit_id) REFERENCES unit (id) ON DELETE CASCADE,
     FOREIGN KEY (audit_program_id) REFERENCES audit_program (id) ON DELETE CASCADE
-);
-
-CREATE TABLE audit_File (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(255) NOT NULL UNIQUE,
-    file_path TEXT NOT NULL,
-    description TEXT NOT NULL,
-    audit_program_id INT NOT NULL,
-    file_type_id INT NOT NULL,
-    file_size_bytes BIGINT NOT NULL DEFAULT 0,
-    FOREIGN KEY (audit_program_id) REFERENCES audit_program (id) ON DELETE CASCADE,
-    FOREIGN KEY (file_type_id) REFERENCES audit_File_Type (id) ON DELETE CASCADE
-);
-
-CREATE TABLE password_reset_request (
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  emp_id VARCHAR(6) NOT NULL UNIQUE CHECK(emp_id REGEXP '[0-9]*'),
-  email VARCHAR(255) NOT NULL,
-  reason VARCHAR(255) NOT NULL,
-  status VARCHAR(25) NOT NULL DEFAULT 'pending',
-  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
