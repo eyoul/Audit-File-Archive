@@ -2,11 +2,13 @@
 
 {% block content %}
   <h1>Add File Type</h1>
-  <form method="POST" action="{{ url_for('file.add_file_type') }}">
+  <form class="my-form" method="POST" action="{{ url_for('file.add_file_type') }}">
     <label for="name">Name:</label>
     <input type="text" id="name" name="name" required>
     <label for="description">Description:</label>
     <textarea id="description" name="description" required></textarea>
+    <br>
+    <br>
     <button type="submit">Add File Type</button>
   </form>
 {% endblock %}
