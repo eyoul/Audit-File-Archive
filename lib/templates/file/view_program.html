@@ -2,9 +2,11 @@
 
 {% block content %}
   <h1>Audit Programs</h1>
-  <p><a href="{{ url_for('file.div_program') }}">Division Programs</a></p>
-  <p><a href="{{ url_for('file.dep_program') }}">Department Programs</a></p>
-  <p><a href="{{ url_for('file.unit_program') }}">Unit Programs</a></p>
+  <div class="link-container">
+    <p class="link-item"><a class="admbut" href="{{ url_for('file.div_program') }}">Division Programs</a></p>
+    <p class="link-item"><a class="admbut" href="{{ url_for('file.dep_program') }}">Department Programs</a></p>
+    <p class="link-item"><a class="admbut" href="{{ url_for('file.unit_program') }}">Unit Programs</a></p>
+  </div>
   <table>
     <thead>
       <tr>

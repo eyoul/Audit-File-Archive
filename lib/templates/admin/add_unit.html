@@ -14,8 +14,8 @@
         </ul>
       {% endif %}
     {% endwith %}
-    <form method="post">
-      <label for="name">Name:</label>
+    <form class="my-form" method="post">
+      <div><label for="name">Name:</label>
       <input type="text" id="name" name="name" required><br>
       <label for="description">Description:</label>
       <input type="text" id="description" name="description" required><br>
@@ -24,7 +24,9 @@
         {% for department in departments %}
           <option value="{{ department[0] }}">{{ department[1] }}</option>
         {% endfor %}
-      </select><br>
+      </select>
+      </div>
+      <br>
       <button type="submit">Add Unit</button>
     </form>
 {% endblock %}
