@@ -23,7 +23,7 @@
         <td>{{ dep_program[3] }}</td>
         <td>{{ dep_program[4] }}</td>
         <td>
-          <a href="{{ url_for('file.edit_dep_program', dep_program_id=dep_program[0]) }}">Edit</a>
+          <a class="edit-link" href="{{ url_for('file.edit_dep_program', dep_program_id=dep_program[0]) }}">Edit</a>
         </td>
       </tr>
       {% endfor %}

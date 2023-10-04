@@ -23,13 +23,8 @@
         <td>{{ div_program[3] }}</td>
         <td>{{ div_program[4] }}</td>
         <td>
-          <a href="{{ url_for('file.edit_div_program', div_program_id=div_program[0]) }}">Edit</a>
+          <a class="edit-link" href="{{ url_for('file.edit_div_program', div_program_id=div_program[0]) }}">Edit</a>
         </td>
-       {# <td>
-          <form method="post" action="{{ url_for('file.delete_program', program_id=program[0]) }}" onsubmit="return confirm('Are you sure you want to delete this audit program?')">            
-            <button type="submit" class="link-button">Delete</button>
-          </form>
-        </td>#}
       </tr>
       {% endfor %}
     </tbody>

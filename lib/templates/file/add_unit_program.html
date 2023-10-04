@@ -2,7 +2,7 @@
 
 {% block content %}
   <h1>Add Audit Unit Program</h1>
-  <form  method="POST" action="{{ url_for('file.add_unit_program') }}">
+  <form class="my-form" method="POST" action="{{ url_for('file.add_unit_program') }}">
     <label for="name">Name:</label>
     <input type="text" name="name" id="name" required>
     <br>
@@ -20,6 +20,7 @@
       {% endfor %}
     </select>
     <br>
-    <input type="submit" value="Add">
+    <br>
+    <button type="submit">Submit</button>
   </form>
 {% endblock %}

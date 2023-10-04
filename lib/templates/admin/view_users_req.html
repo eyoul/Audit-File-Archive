@@ -25,17 +25,17 @@
                 <td>
                     {% if request[4] == 'authorize' %}
                     <form action="{{ url_for('auth.pending_reset_pass', password_reset_request_id=request[0]) }}" method="post">
-                        <button type="submit">Pending</button>
+                        <button  class="deact-link" type="submit">Pending</button>
                     </form>
                     {% else %}
                     <form action="{{ url_for('auth.authorize_reset_pass', password_reset_request_id=request[0]) }}" method="post">
-                        <button type="submit">Authorize</button>
+                        <button class="acti-link" type="submit">Authorize</button>
                     </form>
                     {% endif %}
                </td> 
                <td>
-                    <form action="{{ url_for('auth.delete_request', request_id=request[0]) }}" method="post">
-                        <button type="submit">Delete</button>
+                    <form class="delete-button" action="{{ url_for('auth.delete_request', request_id=request[0]) }}" method="post">
+                        <button class="delete-button" type="submit">Delete</button>
                     </form>
                 </td>
             </tr>

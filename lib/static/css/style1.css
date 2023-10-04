@@ -365,30 +365,89 @@ select {
 }
 
   
-  .my-form button[type="submit"] {
-    background-color: #6b0466;
-    color: #fff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-  }
-  .my-form button[type="submit"]:hover {
-    background-color:  #dd1ad3;
-  }
-  .file-upload input[type="file"] {
-    display: none;
-  }
-  
-  .file-upload label {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: #fff;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 20px;
-  }
-  
-  .file-upload label:hover {
-    background-color: #0056b3;
-  }
+.my-form button[type="submit"] {
+  background-color: #6b0466;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+}
+.my-form button[type="submit"]:hover {
+  background-color:  #dd1ad3;
+}
+.file-upload input[type="file"] {
+  display: none;
+}
+
+.file-upload label {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.file-upload label:hover {
+  background-color: #0056b3;
+}
+
+.edit-link {
+  background-color: rgb(0, 128, 0);
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 3px;
+  text-decoration: none;
+}
+
+.edit-link:hover {
+  background-color: #dfd5de;
+}
+
+.delete-button {
+  background-color: #dc3545;
+  color: #fff;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.delete-button:hover {
+  background-color: #c82333;
+}
+
+.reset-link {
+  background-color: rgb(16, 75, 236);
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 3px;
+  text-decoration: none;
+}
+
+.reset-link:hover {
+  background-color: #dfd5de;
+}
+.deact-link {
+  background-color: rgb(245, 229, 7);
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 3px;
+  text-decoration: none;
+}
+
+.deact-link:hover {
+  background-color: #dfd5de;
+}
+.acti-link {
+  background-color: rgb(128, 74, 4);
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 3px;
+  text-decoration: none;
+}
+
+.acti-link:hover {
+  background-color: #dfd5de;
+}

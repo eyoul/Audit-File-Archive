@@ -2,7 +2,7 @@
 
 {% block content %}
   <h1>Edit Audit Department Program</h1>
-  <form method="post">
+  <form class="my-form" method="post">
     <label for="name">Name:</label>
     <input type="text" id="name" name="name" value="{{ dep_program[1] }}" required>
 
@@ -19,7 +19,9 @@
         <option value="{{ department[0] }}" {% if dep_program.department_id == department[0] %}selected{% endif %}>{{ department[1] }}</option>
       {% endfor %}
     </select>
+    <br>
+    <br>
+    <button type="submit" value="Update">Update</button>
 
-    <input type="submit" value="Update">
   </form>
 {% endblock %}

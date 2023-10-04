@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
     <h1>Reset Password</h1>
-    <form class="form" method="post" action="{{ url_for('auth.reset_request') }}">
+    <form class="my-form" method="post" action="{{ url_for('auth.reset_request') }}">
         <label for="emp_id">Employee ID:</label>
         <input type="text" id="emp_id" name="emp_id">
 

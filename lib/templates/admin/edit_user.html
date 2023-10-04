@@ -2,7 +2,7 @@
 
 {% block content %}
   <h1>Edit User</h1>
-  <form method="post">
+  <form class="my-form" method="post">
     <label for="name">Name</label>
     <input type="text" id="name" name="name" value="{{ user[1] }}" required>
 
@@ -43,6 +43,8 @@
       <option value="2" {% if user.role_id == 2 %}selected{% endif %}>Manager</option>
       <option value="3" {% if user.role_id == 3 %}selected{% endif %}>Employee</option>
     </select>
+    <br>
+    <br>
     <button type="submit">Save Changes</button>
   </form>
 {% endblock %}
