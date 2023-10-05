@@ -2,7 +2,7 @@
 
 {% block content %}
   <h1>Add Division Document</h1>
-  <form method="post" enctype="multipart/form-data">
+  <form class="my-form" method="post" enctype="multipart/form-data">
     <div>
       <label for="name">Name:</label>
       <input type="text" id="name" name="name" required>
@@ -29,10 +29,12 @@
         {% endfor %}
       </select>
     </div>
-    <div>
-      <label for="file_path">File:</label>
+    <div class="file-upload">
+      <label for="file_path">Upload File:</label>
       <input type="file" id="file_path" name="file_path" accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.rtf" required>
+      <span id="file-name"></span>
     </div>
+    <br>
     <button type="submit">Submit</button>
   </form>
 {% endblock %}

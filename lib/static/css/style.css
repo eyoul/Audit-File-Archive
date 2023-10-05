@@ -108,7 +108,7 @@ footer {
   border-top: 1px solid #ccc;
   text-align: center;
   background-color: #8f0d88;
-  height: 60px;
+  height: 40px;
   width: 100%;
   justify-content: center;
   position: fixed;
@@ -119,13 +119,17 @@ footer {
 
 /* Navigation Styles */
 nav {
-  background-color: #6b0466;
   overflow: hidden;
   height: 60px;
   display: flex;
   align-items: center;
   padding: 0 0.5rem;
 }
+.nav-link1{
+  background-color: #6b0466;
+  height: 40px;
+}
+
 
 nav h1 {
   flex: auto;
@@ -454,4 +458,49 @@ input[type="text"],
     margin-left: 20px;
     padding-left: 20px;
   }
+}
+.my-form {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f7f7f7;
+  border-radius: 5px;
+}
+.form-group {
+margin-bottom: 20px;
+}
+
+.my-form label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.my-form input[type="text"], [type="email"],[type="password"],
+textarea,
+select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+
+.my-form button[type="submit"] {
+background-color: #6b0466;
+color: #fff;
+padding: 10px 20px;
+border: none;
+border-radius: 5px;
+}
+.my-form button[type="submit"]:hover {
+background-color:  #dd1ad3;
+}
+.logo {
+  width: 400px;
+  height: 50px;
+}
+.home-logo {
+  width: 30px;
+  height: 30px;
 }

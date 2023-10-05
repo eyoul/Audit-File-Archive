@@ -2,7 +2,7 @@
 
 {% block content %}
   <h1>Edit Division Audit Program</h1>
-  <form method="post">
+  <form class="my-form" method="post">
     <label for="name">Name:</label>
     <input type="text" id="name" name="name" value="{{ div_program[1] }}" required>
 
@@ -19,7 +19,8 @@
         <option value="{{ division[0] }}" {% if div_program.division_id == division[0] %}selected{% endif %}>{{ division[1] }}</option>
       {% endfor %}
     </select>
-
-    <input type="submit" value="Update">
+    <br>
+    <br>
+    <button type="submit" value="Update">Update</button>
   </form>
 {% endblock %}

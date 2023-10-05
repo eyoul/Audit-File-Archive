@@ -213,7 +213,7 @@ body{
 }
 .home-section{
   position: relative;
-  background: #f1d4ec;
+  background: #faf7f9;
   height: 100vh;
   left: 260px;
   width: calc(100% - 260px);
@@ -300,6 +300,7 @@ table {
   border-collapse: collapse;
   background-color: #f2f2f2;
   color: #333;
+  margin-top: 20px;
   font-size: 14px;
 }
 
@@ -312,3 +313,141 @@ td, th {
 ul {
   list-style-type: none;
   }
+  .admbut {
+    /* Add your desired styles here */
+    background-color:  #6b0466;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;   
+  }
+  
+  .admbut:hover {
+    /* Add your desired hover styles here */
+    background-color: #dd1ad3;
+  }
+  h1{
+    margin-bottom: 20px;
+    color: #3e023b;
+  }
+  .link-container {
+    display: flex;
+  }
+  
+  .link-item {
+    margin-right: 10px; /* Adjust the value to control the spacing between links */
+  }
+
+.my-form {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f7f7f7;
+    border-radius: 5px;
+}
+.form-group {
+  margin-bottom: 20px;
+}
+  
+  .my-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+
+input[type="text"], [type="email"],[type="password"],
+textarea,
+select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+  
+.my-form button[type="submit"] {
+  background-color: #6b0466;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+}
+.my-form button[type="submit"]:hover {
+  background-color:  #dd1ad3;
+}
+.file-upload input[type="file"] {
+  display: none;
+}
+
+.file-upload label {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.file-upload label:hover {
+  background-color: #0056b3;
+}
+
+.edit-link {
+  background-color: rgb(0, 128, 0);
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 3px;
+  text-decoration: none;
+}
+
+.edit-link:hover {
+  background-color: #dfd5de;
+}
+
+.delete-button {
+  background-color: #dc3545;
+  color: #fff;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.delete-button:hover {
+  background-color: #c82333;
+}
+
+.reset-link {
+  background-color: rgb(16, 75, 236);
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 3px;
+  text-decoration: none;
+}
+
+.reset-link:hover {
+  background-color: #dfd5de;
+}
+.deact-link {
+  background-color: rgb(245, 229, 7);
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 3px;
+  text-decoration: none;
+}
+
+.deact-link:hover {
+  background-color: #dfd5de;
+}
+.acti-link {
+  background-color: rgb(128, 74, 4);
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 3px;
+  text-decoration: none;
+}
+
+.acti-link:hover {
+  background-color: #dfd5de;
+}

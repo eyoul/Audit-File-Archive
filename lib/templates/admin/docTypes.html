@@ -2,7 +2,7 @@
 
 {% block content %}
   <h1>Document Types</h1>
-  <p><a href="{{ url_for('post.add_doc_type') }}">Add Document Type</a></p>
+  <p><a class="admbut" href="{{ url_for('post.add_doc_type') }}">Add Document Type</a></p>
   <table>
     <thead>
       <tr>
@@ -22,12 +22,12 @@
           <td>{{ docType[1] }}</td>
           <td>{{ docType[2] }}</td>
           <td>
-            <a href="{{ url_for('post.edit_doc_type', doc_type_id=docType[0]) }}">Edit</a>
+            <a class="edit-link" href="{{ url_for('post.edit_doc_type', doc_type_id=docType[0]) }}">Edit</a>
           </td>
           {% if g.user['role_id'] == 1 %}         
           <td>
             <form action="{{ url_for('post.delete_doc_type', doc_type_id=docType[0]) }}" method="post">
-              <input type="submit" value="Delete" onclick="return confirm('Are you sure you want to delete this document type?');">
+              <input class="delete-button" type="submit" value="Delete" onclick="return confirm('Are you sure you want to delete this document type?');">
             </form>
           </td>
           {% endif %}
