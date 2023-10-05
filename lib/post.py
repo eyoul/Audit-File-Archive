@@ -16,6 +16,8 @@ from flask import send_from_directory
 
 bp = Blueprint('post', __name__)
 
+from flask import Flask
+app = Flask(__name__, static_url_path='/static')
 
 #Upload file path
 UPLOAD_FOLDER = os.path.join(os.getcwd(), 'lib', 'static', 'uploads')
