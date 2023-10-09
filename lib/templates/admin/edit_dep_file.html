@@ -35,14 +35,16 @@
                 {% endfor %}
             </select>
         </div>
-        <div class="form-group">
-            <label for="file_path">File</label>
+        <div class="file-upload">
+            <label for="file_path">Upload File</label>
             <input type="file" id="file_path" name="file_path" class="form-control-file">
             {% if document[2] %}
                 <small class="form-text text-muted">Current file: <a href="{{ url_for('static', filename='uploads/'~document[2]) }}">{{ document[1] }}</a></small>
             {% endif %}
         </div>
+        <br>
+        
         <button type="submit" class="btn btn-primary">Save</button>
-        <a href="{{ url_for('post.view_dep_doc') }}" class="btn btn-secondary">Cancel</a>
+        <a href="{{ url_for('post.view_dep_doc') }}" class="cancel-btn">Cancel</a>
     </form>
 {% endblock %}

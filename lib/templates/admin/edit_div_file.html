@@ -35,7 +35,7 @@
         {% endfor %}
       </select>
     </div>
-    <div class="form-group">
+    <div class="file-upload">
       <label for="file_path">File</label>
       <input type="file" id="file_path" name="file_path" class="form-control-file">
       {% if document[2] %}
@@ -43,6 +43,6 @@
       {% endif %}
     </div>
     <button type="submit" class="btn btn-primary">Save</button>
-    <a href="{{ url_for('post.edit_div_file', doc_id=document[0]) }}" class="btn btn-secondary">Cancel</a>
+    <a href="{{ url_for('post.edit_div_file', doc_id=document[0]) }}" class="cancel-btn">Cancel</a>
   </form>
 {% endblock %}

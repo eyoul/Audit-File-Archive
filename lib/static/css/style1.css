@@ -213,7 +213,7 @@ body{
 }
 .home-section{
   position: relative;
-  background: #faf7f9;
+  background: #f3eaf2;
   height: 100vh;
   left: 260px;
   width: calc(100% - 260px);
@@ -417,6 +417,18 @@ select {
 .delete-button:hover {
   background-color: #c82333;
 }
+.cancel-btn {
+  background-color: #f80707;
+  padding: 10px 20px;
+  color: #dfd5de;
+  border: none;
+  border-radius: 5px;
+  text-decoration: none;
+  }
+  .cancel-btn:hover {
+    background-color: #f59da6;
+  }
+
 
 .reset-link {
   background-color: rgb(16, 75, 236);
