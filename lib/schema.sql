@@ -167,3 +167,4 @@ CREATE TABLE unit_program (
     FOREIGN KEY (unit_id) REFERENCES unit (id) ON DELETE CASCADE,
     FOREIGN KEY (audit_program_id) REFERENCES audit_program (id) ON DELETE CASCADE
 );
+

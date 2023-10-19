@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %} - Lib</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style1.css') }}">
-
     <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
    </head>
@@ -50,7 +49,6 @@
           {# <li><a href="{{ url_for('struc.display_structure') }}">Report</a></li> #}
         </ul>
       </li>
-      
       <li>
         <a href="{{ url_for('post.docType') }}">
           <i class='bx bx-compass'></i>
@@ -61,108 +59,82 @@
         </ul>
       </li>
       {% if g.user['role_id'] == 1 %}
-       <li>
-        <div class="iocn-link">
-          <a href="#">
-            <i class='bx bx-plug' ></i>
-            <span class="link_name">Users</span>
-          </a>
-          <i class='bx bxs-chevron-down arrow' ></i>
-        </div>
-        <ul class="sub-menu">
-          <li><a class="link_name" href="#">Manage Users</a></li>
-          <li><a href="{{ url_for('auth.view_users') }}">Users</a></li>
-          <li><a href="{{ url_for('auth.view_users_req') }}">User Request</a></li>
-        </ul>
-      </li>
+      <li>
+      <div class="iocn-link">
+        <a href="#">
+          <i class='bx bx-plug' ></i>
+          <span class="link_name">Users</span>
+        </a>
+        <i class='bx bxs-chevron-down arrow' ></i>
+      </div>
+      <ul class="sub-menu">
+        <li><a class="link_name" href="#">Manage Users</a></li>
+        <li><a href="{{ url_for('auth.view_users') }}">Users</a></li>
+        <li><a href="{{ url_for('auth.view_users_req') }}">User Request</a></li>
+      </ul>
+    </li>
       {% endif %}
-      <li>
-        
-        <div class="iocn-link">
-          <a href="#">
-            <i class='bx bx-book-alt' ></i>
-            <span class="link_name">Manage Files</span>
-          </a>
-          <i class='bx bxs-chevron-down arrow' ></i>
-        </div>
-        <ul class="sub-menu">
-          <li><a class="link_name" href="#">Manage Files</a></li>
-          <li><a href="{{ url_for('post.view_div_doc') }}">Division Files</a></li>
-          <li><a href="{{ url_for('post.view_dep_doc') }}">Department File</a></li>
-          <li><a href="{{ url_for('post.view_unit_doc') }}">Unit File</a></li>
-        </ul>
-      </li>
-
-      <li>
-        <a href="{{ url_for('file.file_type') }}">
-          <i class='bx bx-pie-chart-alt-2'></i>
-          <span class="link_name">Audit File</span>
-        </a>
-        <ul class="sub-menu blank">
-          <li><a class="link_name" href="{{ url_for('file.file_type') }}">Audit File Type</a></li>
-        </ul>
-      </li>
-
-      <li>
-        <a href="{{ url_for('file.program') }}">
-          <i class='bx bx-grid-alt'></i>
-          <span class="link_name">Audit program</span>
-        </a>
-        <ul class="sub-menu blank">
-          <li><a class="link_name" href="{{ url_for('file.program') }}">Audit program</a></li>
-        </ul>
-      </li>
-      <li>
-        <a href="{{ url_for('file.list_file') }}">
-          <i class='bx bx-compass'></i>
-          <span class="link_name">Audit file</span>
-        </a>
-        <ul class="sub-menu blank">
-          <li><a class="link_name" href="{{ url_for('file.list_file') }}">Audit file</a></li>
-        </ul>
-      </li>
-
-      <!-- <li>
-        <div class="iocn-link">
-          <a href="#">
-            <i class='bx bx-line-chart' ></i>
-            <span class="link_name">Edit Struc</span>
-          </a>
-          <i class='bx bxs-chevron-down arrow' ></i>
-        </div>
-        <ul class="sub-menu">
-          <li><a class="link_name" href="#">Edit Struc</a></li>
-          {% if division %}
-
-          <li><a href="{{ url_for('struc.edit_division', division_id=division.id) }}">Edit Division</a></li>
-          {% endif %}
-          <li><a href="#">Edit Division</a></li>
-          <li><a href="#">Edit Department</a></li>
-          <li><a href="#">Edit Unit</a></li>
-        </ul>
-      </li> -->
-      <li>
+    <li>
+      <div class="iocn-link">
         <a href="#">
-          <i class='bx bx-history'></i>
-          <span class="link_name">History</span>
+          <i class='bx bx-book-alt' ></i>
+          <span class="link_name">Manage Files</span>
         </a>
-        <ul class="sub-menu blank">
-          <li><a class="link_name" href="#">History</a></li>
-        </ul>
-      </li>
-  
-      <li>
-        <a href="#">
-          <i class='bx bx-cog' ></i>
-          <span class="link_name">Setting</span>
-        </a>
-        <ul class="sub-menu blank">
-          <li><a class="link_name" href="#">Setting</a></li>
-        </ul>
-      </li>
-
-
-      <li>
+        <i class='bx bxs-chevron-down arrow' ></i>
+      </div>
+      <ul class="sub-menu">
+        <li><a class="link_name" href="#">Manage Files</a></li>
+        <li><a href="{{ url_for('post.view_div_doc') }}">Division Files</a></li>
+        <li><a href="{{ url_for('post.view_dep_doc') }}">Department File</a></li>
+        <li><a href="{{ url_for('post.view_unit_doc') }}">Unit File</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="{{ url_for('file.file_type') }}">
+        <i class='bx bx-pie-chart-alt-2'></i>
+        <span class="link_name">Audit File</span>
+      </a>
+      <ul class="sub-menu blank">
+        <li><a class="link_name" href="{{ url_for('file.file_type') }}">Audit File Type</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="{{ url_for('file.program') }}">
+        <i class='bx bx-grid-alt'></i>
+        <span class="link_name">Audit program</span>
+      </a>
+      <ul class="sub-menu blank">
+        <li><a class="link_name" href="{{ url_for('file.program') }}">Audit program</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="{{ url_for('file.list_file') }}">
+        <i class='bx bx-compass'></i>
+        <span class="link_name">Audit file</span>
+      </a>
+      <ul class="sub-menu blank">
+        <li><a class="link_name" href="{{ url_for('file.list_file') }}">Audit file</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#">
+        <i class='bx bx-history'></i>
+        <span class="link_name">History</span>
+      </a>
+      <ul class="sub-menu blank">
+        <li><a class="link_name" href="#">History</a></li>
+      </ul>
+    </li>
+    <li>
+    <a href="#">
+      <i class='bx bx-cog' ></i>
+      <span class="link_name">Setting</span>
+    </a>
+    <ul class="sub-menu blank">
+      <li><a class="link_name" href="#">Setting</a></li>
+    </ul>
+  </li>
+  <li>
     <div class="profile-details">
       <div class="profile-content">
       </div>
@@ -182,10 +154,14 @@
       <span class="text">Administrator Panal</span>
     </div>
     {% block content %}{% endblock %}
+      <section class="content">
+        {% for message in get_flashed_messages() %}
+          <div class="flash">{{ message }}</div>
+        {% endfor %}
+      </section>
   </section>
   
   <script src="{{ url_for('static', filename='js/script1.js') }}"></script>
 
 </body>
 </html>
-

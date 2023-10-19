@@ -36,11 +36,18 @@ hr {
   margin: 1rem 0 0.25rem 0;
 }
 
+
 .flash {
-  margin: 1em 0;
+  margin: 1em auto;
   padding: 1em;
-  background: #cae6f6;
+  max-width: 400px;
+  background: linear-gradient(45deg, #cae6f6, #a5d2f3);
   border: 1px solid #377ba8;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  color: #377ba8;
+  font-weight: bold;
+  text-align: center;
 }
 
 .post > header {

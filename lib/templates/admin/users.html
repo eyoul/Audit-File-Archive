@@ -10,7 +10,7 @@
         <th>Name</th>
         <th>Employee ID</th>
         <th>Email</th>
-        <th>Department</th>
+        <th>Place</th>
         <th>Position</th>
         <th>Role</th>
         <th>Status</th>
@@ -26,11 +26,11 @@
           <td>{{ user[1] }}</td>
           <td>{{ user[2] }}</td>
           <td>{{ user[3] }}</td>
-          <td>{{ user[5] }}</td>
-          <td>{{ user[6] }}</td>
           <td>{{ user[7] }}</td>
+          <td>{{ user[8] }}</td>
+          <td>{{ user[5] }}</td>
           <td>
-            {% if user[8] %}
+            {% if user[6] %}
             <form action="{{ url_for('auth.deactivate_user', user_id=user[0]) }}" method="post">
                 <button class="deact-link" type="submit" class="btn btn-danger">Deactivate</button>
             </form>

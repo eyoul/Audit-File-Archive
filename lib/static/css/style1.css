@@ -463,3 +463,16 @@ select {
 .acti-link:hover {
   background-color: #dfd5de;
 }
+
+.flash {
+  margin: 1em auto;
+  padding: 1em;
+  max-width: 400px;
+  background: linear-gradient(45deg, #cae6f6, #a5d2f3);
+  border: 1px solid #377ba8;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  color: #377ba8;
+  font-weight: bold;
+  text-align: center;
+}

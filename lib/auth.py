@@ -77,17 +77,22 @@ def login():
 
     return render_template('auth/login.html')
 
-# Users View 
 @bp.route('/view_users')
-@login_required_role([1]) # '1' is the role_id for the admin role
+@login_required_role([1])  # '1' is the role_id for the admin role
 @login_required
 def view_users():
     db = get_db()
     cursor = db.cursor()
 
-    cursor.execute('SELECT * FROM user')
+    cursor.execute(
+        'SELECT u.id, u.name, u.emp_id, u.email, r.name AS role_name, p.name AS place_name, po.name AS position_name '
+        'FROM user u JOIN place p ON u.place_id = p.id '
+        'JOIN position po ON u.position_id = po.id '
+        'JOIN role r ON u.role_id = r.id '
+        'ORDER BY u.emp_id'
+    )
 
-    users =cursor.fetchall()
+    users = cursor.fetchall()
     return render_template('admin/users.html', users=users)
 
 # Add Users
@@ -449,7 +454,7 @@ def logout():
 @bp.route('/unauthorized')
 def unauthorized():
     return render_template('auth/unauthorized.html')
-
+"""
 #tempo Regist
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
@@ -458,8 +463,8 @@ def register():
         emp_id = request.form['emp_id']
         email = request.form['email']
         password = request.form['password']
-        place = request.form['place']
-        position = request.form['position']
+        place_id = request.form['place_id']
+        position_id = request.form['position_id']
         role_id = request.form['role_id']
 
         db = get_db()
@@ -473,10 +478,10 @@ def register():
             error = 'Email is required!'
         elif not password:
             error = 'Password is required!'
-        elif not place:
+        elif not place_id:
             error = 'Place is required!'
-        elif not position:
-            error = 'Position is required!'
+        elif not position_id:
+            error = 'position is required!'
         elif not role_id:
             error = 'Role ID is required!'
 
@@ -484,8 +489,8 @@ def register():
             try:
                 cursor = db.cursor()
                 cursor.execute(
-                    "INSERT INTO user (name, emp_id, email, password, place, position, role_id) VALUES (%s, %s, %s, %s, %s, %s, %s)",
-                    (name, emp_id, email, generate_password_hash(password), place, position, role_id),
+                    "INSERT INTO user (name, emp_id, email, password, place_id, position_id, role_id) VALUES (%s, %s, %s, %s, %s, %s, %s)",
+                    (name, emp_id, email, generate_password_hash(password), place_id, position_id, role_id),
                 )
                 db.commit()
             except Exception as e:
@@ -495,6 +500,5 @@ def register():
 
         flash(error)
 
-    return render_template('auth/register.html')
-
-
+    return render_template('auth/register.html')"""
+  
