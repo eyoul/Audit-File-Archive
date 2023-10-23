@@ -1,9 +1,6 @@
 <!doctype html>
 <title>{% block title %}{% endblock %} - Lib</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-<nav>
-  <img src="{{ url_for('static', filename='images/banner_start.gif') }}" alt="Logo" class="logo">
-</nav>
 <nav class="nav-link1">
   <a href="{{ url_for('post.index') }}"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="home-logo"></a>
   <ul>
@@ -34,6 +31,10 @@
     {% endif %}
 
   </ul>
+</nav>
+<nav>
+  <img src="{{ url_for('static', filename='images/banner_start.gif') }}" alt="Logo" class="logo">
+   {% block nav1 %} {% endblock %}
 </nav>
 <section class="content">
   <header>

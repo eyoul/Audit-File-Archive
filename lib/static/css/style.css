@@ -510,3 +510,16 @@ background-color:  #dd1ad3;
   width: 30px;
   height: 30px;
 }
+.search-container {
+  position: absolute;
+  right: 10px;
+}
+
+.search {
+  display: flex;
+  align-items: center;
+}
+
+.search input[type="text"] {
+  margin-right: 10px;
+}
