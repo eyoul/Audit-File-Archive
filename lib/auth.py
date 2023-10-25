@@ -247,7 +247,6 @@ def reset_password(user_id):
 
     return render_template('admin/reset_password.html', user=user)
 
-# Simple User Profile
 @bp.route('/profile')
 @login_required
 def profile():
@@ -256,7 +255,10 @@ def profile():
     cursor = db.cursor()
 
     cursor.execute(
-        'SELECT name, emp_id, email, place, position FROM user WHERE emp_id = %s',
+        'SELECT u.name, u.emp_id, u.email, p.name AS place_name, po.name AS position_name '
+        'FROM user u JOIN place p ON u.place_id = p.id '
+        'JOIN position po ON u.position_id = po.id '
+        'WHERE u.emp_id = %s',
         (g.user['emp_id'],)
     )
     user_data = cursor.fetchone()
