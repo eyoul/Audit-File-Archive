@@ -5,6 +5,8 @@
 {% endblock %}
 
 {% block nav1 %}
+    <a href="{{ url_for('post.docFile') }}"><img src="{{ url_for('static', filename='images/ebook.png') }}" alt="Logo" class="link-logo"></a> 
+    <a href="{{ url_for('post.AuditFile') }}"><img src="{{ url_for('static', filename='images/audit.png') }}" alt="Logo" class="link-logo"></a> 
     <div class="search-container">
         <form class="search" action="{{ url_for('post.search') }}" method="GET">
             <input type="text" name="q" placeholder="Search..." required>
@@ -15,82 +17,15 @@
 
 {% block content %}
 <section class="section1">
-    <!-- Add search bar -->
-
-    <ul class="tree-menu">
-        {% for division in divisions %}
-        <li>
-            <a href="#">{{ division[1] }}</a>
-            <ul>
-                {% for department in departments if department[3] == division[0] %}
-                <li>
-                    <a href="#">{{ department[1] }}</a>
-                    <ul>
-                        {% for unit in units if unit[3] == department[0] %}
-                        <li>
-                            <a href="#">{{ unit[1] }}</a>
-                            <ul>
-                                {% for document in documents if document[7] == unit[0] %}
-                                <li><a href="#" data-file="{{ url_for('post.download_file', filename=document[2]) }}" data-type="{{ document[4] }}">{{ document[1] }}</a></li>
-                                {% endfor %}
-                            </ul>
-                            <ul>
-                                {% for program in programs if program[6] == unit[0] %}
-                                <li>
-                                    <a href="#">{{ program[1] }}</a>
-                                    <ul>
-                                        {% for file in audit_files if file.audit_program_id == program[0] %}
-                                        <li><a href="#" data-file="{{ url_for('file.download_audit', filename=file[2]) }}" data-type="{{ file[2] }}">{{ file[8] }}</a></li>
-                                        {% endfor %}
-                                    </ul>
-                                </li>
-                                {% endfor %}
-                            </ul>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                    <ul>
-                        {% for document in documents if document[6] == department[0] and document[7] is none %}
-                        <li><a href="#" data-file="{{ url_for('post.download_file', filename=document[2]) }}" data-type="{{ document[4] }}">{{ document[1] }}</a></li>
-                        {% endfor %}
-                        {% for program in programs if program[5] == department[0] %}
-                        <li>
-                            <a href="#">{{ program[1] }}</a>
-                            <ul>
-                                {% for file in audit_files if file.audit_program_id == program.id %}
-                                <li><a href="#" data-file="{{ url_for('file.download_audit', filename=file[2]) }}" data-type="{{ file[3] }}">{{ file[8] }}</a></li>
-                                {% endfor %}
-                            </ul>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </li>
-                {% endfor %}
-            </ul>
-            <ul>
-                {% for document in documents if document[5] == division[0] and document[6] is none and document[7] is none %}
-                <li><a href="#" data-file="{{ url_for('post.download_file', filename=document[2]) }}" data-type="{{ document[4] }}">{{ document[1] }}</a></li>
-                {% endfor %}
-                {% for program in programs if program[4] == division[0] %}
-                <li>
-                    <a href="#">{{ program[1] }}</a>
-                    <ul>
-                        {% for file in audit_files if file.audit_program_id == program.id %}
-                        <li><a href="#" data-file="{{ url_for('file.download_audit', filename=file[2]) }}" data-type="{{ file[2] }}">{{ file[8] }}</a></li>
-                        {% endfor %}
-                    </ul>
-                </li>
-                {% endfor %}
-            </ul>
-        </li>
-        {% endfor %}
-    </ul>
+    {% block doc %} {% endblock%}
+</section>
 </section>
 <section id="file-container" class="section2">
     <object id="pdf" data="" type="application/pdf" width="800px" height="600px">
-        <p><h1>Welcome to Commercial bank of Ethiopia Audit File Achieve</h1></p> <a href=""></a>.</p>
+        <p><h1>Welcome to Commercial bank of Ethiopia Audit File Archive</h1></p> <a href=""></a>.</p>
     </object>
 </section>
+
 
 <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 {% endblock %}

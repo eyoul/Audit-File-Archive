@@ -66,6 +66,50 @@ def index():
     return render_template('post/index.html', divisions=divisions, departments=departments,
                            units=units, documents=documents, programs=programs, audit_files=audit_files)
 
+# Document view 
+@bp.route('/docFile')
+@login_required
+def docFile():
+    db = get_db()
+    cursor = db.cursor()
+
+    cursor.execute('SELECT id, name, description FROM division')
+    divisions = cursor.fetchall()
+
+    cursor.execute('SELECT id, name, description, division_id FROM department')
+    departments = cursor.fetchall()
+
+    cursor.execute('SELECT id, name, description, department_id FROM unit')
+    units = cursor.fetchall()
+
+    cursor.execute('SELECT id, name, file_path, description, docType_id, division_id, department_id, unit_id FROM document')
+    documents = cursor.fetchall()
+
+    cursor.close()
+
+    return render_template('post/doc.html', divisions=divisions, departments=departments,
+                           units=units, documents=documents)
+# Document view 
+@bp.route('/AuditFile')
+@login_required
+def AuditFile():
+    db = get_db()
+    cursor = db.cursor()
+
+    cursor.execute('SELECT id, name, period, description, division_id, department_id, unit_id FROM audit_program')
+    programs = cursor.fetchall()
+
+    cursor.execute('''
+        SELECT audit_File.*, audit_File_Type.name AS type_name
+        FROM audit_File
+        JOIN audit_File_Type ON audit_File.file_type_id = audit_File_Type.id
+        ORDER BY audit_File.name
+    ''')
+    audit_files = cursor.fetchall()
+
+    cursor.close()
+
+    return render_template('post/doc.html', programs=programs, audit_files=audit_files)
 
 @bp.route('/download/<path:filename>')
 @login_required
