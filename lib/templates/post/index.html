@@ -6,7 +6,7 @@
 
 {% block nav1 %}
     <a href="{{ url_for('post.docFile') }}"><img src="{{ url_for('static', filename='images/ebook.png') }}" alt="Logo" class="link-logo"></a> 
-    <a href="{{ url_for('post.AuditFile') }}"><img src="{{ url_for('static', filename='images/audit.png') }}" alt="Logo" class="link-logo"></a> 
+    <a href="{{ url_for('post.auditFile') }}"><img src="{{ url_for('static', filename='images/audit.png') }}" alt="Logo" class="link-logo"></a> 
     <div class="search-container">
         <form class="search" action="{{ url_for('post.search') }}" method="GET">
             <input type="text" name="q" placeholder="Search..." required>
@@ -17,7 +17,7 @@
 
 {% block content %}
 <section class="section1">
-    {% block doc %} {% endblock%}
+    {% block doc %} {% endblock%} 
 </section>
 </section>
 <section id="file-container" class="section2">

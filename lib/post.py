@@ -32,7 +32,7 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 # index file 
-@bp.route('/')
+"""@bp.route('/')
 @login_required
 def index():
     db = get_db()
@@ -64,7 +64,16 @@ def index():
     cursor.close()
 
     return render_template('post/index.html', divisions=divisions, departments=departments,
-                           units=units, documents=documents, programs=programs, audit_files=audit_files)
+                           units=units, documents=documents, programs=programs, audit_files=audit_files)"""
+@bp.route('/')
+@login_required
+def index():
+    db = get_db()
+    cursor = db.cursor()
+
+    cursor.close()
+
+    return render_template('post/index.html')
 
 # Document view 
 @bp.route('/docFile')
@@ -90,9 +99,9 @@ def docFile():
     return render_template('post/doc.html', divisions=divisions, departments=departments,
                            units=units, documents=documents)
 # Document view 
-@bp.route('/AuditFile')
+@bp.route('/auditFile')
 @login_required
-def AuditFile():
+def auditFile():
     db = get_db()
     cursor = db.cursor()
 
@@ -109,7 +118,7 @@ def AuditFile():
 
     cursor.close()
 
-    return render_template('post/doc.html', programs=programs, audit_files=audit_files)
+    return render_template('post/audit.html', programs=programs, audit_files=audit_files)
 
 @bp.route('/download/<path:filename>')
 @login_required

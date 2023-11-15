@@ -1,0 +1,63 @@
+{% extends 'post/index.html' %}
+    
+    <!-- Add search bar -->
+
+    {% block doc %}
+    <br>
+    <br>
+    <h1>this is Audit file </h1>
+    {% comment %} <ul class="tree-menu">
+        <li>
+            <ul>
+                {% for program in programs if program[6] == unit[0] %}
+                <li>
+                    <a href="#">{{ program[1] }}</a>
+                    <ul>
+                        {% for file in audit_files if file.audit_program_id == program[0] %}
+                        <li><a href="#" data-file="{{ url_for('file.download_audit', filename=file[2]) }}" data-type="{{ file[2] }}">{{ file[8] }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                {% endfor %}
+            </ul>
+        </li>
+        {% for program in programs if program[5] == department[0] %}
+        <li>
+            <a href="#">{{ program[1] }}</a>
+            <ul>
+                {% for file in audit_files if file.audit_program_id == program.id %}
+                <li><a href="#" data-file="{{ url_for('file.download_audit', filename=file[2]) }}" data-type="{{ file[3] }}">{{ file[8] }}</a></li>
+                {% endfor %}
+            </ul>
+        </li>
+        {% endfor %}
+        <li>
+            <ul>
+                {% for program in programs if program[4] == division[0] %}
+                <li>
+                    <a href="#">{{ program[1] }}</a>
+                    <ul>
+                        {% for file in audit_files if file.audit_program_id == program.id %}
+                        <li><a href="#" data-file="{{ url_for('file.download_audit', filename=file[2]) }}" data-type="{{ file[2] }}">{{ file[8] }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                {% endfor %}
+            </ul>
+        </li>
+    </ul> {% endcomment %}
+    <ul class="tree-menu">
+        {% for program in programs %}
+        <li>
+            <a href="#">{{ program[1] }}</a>
+            <ul>
+                {% for file in audit_files if file[1] == program[0] %}
+                <li><a href="#" data-file="{{ url_for('file.download_audit', filename=file[2]) }}" data-type="{{ file[9] }}">{{ file[8] }}</a></li>
+                {% endfor %}
+            </ul>
+        </li>
+        {% endfor %}
+    </ul>
+
+
+{% endblock%}
