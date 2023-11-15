@@ -14,15 +14,19 @@
                 <li>
                     <a href="#">{{ department[1] }}</a>
                     <ul>
+                        
+                        
                         {% for unit in units if unit[3] == department[0] %}
                         <li>
                             <a href="#">{{ unit[1] }}</a>
+
                             <ul>
                                 {% for document in documents if document[7] == unit[0] %}
                                 <li><a href="#" data-file="{{ url_for('post.download_file', filename=document[2]) }}" data-type="{{ document[4] }}">{{ document[1] }}</a></li>
                                 {% endfor %}
                             </ul>
                         </li>
+
                         {% endfor %}
                     </ul>
                     <ul>
@@ -33,11 +37,13 @@
                 </li>
                 {% endfor %}
             </ul>
+            
             <ul>
                 {% for document in documents if document[5] == division[0] and document[6] is none and document[7] is none %}
                 <li><a href="#" data-file="{{ url_for('post.download_file', filename=document[2]) }}" data-type="{{ document[4] }}">{{ document[1] }}</a></li>
                 {% endfor %}
             </ul>
+            
         </li>
         {% endfor %}
     </ul>
