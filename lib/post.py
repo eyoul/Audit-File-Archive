@@ -549,6 +549,7 @@ def add_dep_file():
     return render_template('admin/add_dep_file.html', docTypes=docTypes, 
                             departments=departments)
 
+
 @bp.route('/edit_dep_file/<int:doc_id>', methods=('GET', 'POST'))
 @login_required_role([1, 2])  # '1' is the role_id for the admin role
 @login_required

@@ -77,6 +77,7 @@ def login():
 
     return render_template('auth/login.html')
 
+
 @bp.route('/view_users')
 @login_required_role([1])  # '1' is the role_id for the admin role
 @login_required
@@ -94,6 +95,7 @@ def view_users():
 
     users = cursor.fetchall()
     return render_template('admin/users.html', users=users)
+
 
 # Add Users
 @bp.route('/add_user', methods=['GET', 'POST'])
