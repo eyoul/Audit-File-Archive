@@ -57,16 +57,20 @@ def login():
         db = get_db()
         error = None
 
-        cursor = db.cursor(dictionary=True)  # Fetch rows as dictionaries
-        cursor.execute('SELECT * FROM user WHERE emp_id = %s', (emp_id,))
-        user = cursor.fetchone()
+        # Check if emp_id is numeric
+        if not emp_id.isdigit():
+            error = 'Employee ID must be a number.'
+        else:
+            cursor = db.cursor(dictionary=True)  # Fetch rows as dictionaries
+            cursor.execute('SELECT * FROM user WHERE emp_id = %s', (emp_id,))
+            user = cursor.fetchone()
 
-        if user is None:
-            error = 'Incorrect emp_id.'
-        elif not check_password_hash(user['password'], password):
-            error = 'Incorrect password.'
-        elif not user['active']:
-            error = 'User account is inactive.'
+            if user is None:
+                error = 'Incorrect emp_id.'
+            elif not check_password_hash(user['password'], password):
+                error = 'Incorrect password.'
+            elif not user['active']:
+                error = 'User account is inactive.'
 
         if error is None:
             session.clear()
@@ -76,7 +80,6 @@ def login():
         flash(error)
 
     return render_template('auth/login.html')
-
 
 @bp.route('/view_users')
 @login_required_role([1])  # '1' is the role_id for the admin role
@@ -92,7 +95,6 @@ def view_users():
         'JOIN role r ON u.role_id = r.id '
         'ORDER BY u.emp_id'
     )
-
     users = cursor.fetchall()
     return render_template('admin/users.html', users=users)
 
@@ -107,45 +109,52 @@ def add_user():
         emp_id = request.form['emp_id']
         email = request.form['email']
         password = request.form['password']
-        place= request.form['place']
-        position = request.form['position']
+        place_id= request.form['place_id']
+        position_id = request.form['position_id']
         role_id = request.form['role_id']
 
         db = get_db()
         error = None
 
-        if not name:
+        # Check if emp_id is numeric
+        if not emp_id.isdigit():
+            error = 'Employee ID must be a number.'
+            flash(error)
+        elif not name:
             error = 'Name is required!'
-        elif not emp_id:
-            error = 'Employee Id required!'
+            flash(error)
         elif not email:
             error = 'Email required!'
+            flash(error)
         elif not password:
             error = 'Password required!'
-        elif not place:
-            error = 'place required!'
-        elif not position:
-            error = 'position required!'
+            flash(error)
+        elif not  place_id:
+            error = ' place required!'
+            flash(error)
+        elif not position_id:
+            error = 'Position required!'
+            flash(error)
         elif not role_id:
             error = 'Role is required!'
+            flash(error)
         
         if error is None:
             try:
                 cursor = db.cursor()
                 cursor.execute(
-                    "INSERT INTO user (name, emp_id, email, password, place, position, role_id) VALUES (%s, %s, %s, %s, %s, %s, %s)",
-                    (name, emp_id, email, generate_password_hash(password), place, position, role_id),
+                    "INSERT INTO user (name, emp_id, email, password,  place_id, position_id, role_id) VALUES (%s, %s, %s, %s, %s, %s, %s)",
+                    (name, emp_id, email, generate_password_hash(password),  place_id, position_id, role_id),
                 )
                 db.commit()
             except db.IntegrityError:
                 error = f"User {emp_id} is already registered."
+                flash(error)
             else:
                 return redirect(url_for('auth.view_users'))
-            flash(error)
     
     return render_template('admin/add_user.html')
 
-# Edit Useres
 @bp.route('/edit_user/<int:user_id>', methods=['GET', 'POST'])
 @login_required
 @login_required_role([1])  # '1' is the role_id for the admin role
@@ -171,18 +180,25 @@ def edit_user(user_id):
         role_id = request.form['role_id']
         error = None
 
-        if not name:
+        # Check if emp_id is numeric
+        if not emp_id.isdigit():
+            error = 'Employee ID must be a number.'
+            flash(error)
+        elif not name:
             error = 'Name is required!'
-        elif not emp_id:
-            error = 'Employee Id required!'
+            flash(error)
         elif not email:
             error = 'Email required!'
+            flash(error)
         elif not place:
             error = 'place required!'
+            flash(error)
         elif not position:
             error = 'position required!'
+            flash(error)
         elif not role_id:
             error = 'Role is required!'
+            flash(error)
 
         if error is None:
             cursor.execute(
@@ -193,8 +209,6 @@ def edit_user(user_id):
             flash('User updated successfully!')
             
             return redirect(url_for('auth.view_users'))
-
-        flash(error)
 
     return render_template('admin/edit_user.html', user=user)
 

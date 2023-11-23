@@ -12,11 +12,11 @@
       <textarea class="form-control" id="description" name="description" required>{{ request.form.get('description', '') }}</textarea>
     </div>
     <div class="form-group">
-      <label for="division_id">Division</label>
-      <select class="form-control" id="division_id" name="division_id" required>
+      <label for="position_id">Division</label>
+      <select class="form-control" id="position_id" name="position_id" required>
         <option value="">Select a Division</option>
-        {% for division in divisions %}
-          <option value="{{ division[0] }}">{{ division[1] }}</option>
+        {% for position in positions %}
+          <option value="{{ position[0] }}">{{ position[1] }}</option>
         {% endfor %}
       </select>
     </div>

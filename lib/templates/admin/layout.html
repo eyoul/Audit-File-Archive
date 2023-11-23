@@ -60,6 +60,24 @@
       </li>
       {% if g.user['role_id'] == 1 %}
       <li>
+        <a href="#">
+          <i class='bx bx-history'></i>
+          <span class="link_name">Place</span>
+        </a>
+        <ul class="sub-menu blank">
+          <li><a class="link_name" href="{{ url_for('struc.place') }}">Place</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="#">
+          <i class='bx bx-history'></i>
+          <span class="link_name">position</span>
+        </a>
+        <ul class="sub-menu blank">
+          <li><a class="link_name" href="{{ url_for('struc.position') }}">position</a></li>
+        </ul>
+      </li>
+      <li>
       <div class="iocn-link">
         <a href="#">
           <i class='bx bx-plug' ></i>
@@ -142,7 +160,7 @@
         <div class="profile_name">As: {{ g.user['emp_id'] }}</div>
         <div class="job"> {{ g.user['name'] }}</div>
       </div>
-      <i><a class='bx bx-log-out' href="{{ url_for('auth.logout') }}"></a></i>
+      <i style="color: white;"><a class='bx bx-log-out' href="{{ url_for('auth.logout') }}" style="color: white;"></a></i>
     </div>
   </li>
 </ul>

@@ -1,0 +1,16 @@
+{% extends 'admin/layout.html' %}
+
+{% block content %}
+  <h1>Edit Position</h1>
+  <form class="my-form" method="post">
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input type="text" class="form-control" id="name" name="name" value="{{ position['name'] }}">
+    </div>
+    <div class="form-group">
+      <label for="description">Description</label>
+      <textarea class="form-control" id="description" name="description">{{ position['description'] }}</textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Update Position</button>
+  </form>
+{% endblock %}

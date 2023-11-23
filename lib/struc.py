@@ -452,14 +452,267 @@ def delete_unit(unit_id):
 
     return redirect(url_for('struc.unit'))
 
+# place of the user 
+@bp.route('/place')
+@login_required_role([1, 2])  # '1' is the role_id for the admin role
+@login_required
+def place():
+    db = get_db()
+    cursor = db.cursor()
+
+    cursor.execute('SELECT * FROM place ORDER BY name')
+    places = cursor.fetchall()
+
+    cursor.close()
+
+    return render_template('admin/place.html', places=places)
+
+@bp.route('/add_place', methods=['GET', 'POST'])
+@login_required_role([1, 2])  # '1' is the role_id for the admin role
+@login_required
+def add_place():
+    db = get_db()
+    cursor = db.cursor()
+
+    if request.method == 'POST':
+        name = request.form['name']
+        description = request.form['description']
+        error = None
+
+        if not name:
+            error = 'Name is required!'
+        elif not description:
+            error = 'Description is required!'
+
+        if error is None:
+            cursor.execute(
+                'SELECT id FROM place WHERE name = %s', (name,)
+            )
+            existing_place = cursor.fetchone()
+
+            if existing_place is not None:
+                flash(f"The place '{name}' already exists.")
+            else:
+                cursor.execute(
+                    'INSERT INTO place (name, description) VALUES (%s, %s)',
+                    (name, description)
+                )
+                db.commit()
+                flash('place added successfully!')
+                return redirect(url_for('struc.place'))
+
+        flash(error)
+
+    cursor.execute(
+        'SELECT id, name, description FROM place'
+    )
+    places = cursor.fetchall()
+
+    cursor.close()
+
+    return render_template('admin/add_place.html', places=places)
+
+
+@bp.route('/edit_place/<int:place_id>', methods=['GET', 'POST'])
+@login_required_role([1, 2])  # '1' is the role_id for the admin role
+@login_required
+def edit_place(place_id):
+    db = get_db()
+    cursor = db.cursor()
+
+    cursor.execute(
+        'SELECT id, name, description FROM place WHERE id = %s', (place_id,)
+    )
+    place = cursor.fetchone()
+
+    if place is None:
+        flash(f"place id {place_id} doesn't exist.")
+        return redirect(url_for('struc.place'))
+
+    place_id, name, description = place
+
+    if request.method == 'POST':
+        name = request.form['name']
+        description = request.form['description']
+        error = None
+
+        if not name:
+            error = 'Name is required!'
+        elif not description:
+            error = 'Description is required!'
+
+        if error is None:
+            cursor.execute(
+                'UPDATE place SET name = %s, description = %s WHERE id = %s',
+                (name, description, place_id)
+            )
+            db.commit()
+            flash('place updated successfully!')
+            return redirect(url_for('struc.place'))
+
+        flash(error)
+
+    cursor.close()
+
+    return render_template('admin/edit_place.html', place={'id': place_id, 'name': name, 'description': description})
+
+
+@bp.route('/delete_place/<int:place_id>', methods=['POST'])
+@login_required_role([1])  # '1' is the role_id for the admin role
+@login_required
+def delete_place(place_id):
+    db = get_db()
+    cursor = db.cursor()
+
+    cursor.execute('SELECT id FROM place WHERE id = %s', (place_id,))
+    place = cursor.fetchone()
+
+    if place is None:
+        abort(404, f"place id {place_id} doesn't exist.")
+    
+    # Use a transaction to ensure that the deletion is atomic
+        # Delete the place record and any associated department records 
+    
+    cursor.execute('DELETE FROM place WHERE id = %s', (place_id,))
+    db.commit()
+    flash('place deleted successfully!')
+    cursor.close()  
+    return redirect(url_for('struc.place'))
 """
 @bp.route('/display_structure', methods=['GET', 'POST'])
 @login_required_role([1, 2])  # '1' is the role_id for the admin role
 @login_required
 def display_structure():
     db = get_db()
-    divisions = db.execute('SELECT * FROM division ORDER BY name').fetchall()
+    places = db.execute('SELECT * FROM division ORDER BY name').fetchall()
     departments = db.execute('SELECT * FROM department ORDER BY name').fetchall()
     units = db.execute('SELECT * FROM unit ORDER BY name').fetchall()
     return render_template('admin/display_structure.html', divisions=divisions, departments=departments, units=units)
 """
+
+# position of the user 
+@bp.route('/position')
+@login_required_role([1, 2])  # '1' is the role_id for the admin role
+@login_required
+def position():
+    db = get_db()
+    cursor = db.cursor()
+
+    cursor.execute('SELECT * FROM position ORDER BY name')
+    positions = cursor.fetchall()
+
+    cursor.close()
+
+    return render_template('admin/position.html', positions=positions)
+
+@bp.route('/add_position', methods=['GET', 'POST'])
+@login_required_role([1, 2])  # '1' is the role_id for the admin role
+@login_required
+def add_position():
+    db = get_db()
+    cursor = db.cursor()
+
+    if request.method == 'POST':
+        name = request.form['name']
+        description = request.form['description']
+        error = None
+
+        if not name:
+            error = 'Name is required!'
+        elif not description:
+            error = 'Description is required!'
+
+        if error is None:
+            cursor.execute(
+                'SELECT id FROM position WHERE name = %s', (name,)
+            )
+            existing_position = cursor.fetchone()
+
+            if existing_position is not None:
+                flash(f"The position '{name}' already exists.")
+            else:
+                cursor.execute(
+                    'INSERT INTO position (name, description) VALUES (%s, %s)',
+                    (name, description)
+                )
+                db.commit()
+                flash('position added successfully!')
+                return redirect(url_for('struc.position'))
+
+        flash(error)
+
+    cursor.execute(
+        'SELECT id, name, description FROM position'
+    )
+    positions = cursor.fetchall()
+
+    cursor.close()
+
+    return render_template('admin/add_position.html', positions=positions)
+
+
+@bp.route('/edit_position/<int:position_id>', methods=['GET', 'POST'])
+@login_required_role([1, 2])  # '1' is the role_id for the admin role
+@login_required
+def edit_position(position_id):
+    db = get_db()
+    cursor = db.cursor()
+
+    cursor.execute(
+        'SELECT id, name, description FROM position WHERE id = %s', (position_id,)
+    )
+    position = cursor.fetchone()
+
+    if position is None:
+        flash(f"position id {position_id} doesn't exist.")
+        return redirect(url_for('struc.position'))
+
+    position_id, name, description = position
+
+    if request.method == 'POST':
+        name = request.form['name']
+        description = request.form['description']
+        error = None
+
+        if not name:
+            error = 'Name is required!'
+        elif not description:
+            error = 'Description is required!'
+
+        if error is None:
+            cursor.execute(
+                'UPDATE position SET name = %s, description = %s WHERE id = %s',
+                (name, description, position_id)
+            )
+            db.commit()
+            flash('position updated successfully!')
+            return redirect(url_for('struc.position'))
+
+        flash(error)
+
+    cursor.close()
+
+    return render_template('admin/edit_position.html', position={'id': position_id, 'name': name, 'description': description})
+
+
+@bp.route('/delete_position/<int:position_id>', methods=['POST'])
+@login_required_role([1])  # '1' is the role_id for the admin role
+@login_required
+def delete_position(position_id):
+    db = get_db()
+    cursor = db.cursor()
+
+    cursor.execute('SELECT id FROM position WHERE id = %s', (position_id,))
+    position = cursor.fetchone()
+
+    if position is None:
+        abort(404, f"position id {position_id} doesn't exist.")
+    
+    # Use a transaction to ensure that the deletion is atomic
+        # Delete the position record and any associated department records 
+    
+    cursor.execute('DELETE FROM position WHERE id = %s', (position_id,))
+    db.commit()
+    flash('position deleted successfully!')
+    cursor.close()  
+    return redirect(url_for('struc.position'))

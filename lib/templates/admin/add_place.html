@@ -1,0 +1,23 @@
+{% extends 'admin/layout.html' %}
+    
+{% block content %}
+<h1>Add Place</h1>
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul>
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+{% endwith %}
+<form method="post" class="my-form">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required><br>
+    <label for="description">Description:</label>
+    <textarea type="text" id="description" name="description" required></textarea>
+    <br>
+    <br>
+    <button type="submit">Add Place</button>
+</form>
+{% endblock %}
