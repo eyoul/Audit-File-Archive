@@ -56,7 +56,16 @@ def auditFile():
     db = get_db()
     cursor = db.cursor()
 
-    cursor.execute('SELECT id, name, period, description, division_id, department_id, unit_id FROM audit_program')
+    cursor.execute('SELECT id, name FROM place')
+    places = cursor.fetchall()
+
+    cursor.execute('SELECT id, name FROM user')
+    users = cursor.fetchall()
+
+    cursor.execute('SELECT id, name FROM confidence')
+    confidences = cursor.fetchall()
+
+    cursor.execute('SELECT id, name, period, description, division_id, department_id, unit_id, user_id, place_id, confidence_id FROM audit_program')
     programs = cursor.fetchall()
 
     cursor.execute('''
@@ -68,8 +77,7 @@ def auditFile():
     audit_files = cursor.fetchall()
     cursor.close()
 
-    return render_template('post/audit.html', programs=programs, audit_files=audit_files)
-
+    return render_template('post/audit.html', programs=programs, audit_files=audit_files, places=places, users=users, confidences=confidences)
 
 # Document view 
 @bp.route('/docFile')

@@ -12,30 +12,26 @@
     <label for="email">Email</label>
     <input type="email" id="email" name="email" value="{{ user[3] }}" required>
 
-    <label for="place">Department:</label>
-    <select id="place" name="place" value="{{ user[5] }}" required>
-      <option value="">Select a department</option>
-      <option value="Corporate Audit">Corporate Audit</option>
-      <option value="Credit Audit">Credit Audit</option>
-      <option value="IT Audit">IT Audit</option>
-      <option value="Branch Audit">Branch Audit</option>
-      <option value="Fraud Investigation">Fraud Investigation</option>
-      <option value="Follow-up Audit">Follow-up Audit</option>
-      <option value="Administrator">Administrator</option>
-    </select>
-    
-    <label for="position">Position:</label>
-    <select id="position" name="position"  value="{{ user[6] }}" required>
-      <option value="">Select a position</option>
-      <option value="Officer">Officer</option>
-      <option value="Senior Officer">Senior Officer</option>
-      <option value="Auditor">Auditor</option>
-      <option value="Team Leader">Team Leader</option>
-      <option value="Manager">Manager</option>
-      <option value="Director">Director</option>
-      <option value="Vice President">Vice President</option>
-      <option value="Admin">Admin</option>
-    </select>
+
+    <div class="form-group">
+      <label for="place_id">Department</label>
+      <select class="form-control" id="place_id" name="place_id" required>
+        <option value="">Select a Department</option>
+        {% for place in places %}
+          <option value="{{ place[0] }}">{{ place[1] }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="position_id">Position</label>
+      <select class="form-control" id="position_id" name="position_id" required>
+        <option value="">Select a Position</option>
+        {% for position in positions %}
+          <option value="{{ position[0] }}">{{ position[1] }}</option>
+        {% endfor %}
+      </select>
+    </div>
     <label for="role_id">Role</label>
     <select id="role_id" name="role_id" required>
       <option value="">Select a role</option>

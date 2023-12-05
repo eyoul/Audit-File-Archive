@@ -138,11 +138,15 @@ def program():
 
     cursor.execute('''
         SELECT ap.id, ap.name, ap.period, ap.description, d.name AS division_name, 
-            dept.name AS department_name, u.name AS unit_name
+            dept.name AS department_name, u.name AS unit_name, ab.name AS place_name, ur.name AS user_name, 
+            co.name AS confidence_name
         FROM audit_program ap
         LEFT JOIN unit u ON ap.unit_id = u.id
         LEFT JOIN department dept ON ap.department_id = dept.id
         LEFT JOIN division d ON ap.division_id = d.id
+        LEFT JOIN place ab ON ap.place_id = ab.id
+        LEFT JOIN user ur ON ap.user_id = ur.id
+        LEFT JOIN confidence co ON ap.confidence_id = co.id
         ORDER BY ap.name
     ''')
     programs = cursor.fetchall()
@@ -158,9 +162,13 @@ def div_program():
     cursor = db.cursor()
 
     cursor.execute('''
-        SELECT ap.id, ap.name, ap.period, ap.description, d.name AS division_name
+        SELECT ap.id, ap.name, ap.period, ap.description, d.name AS division_name, 
+            ab.name AS place_name, ur.name AS user_name,co.name AS confidence_name
         FROM audit_program ap
         LEFT JOIN division d ON ap.division_id = d.id
+        LEFT JOIN place ab ON ap.place_id = ab.id
+        LEFT JOIN user ur ON ap.user_id = ur.id
+        LEFT JOIN confidence co ON ap.confidence_id = co.id
         ORDER BY ap.name
     ''')
     div_programs = cursor.fetchall()
@@ -176,9 +184,13 @@ def dep_program():
     cursor = db.cursor()
 
     cursor.execute('''
-        SELECT ap.id, ap.name, ap.period, ap.description, d.name AS department_name
+        SELECT ap.id, ap.name, ap.period, ap.description, d.name AS department_name,
+            ab.name AS place_name, ur.name AS user_name,co.name AS confidence_name
         FROM audit_program ap
         LEFT JOIN department d ON ap.department_id = d.id
+        LEFT JOIN place ab ON ap.place_id = ab.id
+        LEFT JOIN user ur ON ap.user_id = ur.id
+        LEFT JOIN confidence co ON ap.confidence_id = co.id
         ORDER BY ap.name
     ''')
     dep_programs = cursor.fetchall()
@@ -194,9 +206,13 @@ def unit_program():
     cursor = db.cursor()
 
     cursor.execute('''
-        SELECT ap.id, ap.name, ap.period, ap.description, d.name AS unit_name
+        SELECT ap.id, ap.name, ap.period, ap.description, d.name AS unit_name,
+            ab.name AS place_name, ur.name AS user_name,co.name AS confidence_name
         FROM audit_program ap
         LEFT JOIN unit d ON ap.unit_id = d.id
+        LEFT JOIN place ab ON ap.place_id = ab.id
+        LEFT JOIN user ur ON ap.user_id = ur.id
+        LEFT JOIN confidence co ON ap.confidence_id = co.id
         ORDER BY ap.name
     ''')
     unit_programs = cursor.fetchall()
@@ -214,11 +230,24 @@ def add_div_program():
     cursor.execute('SELECT id, name FROM division ORDER BY name')
     divisions = cursor.fetchall()
 
+    cursor.execute('SELECT id, name FROM user ORDER BY name')
+    users = cursor.fetchall()
+    
+    cursor.execute('SELECT id, name FROM place ORDER BY name')
+    places = cursor.fetchall()
+
+    cursor.execute('SELECT id, name FROM Confidence ORDER BY name')
+    Confidences = cursor.fetchall()
+
     if request.method == 'POST':
         name = request.form['name']
         period = request.form['period']
         description = request.form['description']
         division_id = request.form.get('division_id')
+        user_id = request.form.get('user_id')
+        place_id = request.form.get('place_id')
+        confidence_id = request.form.get('confidence_id')
+
         error = None
 
         if not name:
@@ -229,11 +258,17 @@ def add_div_program():
             error = 'Description is required!'
         elif not division_id:
             error = 'Division is required!'
+        elif not user_id:
+            error = 'User is required!'
+        elif not place_id:
+            error = 'Place is required!'
+        elif not confidence_id:
+            error = 'Confidentiality is required!'
 
         if error is None:
             cursor.execute(
-                'INSERT INTO audit_program (name, period, description, division_id) VALUES (%s, %s, %s, %s)',
-                (name, period, description, division_id)
+                'INSERT INTO audit_program (name, period, description, division_id, user_id, place_id, confidence_id ) VALUES (%s, %s, %s, %s, %s, %s, %s)',
+                (name, period, description, division_id, user_id, place_id, confidence_id)
             )
             db.commit()
             flash('Audit Division program added successfully!', 'success')
@@ -241,7 +276,7 @@ def add_div_program():
 
         flash(error, 'error')
 
-    return render_template('file/add_div_program.html', divisions=divisions)
+    return render_template('file/add_div_program.html', divisions=divisions, places=places, users=users, Confidences=Confidences )
 
 
 @bp.route('/add_dep_program', methods=['GET', 'POST'])
@@ -254,11 +289,23 @@ def add_dep_program():
     cursor.execute('SELECT id, name FROM department ORDER BY name')
     departments = cursor.fetchall()
 
+    cursor.execute('SELECT id, name FROM user ORDER BY name')
+    users = cursor.fetchall()
+    
+    cursor.execute('SELECT id, name FROM place ORDER BY name')
+    places = cursor.fetchall()
+
+    cursor.execute('SELECT id, name FROM Confidence ORDER BY name')
+    Confidences = cursor.fetchall()
+
     if request.method == 'POST':
         name = request.form['name']
         period = request.form['period']
         description = request.form['description']
         department_id = request.form.get('department_id')
+        user_id = request.form.get('user_id')
+        place_id = request.form.get('place_id')
+        confidence_id = request.form.get('confidence_id')
 
         error = None
 
@@ -270,11 +317,17 @@ def add_dep_program():
             error = 'Description is required!'
         elif not department_id:
             error = 'Department is required!'
+        elif not user_id:
+            error = 'User is required!'
+        elif not place_id:
+            error = 'Place is required!'
+        elif not confidence_id:
+            error = 'Confidentiality is required!'
 
         if error is None:
             cursor.execute(
-                'INSERT INTO audit_program (name, period, description, department_id) VALUES (%s, %s, %s, %s)',
-                (name, period, description, department_id)
+                'INSERT INTO audit_program (name, period, description, department_id, user_id, place_id, confidence_id ) VALUES (%s, %s, %s, %s, %s, %s, %s)',
+                (name, period, description, department_id, user_id, place_id, confidence_id)
             )
             db.commit()
             flash('Audit Department program added successfully!', 'success')
@@ -282,7 +335,7 @@ def add_dep_program():
 
         flash(error, 'error')
 
-    return render_template('file/add_dep_program.html', departments=departments)
+    return render_template('file/add_dep_program.html', departments=departments, places=places, users=users, Confidences=Confidences)
 
 
 @bp.route('/add_unit_program', methods=['GET', 'POST'])
@@ -295,11 +348,23 @@ def add_unit_program():
     cursor.execute('SELECT id, name FROM unit ORDER BY name')
     units = cursor.fetchall()
 
+    cursor.execute('SELECT id, name FROM user ORDER BY name')
+    users = cursor.fetchall()
+    
+    cursor.execute('SELECT id, name FROM place ORDER BY name')
+    places = cursor.fetchall()
+
+    cursor.execute('SELECT id, name FROM Confidence ORDER BY name')
+    Confidences = cursor.fetchall()
+
     if request.method == 'POST':
         name = request.form['name']
         period = request.form['period']
         description = request.form['description']
         unit_id = request.form.get('unit_id')
+        user_id = request.form.get('user_id')
+        place_id = request.form.get('place_id')
+        confidence_id = request.form.get('confidence_id')
         error = None
 
         if not name:
@@ -310,11 +375,17 @@ def add_unit_program():
             error = 'Description is required!'
         elif not unit_id:
             error = 'Unit must be selected.'
+        elif not user_id:
+            error = 'User is required!'
+        elif not place_id:
+            error = 'Place is required!'
+        elif not confidence_id:
+            error = 'Confidentiality is required!'
 
         if error is None:
             cursor.execute(
-                'INSERT INTO audit_program (name, period, description, unit_id) VALUES (%s, %s, %s, %s)',
-                (name, period, description, unit_id)
+                'INSERT INTO audit_program (name, period, description, unit_id, user_id, place_id, confidence_id ) VALUES (%s, %s, %s, %s, %s, %s, %s)',
+                (name, period, description, unit_id, user_id, place_id, confidence_id)
             )
             db.commit()
             flash('Audit Unit program added successfully!', 'success')
@@ -322,7 +393,7 @@ def add_unit_program():
 
         flash(error, 'error')
 
-    return render_template('file/add_unit_program.html', units=units)
+    return render_template('file/add_unit_program.html', units=units, places=places, users=users, Confidences=Confidences)
 
 
 @bp.route('/edit_div_program/<int:div_program_id>', methods=['GET', 'POST'])
@@ -333,23 +404,35 @@ def edit_div_program(div_program_id):
     cursor = db.cursor()
 
     cursor.execute(
-        'SELECT id, name, period, description, division_id FROM audit_program WHERE id = %s',
+        'SELECT id, name, period, description, division_id, user_id, place_id, confidence_id FROM audit_program WHERE id = %s',
         (div_program_id,)
     )
     div_program = cursor.fetchone()
 
-    if program is None:
+    if div_program is None:  # Changed 'program' to 'div_program'
         flash(f"Program with ID '{div_program_id}' does not exist.", 'error')
         return redirect(url_for('file.program'))
 
     cursor.execute('SELECT id, name FROM division ORDER BY name')
     divisions = cursor.fetchall()
 
+    cursor.execute('SELECT id, name FROM user ORDER BY name')
+    users = cursor.fetchall()
+    
+    cursor.execute('SELECT id, name FROM place ORDER BY name')
+    places = cursor.fetchall()
+
+    cursor.execute('SELECT id, name FROM Confidence ORDER BY name')
+    Confidences = cursor.fetchall()
+
     if request.method == 'POST':
         name = request.form['name']
         period = request.form['period']
         description = request.form['description']
         division_id = request.form.get('division_id')
+        user_id = request.form.get('user_id')
+        place_id = request.form.get('place_id')
+        confidence_id = request.form.get('confidence_id')
         error = None
 
         if not name:
@@ -360,12 +443,18 @@ def edit_div_program(div_program_id):
             error = 'Description is required!'
         elif not division_id:
             error = 'Division is required!'
+        elif not user_id:
+            error = 'User is required!'
+        elif not place_id:
+            error = 'Place is required!'
+        elif not confidence_id:
+            error = 'Confidentiality is required!'
 
         if error is None:
             try:
                 cursor.execute(
-                    'UPDATE audit_program SET name = %s, period = %s, description = %s, division_id = %s WHERE id = %s',
-                    (name, period, description, division_id, div_program_id)
+                    'UPDATE audit_program SET name = %s, period = %s, description = %s, division_id = %s, user_id = %s, place_id = %s, confidence_id = %s  WHERE id = %s',
+                    (name, period, description, division_id, user_id, place_id, confidence_id, div_program_id)
                 )
                 db.commit()
                 flash('Audit program updated successfully!', 'success')
@@ -375,7 +464,7 @@ def edit_div_program(div_program_id):
 
         flash(error, 'error')
 
-    return render_template('file/edit_div_program.html', div_program=div_program, divisions=divisions)
+    return render_template('file/edit_div_program.html', div_program=div_program, divisions=divisions, places=places, users=users, Confidences=Confidences)
 
 
 @bp.route('/edit_dep_program/<int:dep_program_id>', methods=['GET', 'POST'])
@@ -386,7 +475,7 @@ def edit_dep_program(dep_program_id):
     cursor = db.cursor()
 
     cursor.execute(
-        'SELECT id, name, period, description, department_id FROM audit_program WHERE id = %s',
+        'SELECT id, name, period, description, department_id, user_id, place_id, confidence_id FROM audit_program WHERE id = %s',
         (dep_program_id,)
     )
     dep_program = cursor.fetchone()
@@ -398,11 +487,23 @@ def edit_dep_program(dep_program_id):
     cursor.execute('SELECT id, name FROM department ORDER BY name')
     departments = cursor.fetchall()
 
+    cursor.execute('SELECT id, name FROM user ORDER BY name')
+    users = cursor.fetchall()
+    
+    cursor.execute('SELECT id, name FROM place ORDER BY name')
+    places = cursor.fetchall()
+
+    cursor.execute('SELECT id, name FROM Confidence ORDER BY name')
+    Confidences = cursor.fetchall()
+
     if request.method == 'POST':
         name = request.form['name']
         period = request.form['period']
         description = request.form['description']
         department_id = request.form.get('department_id')
+        user_id = request.form.get('user_id')
+        place_id = request.form.get('place_id')
+        confidence_id = request.form.get('confidence_id')
         error = None
 
         if not name:
@@ -413,12 +514,18 @@ def edit_dep_program(dep_program_id):
             error = 'Description is required!'
         elif not department_id:
             error = 'department is required!'
+        elif not user_id:
+            error = 'User is required!'
+        elif not place_id:
+            error = 'Place is required!'
+        elif not confidence_id:
+            error = 'Confidentiality is required!'
 
         if error is None:
             try:
                 cursor.execute(
-                    'UPDATE audit_program SET name = %s, period = %s, description = %s, department_id = %s WHERE id = %s',
-                    (name, period, description, department_id, dep_program_id)
+                    'UPDATE audit_program SET name = %s, period = %s, description = %s, department_id = %s, user_id = %s, place_id = %s, confidence_id = %s WHERE id = %s',
+                    (name, period, description, department_id, user_id, place_id, confidence_id, dep_program_id)
                 )
                 db.commit()
                 flash('Audit program updated successfully!', 'success')
@@ -428,7 +535,7 @@ def edit_dep_program(dep_program_id):
 
         flash(error, 'error')
 
-    return render_template('file/edit_dep_program.html', dep_program=dep_program, departments=departments)
+    return render_template('file/edit_dep_program.html', dep_program=dep_program, departments=departments, places=places, users=users, Confidences=Confidences)
 
 
 @bp.route('/edit_unit_program/<int:unit_program_id>', methods=['GET', 'POST'])
@@ -439,7 +546,7 @@ def edit_unit_program(unit_program_id):
     cursor = db.cursor()
 
     cursor.execute(
-        'SELECT id, name, period, description, unit_id FROM audit_program WHERE id = %s',
+        'SELECT id, name, period, description, unit_id, user_id, place_id, confidence_id FROM audit_program WHERE id = %s',
         (unit_program_id,)
     )
     unit_program = cursor.fetchone()
@@ -451,11 +558,23 @@ def edit_unit_program(unit_program_id):
     cursor.execute('SELECT id, name FROM unit ORDER BY name')
     units = cursor.fetchall()
 
+    cursor.execute('SELECT id, name FROM user ORDER BY name')
+    users = cursor.fetchall()
+    
+    cursor.execute('SELECT id, name FROM place ORDER BY name')
+    places = cursor.fetchall()
+
+    cursor.execute('SELECT id, name FROM Confidence ORDER BY name')
+    Confidences = cursor.fetchall()
+
     if request.method == 'POST':
         name = request.form['name']
         period = request.form['period']
         description = request.form['description']
         unit_id = request.form.get('unit_id')
+        user_id = request.form.get('user_id')
+        place_id = request.form.get('place_id')
+        confidence_id = request.form.get('confidence_id')
         error = None
 
         if not name:
@@ -466,12 +585,18 @@ def edit_unit_program(unit_program_id):
             error = 'Description is required!'
         elif not unit_id:
             error = 'Unit is required!'
+        elif not user_id:
+            error = 'User is required!'
+        elif not place_id:
+            error = 'Place is required!'
+        elif not confidence_id:
+            error = 'Confidentiality is required!'
 
         if error is None:
             try:
                 cursor.execute(
-                    'UPDATE audit_program SET name = %s, period = %s, description = %s, unit_id = %s WHERE id = %s',
-                    (name, period, description, unit_id, unit_program_id)
+                    'UPDATE audit_program SET name = %s, period = %s, description = %s, unit_id = %s, user_id = %s, place_id = %s, confidence_id = %s WHERE id = %s',
+                    (name, period, description, unit_id, user_id, place_id, confidence_id, unit_program_id)
                 )
                 db.commit()
                 flash('Audit program updated successfully!', 'success')
@@ -481,7 +606,7 @@ def edit_unit_program(unit_program_id):
 
         flash(error, 'error')
 
-    return render_template('file/edit_unit_program.html', unit_program=unit_program, units=units)
+    return render_template('file/edit_unit_program.html', unit_program=unit_program, units=units, places=places, users=users, Confidences=Confidences)
 
 
 @bp.route('/delete_program/<int:program_id>', methods=['POST'])

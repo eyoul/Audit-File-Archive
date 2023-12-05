@@ -1,24 +1,34 @@
+
 {% extends 'post/index.html' %}
 
 {% block doc %}
+<br>
+<br>
 <section class="section1">
     <!-- Add search bar -->
 
     <ul class="tree-menu">
         <li>
             <a href="#">Audit File</a>
-                <ul>
-                    {% for program in programs %} <!-- The place of the file with (Corporat,  Branch etc )-->
-                    <li>
-                        <a href="#">{{ program[1] }}</a>
-                        <ul>
-                            {% for file in audit_files if file[4] == program[0] %}
-                            <li><a href="#" data-file="{{ url_for('file.download_audit', filename=file[2]) }}" data-type="{{ file[2] }}">{{ file[8] }}</a></li>
-                            {% endfor %}
-                        </ul>
-                    </li>
-                    {% endfor %}
-                </ul>
+            <ul>
+                {% for place in places %}
+                <li>
+                    <a href="#">{{ place[1] }}</a>
+                    <ul>
+                        {% for program in programs if program[8] == place[0] %}
+                        <li>
+                            <a href="#">{{ program[1] }}</a>
+                            <ul>
+                                {% for file in audit_files if file[4] == program[0] %}
+                                <li><a href="#" data-file="{{ url_for('file.download_audit', filename=file[2]) }}" data-type="{{ file[2] }}">{{ file[8] }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                {% endfor %}
+            </ul>
         </li>
     </ul>
 </section>

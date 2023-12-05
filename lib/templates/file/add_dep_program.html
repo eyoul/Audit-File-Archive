@@ -19,6 +19,27 @@
         <option value="{{ department[0] }}">{{ department[1] }}</option>
       {% endfor %}
     </select>
+        <label for="user_id">User:</label>
+    <select name="user_id" id="user_id">
+      <option value=""></option>
+      {% for  user in  users %}
+        <option value="{{  user[0] }}">{{  user[1] }}</option>
+      {% endfor %}
+    </select>
+    <label for="place_id">Place:</label>
+    <select name="place_id" id="place_id">
+      <option value=""></option>
+      {% for place in places %}
+        <option value="{{ place[0] }}">{{ place[1] }}</option>
+      {% endfor %}
+    </select>
+    <label for="confidence_id">Confidentiality:</label>
+    <select name="confidence_id" id="confidence_id">
+      <option value=""></option>
+      {% for Confidence in Confidences %}
+        <option value="{{ Confidence[0] }}">{{ Confidence[1] }}</option>
+      {% endfor %}
+    </select>
     <br>
     <br>
     <button type="submit">Submit</button>

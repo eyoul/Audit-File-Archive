@@ -104,6 +104,8 @@ def view_users():
 @login_required_role([1])  # '1' is the role_id for the admin role
 @login_required
 def add_user():
+    db = get_db()
+    cursor = db.cursor()
     if request.method == 'POST':
         name = request.form['name']
         emp_id = request.form['emp_id']
@@ -152,8 +154,16 @@ def add_user():
                 flash(error)
             else:
                 return redirect(url_for('auth.view_users'))
+            
+    cursor.execute('SELECT id, name, description FROM place')
+    places = cursor.fetchall()
     
-    return render_template('admin/add_user.html')
+    cursor.execute('SELECT * FROM position ORDER BY name')
+    positions = cursor.fetchall()
+
+    cursor.close()
+    
+    return render_template('admin/add_user.html', places=places, positions=positions)
 
 @bp.route('/edit_user/<int:user_id>', methods=['GET', 'POST'])
 @login_required
@@ -163,10 +173,16 @@ def edit_user(user_id):
     cursor = db.cursor()
 
     cursor.execute(
-        'SELECT id, name, emp_id, email, place, position, role_id FROM user WHERE id = %s',
+        'SELECT id, name, emp_id, email, place_id, position_id, role_id FROM user WHERE id = %s',
         (user_id,)
     )
     user = cursor.fetchone()
+
+    cursor.execute('SELECT id, name, description FROM place')
+    places = cursor.fetchall()
+    
+    cursor.execute('SELECT * FROM position ORDER BY name')
+    positions = cursor.fetchall()
 
     if user is None:
         abort(404, f"User id {user_id} doesn't exist.")
@@ -175,8 +191,8 @@ def edit_user(user_id):
         name = request.form['name']
         emp_id = request.form['emp_id']
         email = request.form['email']
-        place= request.form['place']
-        position = request.form['position']
+        place_id = request.form['place_id']
+        position_id = request.form['position_id']
         role_id = request.form['role_id']
         error = None
 
@@ -190,11 +206,11 @@ def edit_user(user_id):
         elif not email:
             error = 'Email required!'
             flash(error)
-        elif not place:
-            error = 'place required!'
+        elif not place_id:
+            error = 'Place is required!'
             flash(error)
-        elif not position:
-            error = 'position required!'
+        elif not position_id:
+            error = 'Position is required!'
             flash(error)
         elif not role_id:
             error = 'Role is required!'
@@ -202,15 +218,15 @@ def edit_user(user_id):
 
         if error is None:
             cursor.execute(
-                'UPDATE user SET name = %s, emp_id = %s, email = %s, place = %s, position = %s, role_id = %s WHERE id = %s',
-                (name, emp_id, email, place, position, role_id, user_id)
+                'UPDATE user SET name = %s, emp_id = %s, email = %s, place_id = %s, position_id = %s, role_id = %s WHERE id = %s',
+                (name, emp_id, email, place_id, position_id, role_id, user_id)
             )
             db.commit()
             flash('User updated successfully!')
             
             return redirect(url_for('auth.view_users'))
 
-    return render_template('admin/edit_user.html', user=user)
+    return render_template('admin/edit_user.html', user=user, places=places, positions=positions)
 
 # delete Users
 @bp.route('/delete_user/<int:user_id>', methods=('POST',))

@@ -11,6 +11,9 @@
         <th>Period</th>
         <th>Description</th>
         <th>Unit</th>
+        <th>Audit By</th>
+        <th>User</th>
+        <th>Confidentiality</th>
         <th>Update</th>
       </tr>
     </thead>
@@ -22,6 +25,9 @@
         <td>{{ unit_program[2] }}</td>
         <td>{{ unit_program[3] }}</td>
         <td>{{ unit_program[4] }}</td>
+        <td>{{ unit_program[5] }}</td>
+        <td>{{ unit_program[6] }}</td>
+        <td>{{ unit_program[7] }}</td>
         <td>
           <a class="edit-link" href="{{ url_for('file.edit_unit_program', unit_program_id=unit_program[0]) }}">Edit</a>
         </td>

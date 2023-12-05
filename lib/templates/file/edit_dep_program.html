@@ -19,6 +19,27 @@
         <option value="{{ department[0] }}" {% if dep_program.department_id == department[0] %}selected{% endif %}>{{ department[1] }}</option>
       {% endfor %}
     </select>
+    <label for="user_id">Users:</label>
+    <select id="user_id" name="user_id">
+      <option value="">-- Select a Users --</option>
+      {% for  user in  users %}
+        <option value="{{  user[0] }}" {% if dep_program.user_id ==  user[0] %}selected{% endif %}>{{  user[1] }}</option>
+      {% endfor %}
+    </select>
+    <label for="place_id">Places:</label>
+    <select id="place_id" name="place_id">
+      <option value="">-- Select a Places --</option>
+      {% for place in places %}
+        <option value="{{ place[0] }}" {% if dep_program.place_id == place[0] %}selected{% endif %}>{{ place[1] }}</option>
+      {% endfor %}
+    </select>
+    <label for="confidence_id">Division:</label>
+    <select id="confidence_id" name="confidence_id">
+      <option value="">-- Select a division --</option>
+      {% for Confidence in Confidences %}
+        <option value="{{ Confidence[0] }}" {% if dep_program.confidence_id == Confidence[0] %}selected{% endif %}>{{ Confidence[1] }}</option>
+      {% endfor %}
+    </select>
     <br>
     <br>
     <button type="submit" value="Update">Update</button>

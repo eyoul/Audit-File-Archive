@@ -168,3 +168,14 @@ CREATE TABLE unit_program (
     FOREIGN KEY (audit_program_id) REFERENCES audit_program (id) ON DELETE CASCADE
 );
 
+DROP TABLE IF EXISTS confidence ;
+
+CREATE TABLE Confidence (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL UNIQUE,
+    description TEXT NOT NULL
+);
+
+INSERT INTO Confidence (name, description) VALUES ('division ', 'Under Division');
+INSERT INTO Confidence (name, description) VALUES ('department', 'Under Department');
+INSERT INTO Confidence (name, description) VALUES ('private', 'Under Private');
